@@ -1,19 +1,16 @@
 import java.util.Objects;
-import java.util.Random;
 //Обычная задача
 public class Task {
-    Random rdn = new Random();
-    private String name;
-    private String description;
-    private final int ID;
+    protected String name;
+    protected String description;
+    protected final int ID;
     protected StatusOfTask status;
 
     public Task(String name, String description, int ID) {
         this.name = name;
         this.description = description;
         this.ID = ID;
-        //ID = rdn.nextInt(100);
-        status = StatusOfTask.NEW;
+        status = StatusOfTask.NEW; //Как только задача создана, она новая.
 
     }
 
@@ -40,12 +37,10 @@ public class Task {
     }
 
     @Override
-    public final String toString() {
-        String allTasks = "Ваши задачи: " + name + ", описание " + description;
-        return allTasks;
+    public String toString() {
+        String result = "Task{name = '" + name + "\'" + " description = '" + description + "\'" +
+                 " ID = '" + ID + "\'" + " status = \'" + status + "\'";
+        return result;
     }
-
-
-
 
 }

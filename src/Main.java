@@ -5,11 +5,12 @@ public class Main {
         TaskManager test = new TaskManager();
 
         HashMap<Integer, Integer> testMap = new HashMap<>();
-        test.addTask("Помыть жопу", "Желательно с мылом");
-        test.addTask("Вытереть жопу", "Желательно полотенцем");
-        System.out.println(test.printAllTasks());
 
-        test.createEpic("Приготовить ужин", "Готовим ужин");
+        test.deleteAllEpics();
+        System.out.println(test.printAllEpics());
+
+
+        //test.createEpic("Приготовить ужин", "Готовим ужин");
         System.out.println(test.printAllEpics());
 
 
