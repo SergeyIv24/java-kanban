@@ -17,13 +17,13 @@ public class TaskManager {
     //Создание эпика
     protected void createEpic(String name, String description) {
         counterEpicID += 1; //ID считается с 1
-        Epic epic = new Epic(name, description, counterEpicID);
+        Epic epic = new Epic(name, description, counterEpicID); //Создание объектов
         epicTable.put(counterEpicID, epic); //Эпик в мапу эпиков
     }
 
     //Получение всех эпиков
     protected String printAllEpics() {
-        return "Эпики " + epicTable.toString(); //Переопределенный toString класса Epic
+        return epicTable.toString(); //Переопределенный toString класса Epic
     }
 
 
@@ -46,28 +46,48 @@ public class TaskManager {
     protected void deleteEpic(int epicID) {
         if (epicTable.containsKey(epicID)) { //Если эпик в мапе
             epicTable.remove(epicID, epicTable.get(epicID));
-        } else { //Если эпика нет в мапе, метод завершается
-            return;
         }
     }
 
-    //TODO Обновление эпика
 
+    //Обновление эпика TODO смена статуса
+    protected void refreshEpic(int epicID) {
+        if (epicTable.containsKey(epicID)) {
+            Epic epic = epicTable.get(epicID);
+            Boolean checkStatusNew = false;
+            Boolean checkStatusDone = false;
+            for (Integer subtaskID : epic.getSubtasks().keySet()) {
+                if ((epic.getSubtasks().get(subtaskID).status != StatusOfTask.NEW) &&
+                    (epic.getSubtasks().get(subtaskID).status != StatusOfTask.DONE)) {
+                    epic.status = StatusOfTask.IN_PROGRESS;
+                    return;
+                } if (StatusOfTask.DONE == epic.getSubtasks().get(subtaskID).status) {
+                    checkStatusDone = true;
+                } if (StatusOfTask.NEW == epic.getSubtasks().get(subtaskID).status) {
+                    checkStatusNew = true;
+                }
+            }
+            if (checkStatusDone) {
+                epic.status = StatusOfTask.DONE;
+            } if (checkStatusNew) {
+                epic.status = StatusOfTask.NEW;
+            }
+        }
+    }
 
 //Методы для подзадач эпиков
 
     //Добавление подзадачи в эпик
     protected void addSubTaskInEpic(int epicID, String name, String description) {
-        counterSubtaskID += 1;
-        Subtask subtask = new Subtask(name, description, counterSubtaskID);
-        Epic epic = epicTable.get(epicID);
-        epic.getSubtasks().put(counterSubtaskID, subtask);
+        counterSubtaskID += 1; //Счет с 1
+        Subtask subtask = new Subtask(name, description, counterSubtaskID); //Создание объекта
+        Epic epic = epicTable.get(epicID); //Получение объекта эпика по ID
+        epic.getSubtasks().put(counterSubtaskID, subtask); //Новый объект в мапу подзадач
     }
 
     //TODO Вывод подзадач эпика
 
-
-    //Todo Вывод подзадачи по идентификатору
+    //Todo Вывод подзадачи по идентификатору ВОЗМОЖЕН NULL
     protected String printSubtasksUseID(int epicID, int subtaskID) { //Чтобы найти подзадачу в эпике, нужно найти
         Epic epic = epicTable.get(epicID);                          //сам эпик
         if (epic.getSubtasks().containsKey(subtaskID)) { //Проверка наличия ключа
@@ -78,78 +98,82 @@ public class TaskManager {
         }
     }
 
-    //Todo Удаление всех подзадач
+    //Todo Удаление всех подзадач одного эпика
+    protected void deleteAllSubtasksOfEpic(int epicID) {
+        Epic epic = epicTable.get(epicID);
+        epic.getSubtasks().clear();
+    }
+
 
     //Todo Удаление подзадачи по идентификатору
     protected void removeParticularSubtask(int epicID, int subtaskID) {
         Epic epic = epicTable.get(epicID);
         if (epic.getSubtasks().containsKey(subtaskID)) {
             epic.getSubtasks().remove(subtaskID);
-        } else {
-            return;
         }
     }
 
-    //Todo Обновление подзадачи по идентификатору
+    //Обновление подзадачи по идентификатору, смена статуса
+    protected void updateSubtask(int epicID, int subtaskID, StatusOfTask status) {
+        Epic epic = epicTable.get(epicID);
+        if (epic.getSubtasks().containsKey(subtaskID)) {
+            epic.getSubtasks().get(subtaskID).status = status;
+        }
+        refreshEpic(epicID);
+    }
 
-    //Todo Все подзадачи эпика
+
+    //Todo Все подзадачи эпика ВОЗМОЖЕН NULL
     protected String printAllSubtasksOfEpic(int epicID) {
         Epic epic = epicTable.get(epicID);
         return epic.getSubtasks().toString();
     }
 
 
-
-
-
-
 // Методы для простых задач.
 
     //Метод добавления простой задачи
-    void addTask(String name, String description) {
+    protected void addTask(String name, String description) {
         counterTaskID += 1;
         Task task = new Task(name, description, counterTaskID);
         tasksTable.put(task.getID(), task);
     }
 
     //Метод удаление всех задач
-    void deleteAllTask() {
+    protected void deleteAllTask() {
         tasksTable.clear();
     }
 
-    //TODO Удаление по идентификатору
-    void deleteUseID(int ID) {
+    //Удаление по идентификатору
+    protected void deleteUseID(int ID) {
         if (tasksTable.containsKey(ID)) {
             tasksTable.remove(ID, tasksTable.get(ID));
-        } else {
-
         }
-
     }
 
     //Метод вывода всех задач
-    String printAllTasks(){
-        return "Список ваших задач " + tasksTable.toString();
+    protected String printAllTasks(){
+        return tasksTable.toString();
     }
 
     //Метод вывода по идентификатору
-    String printOneTask(int ID) {
+    protected String printOneTask(int ID) {
         if (tasksTable.containsKey(ID)) {
             String taskByID = tasksTable.get(ID).toString();
             return taskByID;
         } else {
-            return "None";
+            return "";
         }
 
     }
 
     //Обновление задачи
-    void refreshTask(String name, String description, int ID) {
-        if (tasksTable.containsKey(ID)) {
-            tasksTable.put(ID, new Task(name, description, ID));
+    protected void updateTask(int taskID, StatusOfTask status) {
+        if (tasksTable.containsKey(taskID)) {
+            Task task = tasksTable.get(taskID);
+            tasksTable.put(taskID, task);
+            task.status = status;
         }
     }
-
-
 
 }

@@ -39,7 +39,7 @@ public class Task {
     @Override
     public String toString() {
         String result = "Task{name = '" + name + "\'" + " description = '" + description + "\'" +
-                 " ID = '" + ID + "\'" + " status = \'" + status + "\'";
+                 " ID = '" + ID + "\'" + " status = \'" + status + "\'}";
         return result;
     }
 

@@ -16,7 +16,7 @@ public class Epic extends Task {
     @Override
     public String toString() {
         String result = "Epic{name = '" + name + "\'" + " description = '" + description + "\'" +
-                " ID = '" + ID + "\'" + " status = \'" + status + "\'";
+                " ID = '" + ID + "\'" + " status = \'" + status + "\'}";
         return result;
     }
 
