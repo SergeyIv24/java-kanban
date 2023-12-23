@@ -1,11 +1,11 @@
 import java.util.HashMap;
 
 public class TaskManager {
-    int counterTaskID = 0; //Счетчик ID обычных задач
-    int counterEpicID = 0; //Счетчик ID эпиков
-    int counterSubtaskID = 0; //Счетчик ID подзадач эпиков
-    HashMap<Integer, Task> tasksTable; //Объявление мапы для обычных задач
-    HashMap<Integer, Epic> epicTable; //Объявление мапы для эпиков
+    private int counterTaskID = 0; //Счетчик ID обычных задач
+    private int counterEpicID = 0; //Счетчик ID эпиков
+    private int counterSubtaskID = 0; //Счетчик ID подзадач эпиков
+    private HashMap<Integer, Task> tasksTable; //Объявление мапы для обычных задач
+    private HashMap<Integer, Epic> epicTable; //Объявление мапы для эпиков
 
     public TaskManager() {
         tasksTable = new HashMap<>(); // Инициализация мап
@@ -87,12 +87,14 @@ public class TaskManager {
     }
 
 
-    //Todo Вывод подзадачи по идентификатору ВОЗМОЖЕН NULL
+    //Вывод подзадачи по идентификатору
     protected String printSubtasksUseID(int epicID, int subtaskID) { //Чтобы найти подзадачу в эпике, нужно найти
         Epic epic = epicTable.get(epicID);                          //сам эпик
+        if (epic == null) { //Если объекта нет, пустая строка вместо исключения
+            return "";
+        }
         if (epic.getSubtasks().containsKey(subtaskID)) { //Проверка наличия ключа
-            String particularSubtask = epic.getSubtasks().get(subtaskID).toString(); //Получение значение мапы
-            return particularSubtask;
+            return epic.getSubtasks().get(subtaskID).toString(); //Получение мапы подзадач, получение подзадачи
         } else {
             return ""; //Не найдено - пустая строка
         }
@@ -106,11 +108,13 @@ public class TaskManager {
 
 
     //Удаление подзадачи по идентификатору
-    protected void removeParticularSubtask(int epicID, int subtaskID) {
+    protected String removeParticularSubtask(int epicID, int subtaskID) {
         Epic epic = epicTable.get(epicID);
+        if (epic == null) return "";
         if (epic.getSubtasks().containsKey(subtaskID)) {
             epic.getSubtasks().remove(subtaskID);
-        }
+            return "Подзадача удалена";
+        } else return "";
     }
 
     //Обновление подзадачи по идентификатору, смена статуса
@@ -124,9 +128,10 @@ public class TaskManager {
     }
 
 
-    //Todo Все подзадачи эпика ВОЗМОЖЕН NULL
+    //Все подзадачи эпика
     protected String printAllSubtasksOfEpic(int epicID) {
         Epic epic = epicTable.get(epicID);
+        if (epic == null) return "";
         return epic.getSubtasks().toString();
     }
 
@@ -160,8 +165,7 @@ public class TaskManager {
     //Метод вывода по идентификатору
     protected String printOneTask(int ID) {
         if (tasksTable.containsKey(ID)) {
-            String taskByID = tasksTable.get(ID).toString();
-            return taskByID;
+            return tasksTable.get(ID).toString();
         } else {
             return "";
         }
@@ -178,5 +182,4 @@ public class TaskManager {
         }
 
     }
-
 }

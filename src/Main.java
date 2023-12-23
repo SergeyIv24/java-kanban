@@ -9,12 +9,12 @@ public class Main {
         manager.createEpic("Устроить праздник", "Устраиваем званный ужин");
         manager.addSubTaskInEpic(1, "Сходить в магазин", "Купить макароны");
         manager.addSubTaskInEpic(1, "Вернутся домой", "Там будем готовить");
-        /*manager.addSubTaskInEpic(1, "Готовим ужин", "Желательно вкусный");
-        manager.addSubTaskInEpic(1, "Зовем гостей", "Ждем гостей");*/
+        manager.addSubTaskInEpic(1, "Готовим ужин", "Желательно вкусный");
+        manager.addSubTaskInEpic(1, "Зовем гостей", "Ждем гостей");
 
         //Эпик 2
         manager.createEpic("Доехать до дома", "Едем домой");
-        manager.addSubTaskInEpic(2, "Вызываем такси", "Но надежды мало");
+        manager.addSubTaskInEpic(2, "Вызываем такси", "Надежды мало");
         manager.addSubTaskInEpic(2, "Ищем каршеринг", "Такси же дорого");
         manager.addSubTaskInEpic(2, "Едем домой", "Желательно без ДТП");
 
@@ -42,23 +42,20 @@ public class Main {
         System.out.println(manager.printOneEpic(5));
 
 
-
         //Смена статуса подзадач
         manager.updateSubtask(1, 1, "NEW");
         manager.updateSubtask(1, 2, "IN_PROGRESS");
         System.out.println(manager.printAllSubtasksOfEpic(1));
         System.out.println(manager.printOneEpic(1));
 
-        //Удаление всех эпиков
-        //manager.deleteAllEpics();
-        //System.out.println(manager.deleteAllEpics());
+        //Удаление одного эпика
+        manager.deleteEpic(1);
+        System.out.println(manager.printAllEpics());
 
-        //Удаление по идентификатору
-        //manager.deleteEpic(2);
-        //System.out.println(manager.printAllEpics());
+        //Удаление одной задачи
+        manager.deleteUseID(1);
+        System.out.println(manager.printAllTasks());
 
-        //Вывод подзадачи по ID
-        System.out.println(manager.printSubtasksUseID(1, 1));
 
 
 
