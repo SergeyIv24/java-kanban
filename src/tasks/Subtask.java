@@ -1,3 +1,5 @@
+package tasks;
+
 //Класс подзадачи
 public class Subtask extends Task {
 

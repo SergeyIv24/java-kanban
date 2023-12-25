@@ -1,13 +1,18 @@
+package manager; //отдельный пакет для менеджера
+
+import tasks.*; //Импорт всех классов из пакета tasks
 import java.util.HashMap;
 
 public class TaskManager {
     private int counter = 0;
     private HashMap<Integer, Task> tasksTable; //Объявление мапы для обычных задач
     private HashMap<Integer, Epic> epicTable; //Объявление мапы для эпиков
+    private HashMap<Integer, Subtask> subtaskTable; //Объявление мапы для отдельного хранения подзадач
 
     public TaskManager() {
         tasksTable = new HashMap<>(); // Инициализация мап
         epicTable = new HashMap<>();
+        subtaskTable = new HashMap<>();
     }
 
 //Методы для эпиков
@@ -43,7 +48,7 @@ public class TaskManager {
 
     //Обновление эпика
     public void refreshEpic(int epicID) {
-        if (epicTable.containsKey(epicID)) {
+/*        if (epicTable.containsKey(epicID)) {
             Epic epic = epicTable.get(epicID);
             int amountOfNew = 0; //Счет количества элементов со статусом NEW
             int amountOfDone = 0; //Счет количества элементов со статусом DONE
@@ -63,7 +68,7 @@ public class TaskManager {
             } else {
                 epic.status = StatusOfTask.IN_PROGRESS;
             }
-        }
+        }*/
     }
 
 //Методы для подзадач эпиков
@@ -74,6 +79,13 @@ public class TaskManager {
         Subtask subtask = new Subtask(name, description, counter); //Создание объекта
         Epic epic = epicTable.get(epicID); //Получение объекта эпика по ID
         epic.getSubtasks().put(counter, subtask); //Новый объект в мапу подзадач
+
+        counter += 1;
+        Subtask subtask1 = new Subtask(name, description, counter);
+        Epic epic1 = epicTable.get(epicID);
+        epic1.getSubtasks().add(subtask1);
+        subtaskTable.put(counter, subtask1);
+
     }
 
 

@@ -1,4 +1,5 @@
-import java.util.HashMap;
+package manager;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -26,7 +27,7 @@ public class Main {
         manager.addTask("Дебаг работы", "Проверить выводы программы");
 
         //Печать всех эпиков
-        System.out.println("Все эпики " + manager.printAllEpics());
+        //System.out.println("Все эпики " + manager.printAllEpics());
 
         //Печать всех подзадач эпика 1
         System.out.println("Подзадачи эпика 1 " + manager.printAllSubtasksOfEpic(1));
@@ -50,7 +51,7 @@ public class Main {
 
         //Удаление одного эпика
         manager.deleteEpic(1);
-        System.out.println(manager.printAllEpics());
+        //System.out.println(manager.printAllEpics());
 
         //Удаление одной задачи
         manager.deleteUseID(1);

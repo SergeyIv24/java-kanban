@@ -1,4 +1,4 @@
-
+package tasks;
 //Перечисление статусов
 public enum StatusOfTask {
     NEW,

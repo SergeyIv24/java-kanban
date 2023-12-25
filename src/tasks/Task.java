@@ -1,3 +1,5 @@
+package tasks; //Отдельный пакет для всех классов задач
+
 import java.util.Objects;
 //Обычная задача
 public class Task {
