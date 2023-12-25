@@ -1,6 +1,8 @@
 package manager; //отдельный пакет для менеджера
 
 import tasks.*; //Импорт всех классов из пакета tasks
+
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TaskManager {
@@ -141,10 +143,10 @@ public class TaskManager {
     }
 
     //Все подзадачи эпика
-    public String printAllSubtasksOfEpic(int epicID) {
+    public ArrayList<Subtask> printAllSubtasksOfEpic(int epicID) {
         Epic epic = epicTable.get(epicID);
-        if (epic == null) return "";
-        return epic.getSubtasks().toString();
+        if (epic == null) return null;
+        return epic.getSubtasks();
     }
 
 
@@ -175,11 +177,11 @@ public class TaskManager {
     }
 
     //Метод вывода по идентификатору
-    public String printOneTask(int id) {
+    public Task printOneTask(int id) {
         if (tasksTable.containsKey(id)) {
-            return tasksTable.get(id).toString();
+            return tasksTable.get(id);
         } else {
-            return "";
+            return null;
         }
 
     }
