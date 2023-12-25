@@ -8,10 +8,10 @@ public class Task {
     protected final int id;
     protected StatusOfTask status;
 
-    public Task(String name, String description, int ID) {
+    public Task(String name, String description, int id) {
         this.name = name;
         this.description = description;
-        this.id = ID;
+        this.id = id;
         status = StatusOfTask.NEW; //Как только задача создана, она новая.
 
     }

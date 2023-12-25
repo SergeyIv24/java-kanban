@@ -29,9 +29,9 @@ public class TaskManager {
     }
 
     //Получение эпика по идентификатору
-    public Epic printOneEpic(int epicID){
-        if (epicTable.containsKey(epicID)) { //Проверка наличия ключа в мапе
-            return epicTable.get(epicID);
+    public Epic printOneEpic(int epicId){
+        if (epicTable.containsKey(epicId)) { //Проверка наличия ключа в мапе
+            return epicTable.get(epicId);
         }
         return null;
     }
@@ -43,9 +43,9 @@ public class TaskManager {
     }
 
     //Удаление эпика по идентификатору
-    public void deleteEpic(int epicID) {
-        if (epicTable.containsKey(epicID)) { //Если эпик в мапе
-            epicTable.remove(epicID, epicTable.get(epicID));
+    public void deleteEpic(int epicId) {
+        if (epicTable.containsKey(epicId)) { //Если эпик в мапе
+            epicTable.remove(epicId, epicTable.get(epicId));
         }
     }
 
@@ -78,10 +78,10 @@ public class TaskManager {
 //Методы для подзадач эпиков
 
     //Добавление подзадачи в эпик
-    public void addSubTaskInEpic(int epicID, String name, String description) {
+    public void addSubTaskInEpic(int epicId, String name, String description) {
         counter += 1;
         Subtask subtask = new Subtask(name, description, counter); //Создание объекта подзадачи
-        Epic epic = epicTable.get(epicID); // Получение объекта эпика по ID
+        Epic epic = epicTable.get(epicId); // Получение объекта эпика по ID
         if (epic != null) {
             epic.getSubtasks().add(subtask); // Подзадач в список подзадач эпика
             subtaskTable.put(counter, subtask); // Подазадча в мапу подзадач
@@ -90,9 +90,9 @@ public class TaskManager {
     }
 
     //Вывод подзадачи по идентификатору
-    public Subtask printSubtasksUseID(int subtaskID) {
-        if (subtaskTable.containsKey(subtaskID)) {
-            return subtaskTable.get(subtaskID);
+    public Subtask printSubtasksUseID(int subtaskId) {
+        if (subtaskTable.containsKey(subtaskId)) {
+            return subtaskTable.get(subtaskId);
         }
         return null;
     }
@@ -175,9 +175,9 @@ public class TaskManager {
     }
 
     //Метод вывода по идентификатору
-    public String printOneTask(int ID) {
-        if (tasksTable.containsKey(ID)) {
-            return tasksTable.get(ID).toString();
+    public String printOneTask(int id) {
+        if (tasksTable.containsKey(id)) {
+            return tasksTable.get(id).toString();
         } else {
             return "";
         }
@@ -185,11 +185,11 @@ public class TaskManager {
     }
 
     //Обновление задачи
-    public void updateTask(int taskID, String name, String description, String status) { //Полное обновление задачи
+    public void updateTask(int taskId, String name, String description, String status) { //Полное обновление задачи
         StatusOfTask statusStrToEnum = StatusOfTask.valueOf(status);
-        if (tasksTable.containsKey(taskID)) {
-            Task newTask = new Task(name, description, taskID); //Новый объект
-            tasksTable.put(taskID, newTask); //Заменяет собой прошлый объект в мапе
+        if (tasksTable.containsKey(taskId)) {
+            Task newTask = new Task(name, description, taskId); //Новый объект
+            tasksTable.put(taskId, newTask); //Заменяет собой прошлый объект в мапе
             newTask.setStatus(statusStrToEnum); //Можно заменить статус и остальные пункты
         }
     }
