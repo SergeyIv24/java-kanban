@@ -3,19 +3,19 @@ import java.util.Objects;
 public class Task {
     protected String name;
     protected String description;
-    protected final int ID;
+    protected final int id;
     protected StatusOfTask status;
 
     public Task(String name, String description, int ID) {
         this.name = name;
         this.description = description;
-        this.ID = ID;
+        this.id = ID;
         status = StatusOfTask.NEW; //Как только задача создана, она новая.
 
     }
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
     @Override //Переопределяем в суперклассе, чтобы все другие унаследовали полностью готовый метод
@@ -24,13 +24,13 @@ public class Task {
         if (obj == null) return false;
         if (this.getClass() != obj.getClass()) return false;
         Task anotherTask = (Task) obj;
-        return Objects.equals(ID, anotherTask.ID);
+        return Objects.equals(id, anotherTask.id);
     }
 
     @Override //Переопределяем в суперклассе, чтобы все другие унаследовали полностью готовый метод
     public final int hashCode() {
         int hash = 10;
-        if (ID != 0) {
+        if (id != 0) {
             hash = hash * 20;
         }
         return hash;
@@ -39,7 +39,7 @@ public class Task {
     @Override
     public String toString() {
         String result = "Task{name = '" + name + "\'" + " description = '" + description + "\'" +
-                 " ID = '" + ID + "\'" + " status = \'" + status + "\'}";
+                 " ID = '" + id + "\'" + " status = \'" + status + "\'}";
         return result;
     }
 
