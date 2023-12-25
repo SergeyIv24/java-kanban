@@ -50,30 +50,31 @@ public class TaskManager {
     }
 
 
-    //Обновление эпика
-    public void refreshEpic(int epicID) {
-        if (epicTable.containsKey(epicID)) {
-            Epic epic = epicTable.get(epicID);
-            int amountOfNew = 0; //Счет количества элементов со статусом NEW
-            int amountOfDone = 0; //Счет количества элементов со статусом DONE
-            for (Integer subtaskID : epic.getSubtasks().keySet()) {
-                if (StatusOfTask.NEW == epic.getSubtasks().get(subtaskID).status) {
+    //Обновление статуса эпика
+    public void refreshEpic(Epic epic) {
+        int amountOfNew = 0; //Счет количества элементов со статусом NEW
+        int amountOfDone = 0; //Счет количества элементов со статусом DONE
+        if (epic.getSubtasks() != null) {
+            for (Subtask subtasks : epic.getSubtasks()) {
+                if (subtasks.getStatus() == StatusOfTask.NEW) { //Считается количество элементов со статусом NEW
                     amountOfNew += 1;
                 }
-                if (StatusOfTask.DONE == epic.getSubtasks().get(subtaskID).status) {
+                if (subtasks.getStatus() == StatusOfTask.DONE) { //Считается количество элементов со статусом DONE
                     amountOfDone += 1;
                 }
             }
 
-            if (amountOfNew == epic.getSubtasks().size()) { //Если все элементы NEW
-                epic.status = StatusOfTask.NEW;
-            } else if (amountOfDone == epic.getSubtasks().size()) { //Если все элементы Done
-                epic.status = StatusOfTask.DONE;
-            } else {
-                epic.status = StatusOfTask.IN_PROGRESS;
+            if (amountOfNew == epic.getSubtasks().size()) { //Если количество элементов NEW равно размеру коллекции
+                epic.setStatus(StatusOfTask.NEW); //Значит все задачи NEW эпик - NEW
+            } else if (amountOfDone == epic.getSubtasks().size()) { //Если количество элементов DONE равно размеру списка
+                epic.setStatus(StatusOfTask.DONE); // //Значит все задачи DONE эпик - DONE
+            } else { //Во всех остальных случаях IN_PROGRESS
+                epic.setStatus(StatusOfTask.IN_PROGRESS);
             }
         }
+        tasksTable.put(epic.getId(), epic);
     }
+
 
 //Методы для подзадач эпиков
 
@@ -113,14 +114,38 @@ public class TaskManager {
     }
 
     //Обновление подзадачи по идентификатору, смена статуса
-    public void updateSubtask(int epicID, int subtaskID, String status) {
+    public void updateSubtask(int subtaskId, String  name, String decription, String status) {
+        StatusOfTask statusStrToEnum = StatusOfTask.valueOf(status);
+        if (subtaskTable.containsKey(subtaskId)) {
+            Subtask newSubtask = new Subtask(name, decription, subtaskId);
+            subtaskTable.put(subtaskId, newSubtask);
+            newSubtask.setStatus(statusStrToEnum);
+        }
+
+        Epic newEpic = null;
+        for (Epic epic : epicTable.values()) {
+            for (Subtask sub : epic.getSubtasks()) {
+                if (sub.equals(subtaskId)) {
+                    newEpic = epic;
+                    break;
+                }
+            }
+            break;
+        }
+        if (newEpic != null) {
+            refreshEpic(newEpic);
+        }
+    }
+
+
+/*    public void updateSubtask(int epicID, int subtaskID, String status) {
         StatusOfTask status1 = StatusOfTask.valueOf(status);
         Epic epic = epicTable.get(epicID);
         if (epic.getSubtasks().containsKey(subtaskID)) {
             epic.getSubtasks().get(subtaskID).status = status1;
         }
         refreshEpic(epicID);
-    }
+    }*/
 
 
     //Все подзадачи эпика
@@ -168,13 +193,12 @@ public class TaskManager {
     }
 
     //Обновление задачи
-/*    public void updateTask(int taskID, String status) {
-        StatusOfTask status1 = StatusOfTask.valueOf(status);
+    public void updateTask(int taskID, String name, String description, String status) { //Полное обновление задачи
+        StatusOfTask statusStrToEnum = StatusOfTask.valueOf(status);
         if (tasksTable.containsKey(taskID)) {
-            Task task = tasksTable.get(taskID);
-            tasksTable.put(taskID, task);
-            task.status = status1;
+            Task newTask = new Task(name, description, taskID); //Новый объект
+            tasksTable.put(taskID, newTask); //Заменяет собой прошлый
+            newTask.setStatus(statusStrToEnum); //Можно заменить статус и остальные пункты
         }
-
-    }*/
+    }
 }

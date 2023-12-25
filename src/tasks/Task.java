@@ -20,6 +20,14 @@ public class Task {
         return id;
     }
 
+    public StatusOfTask getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusOfTask newStatus) {
+        status = newStatus;
+    }
+
     @Override //Переопределяем в суперклассе, чтобы все другие унаследовали полностью готовый метод
     public final boolean equals(Object obj) {
         if (this == obj) return true;

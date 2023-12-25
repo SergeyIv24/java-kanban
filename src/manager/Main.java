@@ -5,7 +5,7 @@ public class Main {
     public static void main(String[] args) {
         TaskManager manager = new TaskManager();
 
-        //Тест эпиков
+/*        //Тест эпиков
         //Эпик 1
         manager.createEpic("Устроить праздник", "Устраиваем званный ужин");
         manager.addSubTaskInEpic(1, "Сходить в магазин", "Купить макароны");
@@ -33,16 +33,13 @@ public class Main {
         //Подзадача по ID
         System.out.println("Задача с ID 2 " + manager.printSubtasksUseID(2));
 
-
-
-
         //Удаление всех эпиков
         //manager.deleteAllEpics();
         //System.out.println(manager.printAllEpics());
 
         //Удаление эпика по Id
         //manager.deleteEpic(1);
-        //System.out.println(manager.printAllEpics());
+        //System.out.println(manager.printAllEpics());*/
 
 
 
@@ -54,20 +51,17 @@ public class Main {
 
 
         //Обычная задача 1
-        //manager.addTask("Проверить правильность", "Надежды еще меньше, чем с такси");
+        manager.addTask("Проверить правильность", "Надежды еще меньше, чем с такси");
 
         //Обычная задача 2
-        //manager.addTask("Дебаг работы", "Проверить выводы программы");
-
-
-
+        manager.addTask("Дебаг работы", "Проверить выводы программы");
 
         //Печать всех задач
-        //System.out.println("Все задачи " + manager.printAllTasks());
+        System.out.println("Все задачи " + manager.printAllTasks());
 
         //Смена статуса обычной задачи
-        //manager.updateTask(1, "IN_PROGRESS");
-        //System.out.println("Статус обычной задачи после изменения " + manager.printOneTask(1));
+        manager.updateTask(1, "Проверить правильность", "Надежды еще меньше, чем с такси", "DONE");
+        System.out.println("Статус обычной задачи после изменения " + manager.printOneTask(1));
 
         //System.out.println(manager.printOneEpic(5));
 
