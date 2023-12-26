@@ -31,7 +31,7 @@ public class TaskManager {
     }
 
     //Получение эпика по идентификатору
-    public Epic printOneEpic(int epicId){
+    public Epic receiveOneEpic(int epicId){
         if (epicTable.containsKey(epicId)) { //Проверка наличия ключа в мапе
             return epicTable.get(epicId);
         }
@@ -92,7 +92,7 @@ public class TaskManager {
     }
 
     //Вывод подзадачи по идентификатору
-    public Subtask printSubtasksUseID(int subtaskId) {
+    public Subtask receiveSubtasksUseID(int subtaskId) {
         if (subtaskTable.containsKey(subtaskId)) {
             return subtaskTable.get(subtaskId);
         }
@@ -111,7 +111,7 @@ public class TaskManager {
 
 
     //Удаление подзадачи по идентификатору
-    public boolean removeParticularSubtask(int subtaskId) {
+    public boolean deleteParticularSubtask(int subtaskId) {
         if (subtaskTable.containsKey(subtaskId)) {
             subtaskTable.remove(subtaskId);
             return true;
@@ -143,7 +143,7 @@ public class TaskManager {
     }
 
     //Все подзадачи эпика
-    public ArrayList<Subtask> printAllSubtasksOfEpic(int epicID) {
+    public ArrayList<Subtask> receiveAllSubtasksOfEpic(int epicID) {
         Epic epic = epicTable.get(epicID);
         if (epic == null) return null;
         return epic.getSubtasks();
@@ -172,7 +172,7 @@ public class TaskManager {
     }
 
     //Метод вывода всех задач
-    public HashMap<Integer, Task> printAllTasks(){
+    public HashMap<Integer, Task> receiveAllTasks(){
         return tasksTable;
     }
 

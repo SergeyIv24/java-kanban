@@ -1,7 +1,5 @@
 package manager;
 
-import tasks.StatusOfTask;
-
 public class Main {
 
     public static void main(String[] args) {
@@ -26,10 +24,10 @@ public class Main {
         manager.addTask("Сдать работу", "До НГ");
 
         //Вывод результатов
-        System.out.println("Все задачи " + manager.printAllTasks());
-        System.out.println("Все задачи эпика 1 " + manager.printAllSubtasksOfEpic(1));
-        System.out.println("Подзадача по ID " + manager.printSubtasksUseID(3));
-        System.out.println("Эпик по ID " + manager.printOneEpic(6));
+        System.out.println("Все задачи " + manager.receiveAllTasks());
+        System.out.println("Все задачи эпика 1 " + manager.receiveAllSubtasksOfEpic(1));
+        System.out.println("Подзадача по ID " + manager.receiveSubtasksUseID(3));
+        System.out.println("Эпик по ID " + manager.receiveOneEpic(6));
         System.out.println("Задача по ID " + manager.printOneTask(10) + "\n");
 
         //Изменение статуса подзадач
@@ -43,19 +41,19 @@ public class Main {
         manager.updateTask(11, "Сдать работу", "До НГ", "IN_PROGRESS");
 
         //Выводы после изменения статуса
-        System.out.println("Статус эпика после изменений " + manager.printOneEpic(1));
-        System.out.println("Все подзадачи после изменения " + manager.printAllSubtasksOfEpic(1) + "\n");
+        System.out.println("Статус эпика после изменений " + manager.receiveOneEpic(1));
+        System.out.println("Все подзадачи после изменения " + manager.receiveAllSubtasksOfEpic(1) + "\n");
 
         System.out.println("Задача после смены статуса " + manager.printOneTask(10));
         System.out.println("Другая задача после смены статуса " + manager.printOneTask(11) + "\n");
 
         //Удаление
         manager.deleteAllSubtasksOfEpic(6);
-        System.out.println("Все подзадачи удалены " + manager.printAllSubtasksOfEpic(6));
+        System.out.println("Все подзадачи удалены " + manager.receiveAllSubtasksOfEpic(6));
         manager.deleteEpic(1);
-        System.out.println("Эпик удален " + manager.printOneEpic(1));
+        System.out.println("Эпик удален " + manager.receiveOneEpic(1));
         manager.deleteUseID(10);
-        System.out.println("Задача была удалена " + manager.printAllTasks());
+        System.out.println("Задача была удалена " + manager.receiveAllTasks());
 
 
 
