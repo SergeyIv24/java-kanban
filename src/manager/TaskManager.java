@@ -170,9 +170,18 @@ public class TaskManager {
         }
     }
 
-    //Метод вывода всех задач
-    public HashMap<Integer, Task> receiveAllTasks() {
-        return tasksTable;
+    /**
+     * Исходя из условия задачи:
+     * "Методы для каждого из типа задач(Задача/Эпик/Подзадача):
+     * a. Получение списка всех задач."
+     * То есть, на сколько я понимаю, следует оставить методы вывода каждого из типа
+     * Метод receiveAllTasks() возвращающий коллекцию обычных задач, на всякий случай оставляю.
+     * Добавлен метод receiveSubtasksAndTasks() возвращающий коллекцию задач и подзадач в соотв. с комментариями.
+     * **/
+
+    //Метод возвращающий коллекцию всех обычных задач
+    public ArrayList<Task> receiveAllTasks() {
+        return new ArrayList<>(tasksTable.values());
     }
 
     //Метода возвращающий все обычные задачи и все подзадачи в одной коллекции
@@ -184,7 +193,7 @@ public class TaskManager {
     }
 
     //Метод вывода по идентификатору
-    public Task printOneTask(int id) {
+    public Task receiveOneTask(int id) {
         if (tasksTable.containsKey(id)) {
             return tasksTable.get(id);
         } else {
