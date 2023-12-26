@@ -120,7 +120,6 @@ public class TaskManager {
     }
 
     //Обновление подзадачи по идентификатору, смена статуса
-    //На вход поступают параметры для создания нового объекта
     public void updateSubtask(String status, Subtask subtask) { //int subtaskId, String  name, String description, String status
         StatusOfTask statusStrToEnum = StatusOfTask.valueOf(status);
         Epic newEpic = null; //Стартовое значение для запуска цикла
