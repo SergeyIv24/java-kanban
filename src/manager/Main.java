@@ -1,5 +1,8 @@
 package manager;
 
+import tasks.Subtask;
+import tasks.Task;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -23,22 +26,24 @@ public class Main {
         manager.addTask("Проверить", "Правильность работы");
         manager.addTask("Сдать работу", "До НГ");
 
+
         //Вывод результатов
-        System.out.println("Все задачи " + manager.receiveAllTasks());
+        System.out.println("Все обычные задачи задачи " + manager.receiveAllTasks());
+        System.out.println("Все задачи + все подзадачи " + manager.receiveSubtasksAndTasks());
         System.out.println("Все задачи эпика 1 " + manager.receiveAllSubtasksOfEpic(1));
         System.out.println("Подзадача по ID " + manager.receiveSubtasksUseID(3));
         System.out.println("Эпик по ID " + manager.receiveOneEpic(6));
         System.out.println("Задача по ID " + manager.printOneTask(10) + "\n");
 
         //Изменение статуса подзадач
-        manager.updateSubtask(2, "Сходить в магазин", "Купить макароны", "NEW");
-        manager.updateSubtask(3, "Вернутся домой", "Там будем готовить", "DONE");
-        manager.updateSubtask(4, "Готовим ужин", "Желательно вкусный", "IN_PROGRESS");
-        manager.updateSubtask(5, "Зовем гостей", "Ждем гостей", "DONE");
+        manager.updateSubtask("NEW", new Subtask("Сходить в магазин", "Купить макароны", 2));
+        manager.updateSubtask("DONE", new Subtask("Вернутся домой", "Там будем готовить", 3));
+        manager.updateSubtask("IN_PROGRESS", new Subtask("Готовим ужин", "Желательно вкусный", 4));
+        manager.updateSubtask("DONE", new Subtask("Зовем гостей", "Ждем гостей", 5));
 
         //Изменение статуса задач
-        manager.updateTask(10, "Проверить", "Правильность работы", "DONE");
-        manager.updateTask(11, "Сдать работу", "До НГ", "IN_PROGRESS");
+        manager.updateTask("DONE", new Task("Проверить", "Правильность работы", 10));
+        manager.updateTask("IN_PROGRESS", new Task("Сдать работу", "До НГ", 11));
 
         //Выводы после изменения статуса
         System.out.println("Статус эпика после изменений " + manager.receiveOneEpic(1));
