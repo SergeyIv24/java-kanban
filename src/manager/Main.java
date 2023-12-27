@@ -49,10 +49,12 @@ public class Main {
         manager.updateSubtask(subtask4);
 
         //Изменение статуса задач
-        Task task = new Task("Проверить", "Правильность работы", 10);
-        task.setStatus("DONE");
-        manager.updateTask(task);
-        manager.updateTask(new Task("Сдать работу", "До НГ", 11));
+        Task task1 = new Task("Проверить", "Правильность работы", 10);
+        task1.setStatus("DONE");
+        manager.updateTask(task1);
+        Task task2 = new Task("Сдать работу", "До НГ", 11);
+        task2.setStatus("IN_PROGRESS");
+        manager.updateTask(task2);
 
         //Выводы после изменения статуса
         System.out.println("Статус эпика после изменений " + manager.receiveOneEpic(1));
