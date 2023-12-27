@@ -36,14 +36,23 @@ public class Main {
         System.out.println("Задача по ID " + manager.receiveOneTask(10) + "\n");
 
         //Изменение статуса подзадач
-        manager.updateSubtask("NEW", new Subtask("Сходить в магазин", "Купить макароны", 2));
-        manager.updateSubtask("DONE", new Subtask("Вернутся домой", "Там будем готовить", 3));
-        manager.updateSubtask("IN_PROGRESS", new Subtask("Готовим ужин", "Желательно вкусный", 4));
-        manager.updateSubtask("DONE", new Subtask("Зовем гостей", "Ждем гостей", 5));
+        Subtask subtask1 = new Subtask("Сходить в магазин", "Купить макароны", 2);
+        subtask1.setStatus("DONE");
+        Subtask subtask2 = new Subtask("Вернутся домой", "Там будем готовить", 3);
+        subtask2.setStatus("IN_PROGRESS");
+        Subtask subtask3 = new Subtask("Готовим ужин", "Желательно вкусный", 4);
+        Subtask subtask4 = new Subtask("Зовем гостей", "Ждем гостей", 5);
+
+        manager.updateSubtask(subtask1);
+        manager.updateSubtask(subtask2);
+        manager.updateSubtask(subtask3);
+        manager.updateSubtask(subtask4);
 
         //Изменение статуса задач
-        manager.updateTask("DONE", new Task("Проверить", "Правильность работы", 10));
-        manager.updateTask("IN_PROGRESS", new Task("Сдать работу", "До НГ", 11));
+        Task task = new Task("Проверить", "Правильность работы", 10);
+        task.setStatus("DONE");
+        manager.updateTask(task);
+        manager.updateTask(new Task("Сдать работу", "До НГ", 11));
 
         //Выводы после изменения статуса
         System.out.println("Статус эпика после изменений " + manager.receiveOneEpic(1));

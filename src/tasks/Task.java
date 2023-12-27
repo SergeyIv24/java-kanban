@@ -24,8 +24,9 @@ public class Task {
         return status;
     }
 
-    public void setStatus(StatusOfTask newStatus) {
-        status = newStatus;
+    public void setStatus(String newStatus) {
+        StatusOfTask statusStrToEnum = StatusOfTask.valueOf(newStatus);
+        status = statusStrToEnum;
     }
 
     @Override //Переопределяем в суперклассе, чтобы все другие унаследовали полностью готовый метод

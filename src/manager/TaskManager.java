@@ -66,11 +66,11 @@ public class TaskManager {
             }
 
             if (amountOfNew == epic.getSubtasks().size()) { //Если количество элементов NEW равно размеру коллекции
-                epic.setStatus(StatusOfTask.NEW); //Значит все задачи NEW эпик - NEW
+                epic.setStatus("NEW"); //Значит все задачи NEW эпик - NEW
             } else if (amountOfDone == epic.getSubtasks().size()) { //Если количество элементов DONE равно размеру списка
-                epic.setStatus(StatusOfTask.DONE); // //Значит все задачи DONE эпик - DONE
+                epic.setStatus("DONE"); // //Значит все задачи DONE эпик - DONE
             } else { //Во всех остальных случаях IN_PROGRESS
-                epic.setStatus(StatusOfTask.IN_PROGRESS);
+                epic.setStatus("IN_PROGRESS");
             }
         }
         epicTable.put(epic.getId(), epic);
@@ -120,14 +120,12 @@ public class TaskManager {
     }
 
     //Обновление подзадачи по идентификатору, смена статуса
-    public void updateSubtask(String status, Subtask subtask) { //int subtaskId, String  name, String description, String status
-        StatusOfTask statusStrToEnum = StatusOfTask.valueOf(status);
+    public void updateSubtask(Subtask subtask) { //int subtaskId, String  name, String description, String status
         Epic newEpic = null; //Стартовое значение для запуска цикла
         for (Epic epic : epicTable.values()) { //Цикл по значениям мапы эпиков
             int i = 0; //Счетчик индекса подзадачи в списке
             for (Subtask sub : epic.getSubtasks()) { //Цикл по подзадачам эпика
                 if (sub.getId() == subtask.getId()) { //Если найден по id
-                    subtask.setStatus(statusStrToEnum); //Смена статуса
                     epic.getSubtasks().set(i, subtask); //Замена элемента в списке
                     newEpic = epic;
                     break; //Если if сработал не нужно продолжать цикл
@@ -202,11 +200,9 @@ public class TaskManager {
     }
 
     //Обновление задачи
-    public void updateTask(String status, Task task) { //Полное обновление задачи
-        StatusOfTask statusStrToEnum = StatusOfTask.valueOf(status);
+    public void updateTask(Task task) { //Полное обновление задачи
         if (tasksTable.containsKey(task.getId())) {
             tasksTable.put(task.getId(), task); //Заменяет собой прошлый объект в мапе
-            task.setStatus(statusStrToEnum); //Можно заменить статус и остальные пункты
         }
     }
 }
