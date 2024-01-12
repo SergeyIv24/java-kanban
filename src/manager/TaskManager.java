@@ -65,12 +65,4 @@ public interface TaskManager {
     //Обновление задачи
     void updateTask(Task task);
 
-    List<Task> getHistory();
-
-
-
-
-
-
-
 }
