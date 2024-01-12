@@ -6,7 +6,7 @@ import tasks.Task;
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager manager = new TaskManager();
+        InMemoryTaskManager manager = new InMemoryTaskManager();
 
         //Тест эпиков
         //Эпик 1
