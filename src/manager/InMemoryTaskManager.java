@@ -4,12 +4,15 @@ import tasks.*; //Импорт всех классов из пакета tasks
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     private int counter = 0;
     private HashMap<Integer, Task> tasksTable; //Объявление мапы для обычных задач
     private HashMap<Integer, Epic> epicTable; //Объявление мапы для эпиков
     private HashMap<Integer, Subtask> subtaskTable; //Объявление мапы для отдельного хранения подзадач
+    private List<Task> historyOf10Elem = new ArrayList<>(); //Список для хранения истории задач
+
 
     public InMemoryTaskManager() {
         tasksTable = new HashMap<>(); // Инициализация мап
@@ -35,6 +38,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Epic receiveOneEpic(int epicId) {
         if (epicTable.containsKey(epicId)) { //Проверка наличия ключа в мапе
+            historyOf10Elem.add(epicTable.get(epicId)); //Добавление вызванной задачи в историю
             return epicTable.get(epicId);
         }
         return null;
@@ -101,6 +105,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Subtask receiveSubtasksUseID(int subtaskId) {
         if (subtaskTable.containsKey(subtaskId)) {
+            historyOf10Elem.add(subtaskTable.get(subtaskId)); //Добавление вызванной задачи в историю
             return subtaskTable.get(subtaskId);
         }
         return null;
@@ -181,15 +186,6 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    /**
-     * Исходя из условия задачи:
-     * "Методы для каждого из типа задач(Задача/Эпик/Подзадача):
-     * a. Получение списка всех задач."
-     * То есть, на сколько я понимаю, следует оставить методы вывода каждого из типа
-     * Метод receiveAllTasks() возвращающий коллекцию обычных задач, на всякий случай оставляю.
-     * Добавлен метод receiveSubtasksAndTasks() возвращающий коллекцию задач и подзадач в соотв. с комментариями.
-     * **/
-
     //Метод возвращающий коллекцию всех обычных задач
     @Override
     public ArrayList<Task> receiveAllTasks() {
@@ -209,6 +205,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task receiveOneTask(int id) {
         if (tasksTable.containsKey(id)) {
+            historyOf10Elem.add(tasksTable.get(id)); //Добавление вызванной задачи в историю
             return tasksTable.get(id);
         } else {
             return null;
@@ -222,5 +219,13 @@ public class InMemoryTaskManager implements TaskManager {
         if (tasksTable.containsKey(task.getId())) {
             tasksTable.put(task.getId(), task); //Заменяет собой прошлый объект в мапе
         }
+    }
+
+    @Override
+    public List<Task> getHistory() {
+
+
+
+        return null;
     }
 }
