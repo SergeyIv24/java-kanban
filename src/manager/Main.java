@@ -7,7 +7,6 @@ public class Main {
 
     public static void main(String[] args) {
         InMemoryTaskManager manager = new InMemoryTaskManager();
-        //HistoryManager history = new InMemoryHistoryManage();
 
         //Тест эпиков
         //Эпик 1
@@ -85,13 +84,13 @@ public class Main {
 
 
 
-/*        //Удаление
+        //Удаление
         manager.deleteAllSubtasksOfEpic(6);
         System.out.println("Все подзадачи удалены " + manager.receiveAllSubtasksOfEpic(6));
         manager.deleteEpic(1);
         System.out.println("Эпик удален " + manager.receiveOneEpic(1));
         manager.deleteUseID(10);
-        System.out.println("Задача была удалена " + manager.receiveAllTasks());*/
+        System.out.println("Задача была удалена " + manager.receiveAllTasks());
 
 
 

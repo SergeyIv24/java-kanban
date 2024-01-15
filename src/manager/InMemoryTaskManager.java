@@ -21,12 +21,24 @@ public class InMemoryTaskManager implements TaskManager {
         subtaskTable = new HashMap<>();
     }
 
+    public HashMap<Integer, Epic> getEpicTable(){
+        return epicTable;
+    }
+
     public HashMap<Integer, Subtask> getSubtaskTable(){
         return subtaskTable;
     }
 
+    public HashMap<Integer, Task> getTaskTable(){
+        return tasksTable;
+    }
+
     public HistoryManager getHistory() {
         return history;
+    }
+
+    public int getCounter() {
+        return counter;
     }
 
 
@@ -98,10 +110,10 @@ public class InMemoryTaskManager implements TaskManager {
     //Добавление подзадачи в эпик
     @Override
     public void addSubTaskInEpic(int epicId, String name, String description) {
-        counter += 1;
-        Subtask subtask = new Subtask(name, description, counter); //Создание объекта подзадачи
         Epic epic = epicTable.get(epicId); // Получение объекта эпика по ID
         if (epic != null) {
+            counter += 1;
+            Subtask subtask = new Subtask(name, description, counter); //Создание объекта подзадачи
             epic.getSubtasks().add(subtask); // Подзадач в список подзадач эпика
             subtaskTable.put(counter, subtask); // Подазадча в мапу подзадач
         }
@@ -143,7 +155,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Обновление подзадачи по идентификатору, смена статуса
     @Override
-    public void updateSubtask(Subtask subtask) { //int subtaskId, String  name, String description, String status
+    public boolean updateSubtask(Subtask subtask) { //int subtaskId, String  name, String description, String status
         Epic newEpic = null; //Стартовое значение для запуска цикла
         for (Epic epic : epicTable.values()) { //Цикл по значениям мапы эпиков
             int i = 0; //Счетчик индекса подзадачи в списке
@@ -158,6 +170,9 @@ public class InMemoryTaskManager implements TaskManager {
         }
         if (newEpic != null) { //Если эпик по id подзадачи найден
             updateEpic(newEpic); //Вызов метода обновления статуса эпика
+            return true;
+        } else {
+            return false;
         }
     }
 

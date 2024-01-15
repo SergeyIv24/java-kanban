@@ -5,7 +5,6 @@ import tasks.Subtask;
 import tasks.Task;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public interface TaskManager {
 
@@ -38,7 +37,7 @@ public interface TaskManager {
     boolean deleteParticularSubtask(int subtaskId);
 
     //Обновление подзадачи по идентификатору, смена статуса
-    void updateSubtask(Subtask subtask);
+    boolean updateSubtask(Subtask subtask);
 
     //Все подзадачи эпика
     ArrayList<Subtask> receiveAllSubtasksOfEpic(int epicID);
