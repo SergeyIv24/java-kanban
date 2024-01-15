@@ -7,6 +7,7 @@ public class Main {
 
     public static void main(String[] args) {
         InMemoryTaskManager manager = new InMemoryTaskManager();
+        //HistoryManager history = new InMemoryHistoryManage();
 
         //Тест эпиков
         //Эпик 1
@@ -63,13 +64,34 @@ public class Main {
         System.out.println("Задача после смены статуса " + manager.receiveOneTask(10));
         System.out.println("Другая задача после смены статуса " + manager.receiveOneTask(11) + "\n");
 
-        //Удаление
+
+
+        //Запись истории, вызвав методы получения задач по Id
+        manager.receiveOneEpic(1);
+        manager.receiveOneEpic(6);
+        manager.receiveSubtasksUseID(2);
+        manager.receiveSubtasksUseID(3);
+        manager.receiveSubtasksUseID(4);
+        manager.receiveOneTask(10);
+        manager.receiveOneTask(11);
+
+        //Вывод истории
+        for (Task task : manager.getHistory().getListOfHistory()) {
+            System.out.println("История " + task);
+        }
+
+
+
+
+
+
+/*        //Удаление
         manager.deleteAllSubtasksOfEpic(6);
         System.out.println("Все подзадачи удалены " + manager.receiveAllSubtasksOfEpic(6));
         manager.deleteEpic(1);
         System.out.println("Эпик удален " + manager.receiveOneEpic(1));
         manager.deleteUseID(10);
-        System.out.println("Задача была удалена " + manager.receiveAllTasks());
+        System.out.println("Задача была удалена " + manager.receiveAllTasks());*/
 
 
 

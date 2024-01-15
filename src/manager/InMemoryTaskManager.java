@@ -4,9 +4,10 @@ import tasks.*; //Импорт всех классов из пакета tasks
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
+    private HistoryManager history = Managers.getDefaultHistory();
+
     private int counter = 0;
     private HashMap<Integer, Task> tasksTable; //Объявление мапы для обычных задач
     private HashMap<Integer, Epic> epicTable; //Объявление мапы для эпиков
@@ -24,6 +25,11 @@ public class InMemoryTaskManager implements TaskManager {
         return subtaskTable;
     }
 
+    public HistoryManager getHistory() {
+        return history;
+    }
+
+
 //Методы для эпиков
 
     //Создание эпика
@@ -38,7 +44,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Epic receiveOneEpic(int epicId) {
         if (epicTable.containsKey(epicId)) { //Проверка наличия ключа в мапе
-            Managers.getDefaultHistory().getHistory().add(epicTable.get(epicId)); //Добавление вызванной задачи в историю
+            history.getListOfHistory().add(epicTable.get(epicId)); //Добавление вызванной задачи в историю
             checkCountOfHistory(); //Проверка переполнения списка из 10 элементов истории
             return epicTable.get(epicId);
         }
@@ -106,7 +112,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Subtask receiveSubtasksUseID(int subtaskId) {
         if (subtaskTable.containsKey(subtaskId)) {
-            Managers.getDefaultHistory().getHistory().add(subtaskTable.get(subtaskId)); //Добавление вызванной задачи в историю
+            history.getListOfHistory().add(subtaskTable.get(subtaskId)); //Добавление вызванной задачи в историю
             checkCountOfHistory(); //Проверка переполнения списка из 10 элементов истории
             return subtaskTable.get(subtaskId);
         }
@@ -207,7 +213,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task receiveOneTask(int id) {
         if (tasksTable.containsKey(id)) {
-            Managers.getDefaultHistory().getHistory().add(tasksTable.get(id)); //Добавление вызванной задачи в историю
+            history.getListOfHistory().add(tasksTable.get(id)); //Добавление вызванной задачи в историю
             checkCountOfHistory(); //Проверка переполнения списка из 10 элементов истории
             return tasksTable.get(id);
         } else {
@@ -226,8 +232,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Метод для проверки переполнения списка истории из 10 элементов
     public void checkCountOfHistory() {
-        if (Managers.getDefaultHistory().getHistory().size() > 10) {
-            Managers.getDefaultHistory().getHistory().remove(0);
+        if (history.getListOfHistory().size() > 10) {
+            history.getListOfHistory().remove(0);
         }
     }
 

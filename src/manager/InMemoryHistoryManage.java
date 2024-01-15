@@ -21,7 +21,7 @@ public class InMemoryHistoryManage implements HistoryManager {
 
 
     @Override
-    public List<Task> getHistory() {
+    public List<Task> getListOfHistory() {
         return historyOf10Elem;
     }
 

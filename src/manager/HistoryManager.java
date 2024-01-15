@@ -10,6 +10,6 @@ public interface HistoryManager {
     void add(Task task);
 
     //Получение истории
-    List<Task> getHistory();
+    List<Task> getListOfHistory();
 
 }
