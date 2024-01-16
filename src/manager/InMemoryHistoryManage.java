@@ -13,10 +13,13 @@ public class InMemoryHistoryManage implements HistoryManager {
     }
 
 
-
     @Override
-    public void add(Task task) {
+    public void addTaskInHistory(Task task) {
         historyOf10Elem.add(task);
+        //Проверка переполнения списка истории из 10 элементов
+        if (historyOf10Elem.size() > 10) {
+            historyOf10Elem.remove(0);
+        }
     }
 
 

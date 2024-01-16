@@ -78,6 +78,7 @@ public class Main {
         for (Task task : manager.getHistory().getListOfHistory()) {
             System.out.println("История " + task);
         }
+        System.out.println("Количество элементов истории: " + manager.getHistory().getListOfHistory().size());
 
 
 

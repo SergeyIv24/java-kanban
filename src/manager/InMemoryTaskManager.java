@@ -21,6 +21,12 @@ public class InMemoryTaskManager implements TaskManager {
         subtaskTable = new HashMap<>();
     }
 
+    /**Геттеры сейчас используются в тестах, если в них нет ошибок
+        в тесте shouldBeNothingWhenAddSubtaskInEpicDoesntExist() (строка 58) при добавлении subtask в несуществующий Epic
+        в тесте shouldStorePreviousItemOfHistoryAndLastItem() (строка 74) проверка, что сохранение в историю корректно
+        Если эти тесты можно убрать, тогда можно убрать и геттеры
+    * */
+
     public HashMap<Integer, Epic> getEpicTable(){
         return epicTable;
     }
@@ -32,6 +38,8 @@ public class InMemoryTaskManager implements TaskManager {
     public HashMap<Integer, Task> getTaskTable(){
         return tasksTable;
     }
+
+
 
     public HistoryManager getHistory() {
         return history;
@@ -56,8 +64,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Epic receiveOneEpic(int epicId) {
         if (epicTable.containsKey(epicId)) { //Проверка наличия ключа в мапе
-            history.getListOfHistory().add(epicTable.get(epicId)); //Добавление вызванной задачи в историю
-            checkCountOfHistory(); //Проверка переполнения списка из 10 элементов истории
+            history.addTaskInHistory(epicTable.get(epicId)); //Добавление вызванной задачи в историю
             return epicTable.get(epicId);
         }
         return null;
@@ -124,8 +131,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Subtask receiveSubtasksUseID(int subtaskId) {
         if (subtaskTable.containsKey(subtaskId)) {
-            history.getListOfHistory().add(subtaskTable.get(subtaskId)); //Добавление вызванной задачи в историю
-            checkCountOfHistory(); //Проверка переполнения списка из 10 элементов истории
+            history.addTaskInHistory(subtaskTable.get(subtaskId)); //Добавление вызванной задачи в историю
             return subtaskTable.get(subtaskId);
         }
         return null;
@@ -228,8 +234,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task receiveOneTask(int id) {
         if (tasksTable.containsKey(id)) {
-            history.getListOfHistory().add(tasksTable.get(id)); //Добавление вызванной задачи в историю
-            checkCountOfHistory(); //Проверка переполнения списка из 10 элементов истории
+            history.addTaskInHistory(tasksTable.get(id)); //Добавление вызванной задачи в историю
             return tasksTable.get(id);
         } else {
             return null;
@@ -245,12 +250,8 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    //Метод для проверки переполнения списка истории из 10 элементов
-    public void checkCountOfHistory() {
-        if (history.getListOfHistory().size() > 10) {
-            history.getListOfHistory().remove(0);
-        }
-    }
+
+
 
 
 }
