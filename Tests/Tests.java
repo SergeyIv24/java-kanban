@@ -1,13 +1,14 @@
-package tasks;
 
 import manager.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tasks.Subtask;
+import tasks.Task;
 
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ManagerTest {
+public class Tests {
     Managers managers;
     InMemoryTaskManager testObj;
     HistoryManager testHistory;
@@ -128,5 +129,6 @@ class ManagerTest {
         assertEquals("IN_PROGRESS", testObj.receiveOneTask(1).getStatus().toString());
     }
 
-}
 
+
+}
