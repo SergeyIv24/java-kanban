@@ -3,40 +3,55 @@ package manager;
 import tasks.Task;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class InMemoryHistoryManage <T> implements HistoryManager {
+//Параметризованный класс - Task и его наследники
+public class InMemoryHistoryManage  implements HistoryManager {
     private List<Task> historyOf10Elem;  //Список для хранения истории задач
 
+    private LinkedDataStructure<Task> history = new LinkedDataStructure<>();
 
-    private Node<T> head; //Голова списка
-    private Node<T> tail; //Хвост списка
-    private int size; //Размер списка
 
-    //Вложенный класс узел
-    class Node <E> {
-        public E data; //Данные
-        public Node<E> prev; //Ссылка не предыдущий элемент
-        public Node<E> next; //Ссылка на следующий элемент
 
-        public Node(E data, Node<E> prev, Node<E> next) {
-            this.data = data;
-            this.prev = prev;
-            this.next = next;
+    class LinkedDataStructure<T extends Task> {
+
+        private Map<Integer, Node> history = new HashMap<>();
+
+        private Node<T> head; //Голова списка
+        private Node<T> tail; //Хвост списка
+        private int size; //Размер списка
+
+        //Добавление элемента в конец списка
+        public void linkLast(T element) {
+            final Node<T> oldTail = tail; //Старый хвост
+            final Node<T> newTail = new Node<>(element, oldTail, null); //Новый хвост
+            tail = newTail; //Обновление хвоста
+            if(oldTail == null) { //Если хвоста нет
+                head = newTail; //Голова - это хвост
+            } else {
+                oldTail.next = newTail; //Связка нового хвоста и старого хвоста
+            }
+            size++;//Увеличение размера коллекции
+            history.put(element.getId(), tail); //Добавление узла в мапу по Id этого узла (Задачи)
+
         }
+
+        //Получение списка истории из мапы
+        public List<Node> getListOfHistory() {
+            return new ArrayList<>(history.values());
+        }
+
     }
 
-    //Добавление элемента в конец списка
-    public void linkLast(T element) {
-        final Node<T> oldTail = tail; //Старый хвост
-        final Node<T> newTail = new Node<>(element, oldTail, null); //Новый хвост
-        tail = newTail; //Обновление хвоста
-        if(oldTail == null) { //Если хвоста нет
-            head = newTail; //Голова - это хвост
-        } else {
-            oldTail.next = newTail; //Связка нового хвоста и старого хвоста
+    @Override
+    public List<Task> getListOfHistory() {
+        List<Task> tasksHistory = new ArrayList<>();
+        for (Node node : history.getListOfHistory()) {
+            tasksHistory.add(node.getData());
         }
-        size++;//Увеличение размера коллекции
+        return tasksHistory;
     }
 
 
@@ -55,11 +70,11 @@ public class InMemoryHistoryManage <T> implements HistoryManager {
 
     @Override
     public void addTaskInHistory(Task task) {
-        historyOf10Elem.add(task);
-/*        //Проверка переполнения списка истории из 10 элементов
-        if (historyOf10Elem.size() > 10) {
-            historyOf10Elem.remove(0);
-        }*/
+        //historyOf10Elem.add(task);
+        history.linkLast(task);
+
+
+
     }
 
     @Override
@@ -72,10 +87,10 @@ public class InMemoryHistoryManage <T> implements HistoryManager {
 
 
 
-    @Override
-    public List<Task> getListOfHistory() {
+/*    @Override
+    public List<Task> getListOfHistory(i) {
         return historyOf10Elem;
-    }
+    }*/
 
 
 

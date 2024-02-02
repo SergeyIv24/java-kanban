@@ -1,15 +1,19 @@
 package manager;
 
+import tasks.Task;
 
-public class Node <T> {
-    public T data;
-    public Node<T> prev;
-    public Node<T> next;
+public class Node <E extends Task> {
+    public E data; //Данные
+    public Node<E> prev; //Ссылка не предыдущий элемент
+    public Node<E> next; //Ссылка на следующий элемент
 
-    public Node(T data, Node<T> prev, Node<T> next) {
+    public Node(E data, Node<E> prev, Node<E> next) {
         this.data = data;
         this.prev = prev;
         this.next = next;
     }
 
+    public E getData() {
+        return data;
+    }
 }
