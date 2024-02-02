@@ -31,16 +31,12 @@ public class InMemoryHistoryManage <T> implements HistoryManager {
         final Node<T> oldTail = tail; //Старый хвост
         final Node<T> newTail = new Node<>(element, oldTail, null); //Новый хвост
         tail = newTail; //Обновление хвоста
-        if(oldTail == null) {
-            head = newTail;
+        if(oldTail == null) { //Если хвоста нет
+            head = newTail; //Голова - это хвост
         } else {
-            oldTail.next = newTail;
+            oldTail.next = newTail; //Связка нового хвоста и старого хвоста
         }
-
-
-
-        size++;//Увеличение размера
-
+        size++;//Увеличение размера коллекции
     }
 
 
