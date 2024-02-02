@@ -7,21 +7,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//Параметризованный класс - Task и его наследники
+
 public class InMemoryHistoryManage  implements HistoryManager {
-    private List<Task> historyOf10Elem;  //Список для хранения истории задач
 
-    private LinkedDataStructure<Task> history = new LinkedDataStructure<>();
+    private LinkedDataStructure<Task> history; //Поле истории в созданной структуре данных
 
+    public InMemoryHistoryManage() {
+        history = new LinkedDataStructure<>(); //Инициализация истории
+    }
 
+    //Структура данных для хранения истории
+    //Параметризованный класс - Task и его наследники
+    static class LinkedDataStructure<T extends Task> {
 
-    class LinkedDataStructure<T extends Task> {
-
-        private Map<Integer, Node> history = new HashMap<>();
-
+        private Map<Integer, Node> nodesOfHistory = new HashMap<>(); //Мапа id - узел
         private Node<T> head; //Голова списка
         private Node<T> tail; //Хвост списка
         private int size; //Размер списка
+
+        public Map<Integer, Node> getNodesOfHistory() {
+            return nodesOfHistory;
+        }
 
         //Добавление элемента в конец списка
         public void linkLast(T element) {
@@ -34,65 +40,51 @@ public class InMemoryHistoryManage  implements HistoryManager {
                 oldTail.next = newTail; //Связка нового хвоста и старого хвоста
             }
             size++;//Увеличение размера коллекции
-            history.put(element.getId(), tail); //Добавление узла в мапу по Id этого узла (Задачи)
-
+            nodesOfHistory.put(element.getId(), tail); //Добавление узла в мапу по Id этого узла (Задачи)
         }
 
         //Получение списка истории из мапы
-        public List<Node> getListOfHistory() {
-            return new ArrayList<>(history.values());
+        public List<Task> getTasks() {
+            ArrayList<Node> nodes = new ArrayList<>(nodesOfHistory.values());
+            List<Task> tasksHistory = new ArrayList<>();
+            for (Node node : nodes) {
+                tasksHistory.add(node.data);
+            }
+            return tasksHistory;
+        }
+
+        //Метод удаления узла из связного списка
+        public void removeNode(Node node) { //Узел заранее известен
+            Node prevElem = node.prev; //Ссылка на объект перед рассматриваемым
+            Node nextElem = node.next; //Ссылка на объект после рассматриваемого
+
+            if (prevElem != null) {
+                prevElem.next = node.next; //Следующая ссылка, прошлого элемента, привязывается на следующую ссылку текущего
+                node.prev = null; //Ссылка на предыдущий элемент обнулена
+                node.next = null; //Ссылка на следующий обнулена
+                node.data = null; //Данные обнулены
+            }
         }
 
     }
 
     @Override
     public List<Task> getListOfHistory() {
-        List<Task> tasksHistory = new ArrayList<>();
-        for (Node node : history.getListOfHistory()) {
-            tasksHistory.add(node.getData());
-        }
-        return tasksHistory;
+        return history.getTasks();
     }
-
-
-
-
-
-
-
-
-
-
-    public InMemoryHistoryManage() {
-        historyOf10Elem = new ArrayList<>();
-    }
-
 
     @Override
     public void addTaskInHistory(Task task) {
-        //historyOf10Elem.add(task);
+        if (history.getNodesOfHistory().containsValue(task)) {
+            removeItem(task.getId());
+        }
         history.linkLast(task);
-
-
-
     }
 
     @Override
     public void removeItem(int id) {
-
+        history.removeNode(history.getNodesOfHistory().get(id));
+        history.getNodesOfHistory().remove(history.getNodesOfHistory().get(id));
     }
-
-
-
-
-
-
-/*    @Override
-    public List<Task> getListOfHistory(i) {
-        return historyOf10Elem;
-    }*/
-
-
-
 
 }

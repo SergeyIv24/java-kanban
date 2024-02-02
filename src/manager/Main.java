@@ -3,25 +3,12 @@ package manager;
 import tasks.Subtask;
 import tasks.Task;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 public class Main {
 
     public static void main(String[] args) {
-        List<Integer> list = new LinkedList<>();
-        list.add(1);
-        list.add(2);
-
-        ArrayList<Integer> l = new ArrayList<>();
-
-        for (Integer num : list) {
-            System.out.println(num);
-        }
 
 
-/*        InMemoryTaskManager manager = new InMemoryTaskManager();
+        InMemoryTaskManager manager = new InMemoryTaskManager();
 
         //Тест эпиков
         //Эпик 1
@@ -106,7 +93,7 @@ public class Main {
         manager.deleteEpic(1);
         System.out.println("Эпик удален " + manager.receiveOneEpic(1));
         manager.deleteUseID(10);
-        System.out.println("Задача была удалена " + manager.receiveAllTasks());*/
+        System.out.println("Задача была удалена " + manager.receiveAllTasks());
 
 
 
