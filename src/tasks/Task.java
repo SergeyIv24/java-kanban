@@ -40,9 +40,10 @@ public class Task {
 
     @Override //Переопределяем в суперклассе, чтобы все другие унаследовали полностью готовый метод
     public final int hashCode() {
-        int hash = 10;
+        int hash = 17;
         if (id != 0) {
-            hash = hash * 20;
+            //hash = hash * 20 + id;
+            hash = Objects.hashCode(id);
         }
         return hash;
     }

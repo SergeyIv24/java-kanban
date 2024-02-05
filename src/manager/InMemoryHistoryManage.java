@@ -84,7 +84,7 @@ public class InMemoryHistoryManage  implements HistoryManager {
     @Override
     public void removeItem(int id) {
         history.removeNode(history.getNodesOfHistory().get(id));
-        history.getNodesOfHistory().remove(history.getNodesOfHistory().get(id));
+        history.getNodesOfHistory().remove(id);
     }
 
 }
