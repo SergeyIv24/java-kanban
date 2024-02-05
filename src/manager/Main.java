@@ -8,6 +8,8 @@ public class Main {
     public static void main(String[] args) {
 
 
+
+
         InMemoryTaskManager manager = new InMemoryTaskManager();
         //Тест эпиков
         //Эпик 1
@@ -45,14 +47,29 @@ public class Main {
 
         manager.receiveSubtasksUseID(3);
         manager.receiveSubtasksUseID(2);
+        manager.receiveOneTask(8);
+        manager.receiveOneEpic(1);
+        manager.receiveOneEpic(6);
+        manager.receiveSubtasksUseID(4);
+        manager.receiveSubtasksUseID(3);
+        manager.receiveSubtasksUseID(2);
+        manager.receiveOneTask(8);
+        manager.receiveOneTask(7);
+        manager.receiveOneTask(11);
+        manager.receiveOneTask(10);
+        manager.receiveOneTask(14);
+        manager.receiveOneTask(13);
+
+        manager.receiveSubtasksUseID(3);
+        manager.receiveSubtasksUseID(2);
 
 
         System.out.println(manager.getHistory().getListOfHistory());
 
         //Вывод истории
-/*        for (Task task : manager.getHistory().getListOfHistory()) {
+        for (Task task : manager.getHistory().getListOfHistory()) {
             System.out.println("История " + task);
-        }*/
+        }
 
 
 
