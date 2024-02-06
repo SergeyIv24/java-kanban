@@ -16,7 +16,7 @@ public class InMemoryHistoryManage implements HistoryManager {
             this.prev = prev;
             this.next = next;
         }
-        @Override //Переопределяем в суперклассе, чтобы все другие унаследовали полностью готовый метод
+        @Override
         public final int hashCode() {
             int hash = 17;
             hash = hash * 17 + data.hashCode();
@@ -28,7 +28,6 @@ public class InMemoryHistoryManage implements HistoryManager {
 
     private Node<Task> head;
     private Node<Task> tail;
-    private int size = 0;
     Map<Integer, Node<Task>> nodeMap;
 
     public InMemoryHistoryManage() {
@@ -36,43 +35,53 @@ public class InMemoryHistoryManage implements HistoryManager {
     }
 
     //Добавление элемента в конец списка
-    public void linkLast(Task element) {
-        final Node<Task> oldTail = tail; //Старый хвост
-        final Node<Task> newTail = new Node<>(element, oldTail, null); //Новый хвост
-        tail = newTail; //Обновление хвоста
-        if(oldTail == null) { //Если хвоста нет
-            head = newTail; //Голова - это хвост
+    private void linkLast(Task element) {
+        final Node<Task> newNode = new Node<>(element, tail, null);
+        if (head == null) {
+            head = newNode;
         } else {
-            oldTail.next = newTail; //Связка нового хвоста и старого хвоста
+            tail.next = newNode;
         }
-        size++;//Увеличение размера коллекции
-
+        tail = newNode;
     }
+
 
     //Метод удаления узла из связного списка
-    public void removeNode(Node<Task> node) { //Узел заранее известен
-        Node<Task> prevElement = node.prev;
-        node.data = null;
-        node.prev = null;
-        tail = prevElement;
-        if (prevElement == null) {
-            head = null;
-        } else {
-            prevElement.next = null;
+    private void removeNode(int id) { //Узел заранее известен
+        final Node<Task> node = nodeMap.get(id);
+        nodeMap.remove(id);
+        if (node == null) {
+            return;
         }
-        size--;
+        Node<Task> prevElement = node.prev;
+        Node<Task> nextElement = node.next;
+
+        if (prevElement == null) {
+            head = nextElement;
+        } else {
+            prevElement.next = nextElement;
+            node.prev = null;
+        }
+
+        if (nextElement == null) {
+            tail = prevElement;
+        } else {
+            node.next = null;
+            nextElement.prev = prevElement;
+        }
+        node.data = null;
     }
 
-    public List<Task> getList() {
+    private List<Task> getList() {
         List<Task> taskList = new ArrayList<>();
-        for (Node<Task> node : nodeMap.values()) {
-            taskList.add(node.data);
+        for (Node<Task> x = head; x != null; ) {
+            Node<Task> next = x.next;
+            taskList.add(x.data);
+            x = next;
         }
+
         return taskList;
     }
-
-
-
 
     @Override
     public void addTaskInHistory(Task task) {
@@ -86,8 +95,8 @@ public class InMemoryHistoryManage implements HistoryManager {
 
     @Override
     public void removeItem(int id) {
-        removeNode(nodeMap.get(id));
-        nodeMap.remove(id);
+        removeNode(id);
+
     }
 
     @Override

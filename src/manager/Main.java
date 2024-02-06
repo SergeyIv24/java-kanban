@@ -64,7 +64,7 @@ public class Main {
         manager.receiveSubtasksUseID(2);
 
 
-        System.out.println(manager.getHistory().getListOfHistory());
+        //System.out.println(manager.getHistory().getListOfHistory());
 
         //Вывод истории
         for (Task task : manager.getHistory().getListOfHistory()) {
