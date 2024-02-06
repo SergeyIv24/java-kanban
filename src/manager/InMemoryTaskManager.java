@@ -147,7 +147,7 @@ public class InMemoryTaskManager implements TaskManager {
 
         for (Subtask sub : epic.getSubtasks()) { //Удаление подзадачи из мапы подзадач по ключу
             subtaskTable.remove(sub.getId());
-            history.removeItem(sub.getId());
+            history.removeItem(sub.getId()); //Удаление элемента из истории
         }
         epic.getSubtasks().clear(); //Удаление элементов из списка
     }
@@ -158,7 +158,7 @@ public class InMemoryTaskManager implements TaskManager {
     public boolean deleteParticularSubtask(int subtaskId) {
         if (subtaskTable.containsKey(subtaskId)) {
             subtaskTable.remove(subtaskId);
-            history.removeItem(subtaskId);
+            history.removeItem(subtaskId); //Удаление элемента из истории
             return true;
         }
         return false;
@@ -217,7 +217,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteUseID(int ID) {
         if (tasksTable.containsKey(ID)) {
             tasksTable.remove(ID, tasksTable.get(ID));
-            history.removeItem(ID);
+            history.removeItem(ID); //Удаление элемента из истории
         }
     }
 

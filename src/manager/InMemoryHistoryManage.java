@@ -19,6 +19,7 @@ public class InMemoryHistoryManage implements HistoryManager {
             this.prev = prev;
             this.next = next;
         }
+         //Переопределен, так как при использовании собственных классов в HashMap, следует переопределить хеш функцию.
         @Override
         public final int hashCode() {
             int hash = 17;
@@ -50,7 +51,7 @@ public class InMemoryHistoryManage implements HistoryManager {
 
 
     //Метод удаления узла из связного списка
-    private void removeNode(int id) { //Узел заранее известен
+    private void removeNode(int id) { //Заранее известен id узла
         final Node<Task> node = nodeMap.get(id); //Получение node из мапы
         nodeMap.remove(id); //Удаление из мапы
         if (node == null) {
@@ -99,7 +100,7 @@ public class InMemoryHistoryManage implements HistoryManager {
 
     @Override
     public void removeItem(int id) {
-        removeNode(id);
+        removeNode(id); //Если задача удаляется, метод вызывается в InMemoryTaskManager для удаления также, из истории
     }
 
     @Override

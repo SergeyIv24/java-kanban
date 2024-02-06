@@ -64,6 +64,7 @@ public class Main {
         manager.deleteParticularSubtask(2); //Подзадача удалена
         manager.deleteUseID(8); //Задача удалена
         manager.deleteEpic(1); //Удален эпик и все его подзадачи
+        manager.deleteEpic(20); //Удаление несуществующего эпика.
 
         //Вывод истории. Удаленные элементы не отображаются в истории
         for (Task task : manager.getHistory().getListOfHistory()) {
