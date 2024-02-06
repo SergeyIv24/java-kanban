@@ -2,7 +2,10 @@ package manager;
 
 import tasks.Task;
 
-import java.util.*;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 
 public class InMemoryHistoryManage implements HistoryManager {
 
@@ -28,7 +31,7 @@ public class InMemoryHistoryManage implements HistoryManager {
 
     private Node<Task> head;
     private Node<Task> tail;
-    Map<Integer, Node<Task>> nodeMap;
+    Map<Integer, Node<Task>> nodeMap; //Мапа для хранения пары ключ - node
 
     public InMemoryHistoryManage() {
         nodeMap = new HashMap<>();
@@ -48,11 +51,12 @@ public class InMemoryHistoryManage implements HistoryManager {
 
     //Метод удаления узла из связного списка
     private void removeNode(int id) { //Узел заранее известен
-        final Node<Task> node = nodeMap.get(id);
-        nodeMap.remove(id);
+        final Node<Task> node = nodeMap.get(id); //Получение node из мапы
+        nodeMap.remove(id); //Удаление из мапы
         if (node == null) {
             return;
         }
+
         Node<Task> prevElement = node.prev;
         Node<Task> nextElement = node.next;
 
@@ -72,21 +76,21 @@ public class InMemoryHistoryManage implements HistoryManager {
         node.data = null;
     }
 
+    //Метод получения истории в виде списка
     private List<Task> getList() {
         List<Task> taskList = new ArrayList<>();
-        for (Node<Task> x = head; x != null; ) {
+        for (Node<Task> x = head; x != null; ) { //Цикл по элементам связного списка, так сохраняется порядок вызова задач
             Node<Task> next = x.next;
             taskList.add(x.data);
             x = next;
         }
-
         return taskList;
     }
 
     @Override
     public void addTaskInHistory(Task task) {
         if (nodeMap.containsKey(task.getId())) {
-            removeItem(task.getId());
+            removeNode(task.getId());
         }
         linkLast(task);
         nodeMap.put(task.getId(), tail); //Добавление узла в мапу по Id этого узла (Задачи)
@@ -96,7 +100,6 @@ public class InMemoryHistoryManage implements HistoryManager {
     @Override
     public void removeItem(int id) {
         removeNode(id);
-
     }
 
     @Override

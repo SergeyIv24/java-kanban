@@ -7,9 +7,6 @@ public class Main {
 
     public static void main(String[] args) {
 
-
-
-
         InMemoryTaskManager manager = new InMemoryTaskManager();
         //Тест эпиков
         //Эпик 1
@@ -24,12 +21,9 @@ public class Main {
         //Обычные задачи
         manager.addTask("Проверить", "Правильность работы"); //7
         manager.addTask("Сдать работу", "До НГ"); //8
-        manager.addTask("1", "1"); //9
-        manager.addTask("2", "2"); //10
-        manager.addTask("3", "3"); //11
-        manager.addTask("4", "4"); //12
-        manager.addTask("5", "6"); //13
-        manager.addTask("5", "6"); //14
+        manager.addTask("Обычная", "задача"); //9
+        manager.addTask("задача", "обычная"); //10
+
 
         //Запись истории, вызвав методы получения задач по Id
         manager.receiveOneTask(8);
@@ -42,8 +36,6 @@ public class Main {
         manager.receiveOneTask(7);
         manager.receiveOneTask(11);
         manager.receiveOneTask(10);
-        manager.receiveOneTask(14);
-        manager.receiveOneTask(13);
 
         manager.receiveSubtasksUseID(3);
         manager.receiveSubtasksUseID(2);
@@ -57,18 +49,25 @@ public class Main {
         manager.receiveOneTask(7);
         manager.receiveOneTask(11);
         manager.receiveOneTask(10);
-        manager.receiveOneTask(14);
-        manager.receiveOneTask(13);
 
         manager.receiveSubtasksUseID(3);
         manager.receiveSubtasksUseID(2);
 
 
-        //System.out.println(manager.getHistory().getListOfHistory());
-
-        //Вывод истории
+        //Вывод истории до удаления задач. Повторов нет, порядок вызова сохранен
         for (Task task : manager.getHistory().getListOfHistory()) {
-            System.out.println("История " + task);
+            System.out.println("История до удаления " + task);
+        }
+        System.out.println("\n");
+
+
+        manager.deleteParticularSubtask(2); //Подзадача удалена
+        manager.deleteUseID(8); //Задача удалена
+        manager.deleteEpic(1); //Удален эпик и все его подзадачи
+
+        //Вывод истории. Удаленные элементы не отображаются в истории
+        for (Task task : manager.getHistory().getListOfHistory()) {
+            System.out.println("История после удаления " + task);
         }
 
 
