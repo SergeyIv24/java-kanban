@@ -1,9 +1,13 @@
 package manager;
 
+import tasks.Task;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
     Path file; //Поле файла с данными менеджера
@@ -26,6 +30,25 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     //Метод сохранения данных
     public void save() {
 
+    }
+
+    //Список истории в строку для записи в файл. В конце файла хранятся только id задач истории
+    public static String historyToString(HistoryManager manager) {
+        String idOfHistory = ""; //Выходная строка
+        for (Task task : manager.getListOfHistory()) { //Цикл по элементам истории
+            idOfHistory += task.getId() + ",";
+        }
+        return idOfHistory;
+    }
+
+    //Строка из документа в массив Id
+    public static List<Integer> historyFromString(String value) {
+        List<Integer> idOfHistory = new ArrayList<>(); //Выходной список id
+        String[] valueLikeArray = value.split(","); //В файле id разделены запятой
+        for (String id : valueLikeArray) {
+            idOfHistory.add(Integer.parseInt(id));
+        }
+        return idOfHistory;
     }
 
 //Методы для эпиков
