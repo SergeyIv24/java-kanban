@@ -8,10 +8,15 @@ public class Subtask extends Task {
         status = StatusOfTask.NEW;
     }
 
-    @Override
+/*    @Override
     public String toString() {
         String result = "Subtask{name = '" + name + "\'" + " description = '" + description + "\'" +
                 " ID = '" + id + "\'" + " status = \'" + status + "\'}";
         return result;
+    }*/
+
+    @Override
+    public String toString() {
+        return id + "," +"SUBTASK," + name + "," + status + "," + description + ",";
     }
 }

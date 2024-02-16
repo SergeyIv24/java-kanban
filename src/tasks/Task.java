@@ -49,11 +49,16 @@ public class Task {
         return hash;
     }
 
-    @Override
+/*    @Override
     public String toString() {
         String result = "Task{name = '" + name + "\'" + " description = '" + description + "\'" +
                  " ID = '" + id + "\'" + " status = \'" + status + "\'}";
         return result;
+    }*/
+
+    @Override
+    public String toString() {
+        return id + "," + "TASK," + name + "," + status + "," + description + ",";
     }
 
 }

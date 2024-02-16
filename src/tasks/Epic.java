@@ -16,11 +16,16 @@ public class Epic extends Task {
     }
 
 
-    @Override
+/*    @Override
     public String toString() {
         String result = "Epic{name = '" + name + "\'" + " description = '" + description + "\'" +
                 " ID = '" + id + "\'" + " status = \'" + status + "\'}";
         return result;
+    }*/
+
+    @Override
+    public String toString() {
+        return id + "," + "EPIC," + name + "," + status + "," + description + ",";
     }
 
 }
