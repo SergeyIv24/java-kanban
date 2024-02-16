@@ -61,4 +61,21 @@ public class Task {
         return id + "," + "TASK," + name + "," + status + "," + description + ",";
     }
 
+    //Из строки в объект Task
+    public Task fromString(String value) {
+        String[] valueInArr = value.split(","); //Строку в массив по разделителю
+        Task task = new Task(valueInArr[2], valueInArr[4], Integer.parseInt(valueInArr[0])); //Элементы в конструктор
+        //Для сохранения статуса задач
+        switch (valueInArr[3]) {
+            case "IN_PROGRESS": //Если элемент массива IN_PROGRESS
+                task.status = StatusOfTask.IN_PROGRESS; //Обновление статуса
+                break;
+            case "DONE":
+                task.status = StatusOfTask.DONE;
+                break;
+        }
+        return task;
+    }
+
+
 }
