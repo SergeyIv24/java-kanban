@@ -7,11 +7,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
     Path file; //Поле файла с данными менеджера
+    private final HistoryManager history = Managers.getDefaultHistory();
 
     public FileBackedTaskManager() throws IOException {
         Path newFile = Paths.get(
@@ -34,12 +34,24 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         for (Integer id : tasksTable.keySet()) {
             writer.write(tasksTable.get(id).toString() + "\n");
         }
+        writer.write("\n"); //Пустая строка отделяет обычные задачи
         for (Integer id : epicTable.keySet()) {
             writer.write(epicTable.get(id).toString() + "\n");
         }
+        writer.write("\n"); //Пустая строка отделяет эпики
         for (Integer id : subtaskTable.keySet()) {
             writer.write(subtaskTable.get(id).toString() + "\n");
         }
+        writer.write("\n"); //Пустая строка отделяет подзадачи
+
+        writer.write(historyToString(history)); //Запись истории
+
+    }
+
+    public static FileBackedTaskManager loadFromFile() {
+
+
+        return null;
     }
 
     //Список истории в строку для записи в файл. В конце файла хранятся только id задач истории
@@ -64,7 +76,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 //Методы для эпиков
     //Создание эпика
     @Override
-    public void createEpic(String name, String description) {
+    public void createEpic(String name, String description) throws IOException {
         super.createEpic(name, description);
         save();
     }
@@ -74,7 +86,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 //Методы для подзадач эпиков
     //Создание подзадачи
     @Override
-    public void addSubTaskInEpic(int epicId, String name, String description) {
+    public void addSubTaskInEpic(int epicId, String name, String description) throws IOException {
         super.addSubTaskInEpic(epicId, name, description);
         save();
     }
@@ -85,7 +97,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 //Методы для обычных задач
     //Создание задачи
     @Override
-    public void addTask(String name, String description) {
+    public void addTask(String name, String description) throws IOException {
         super.addTask(name, description);
         save();
     }
