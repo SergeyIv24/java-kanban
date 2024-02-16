@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
@@ -28,8 +29,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     //Метод сохранения данных
-    public void save() {
-
+    public void save() throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(file.toFile()));
+        for (Integer id : tasksTable.keySet()) {
+            writer.write(tasksTable.get(id).toString() + "\n");
+        }
+        for (Integer id : epicTable.keySet()) {
+            writer.write(epicTable.get(id).toString() + "\n");
+        }
+        for (Integer id : subtaskTable.keySet()) {
+            writer.write(subtaskTable.get(id).toString() + "\n");
+        }
     }
 
     //Список истории в строку для записи в файл. В конце файла хранятся только id задач истории

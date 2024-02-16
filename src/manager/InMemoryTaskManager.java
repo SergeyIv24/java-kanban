@@ -9,9 +9,9 @@ public class InMemoryTaskManager implements TaskManager {
     private final HistoryManager history = Managers.getDefaultHistory();
 
     private int counter = 0;
-    private HashMap<Integer, Task> tasksTable; //Объявление мапы для обычных задач
-    private HashMap<Integer, Epic> epicTable; //Объявление мапы для эпиков
-    private HashMap<Integer, Subtask> subtaskTable; //Объявление мапы для отдельного хранения подзадач
+    protected HashMap<Integer, Task> tasksTable; //Объявление мапы для обычных задач
+    protected HashMap<Integer, Epic> epicTable; //Объявление мапы для эпиков
+    protected HashMap<Integer, Subtask> subtaskTable; //Объявление мапы для отдельного хранения подзадач
 
 
 
