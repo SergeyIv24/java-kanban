@@ -11,7 +11,7 @@ public interface TaskManager {
 
     //Методы для эпиков
     //Создание эпика
-    void createEpic(String name, String description) throws IOException;
+    void createEpic(String name, String description);
 
     //Получение эпика по идентификатору
     Epic receiveOneEpic(int epicId);
@@ -26,7 +26,7 @@ public interface TaskManager {
 
     //Методы для подзадач эпиков
     //Добавление подзадачи в эпик
-    void addSubTaskInEpic(int epicId, String name, String description) throws IOException;
+    void addSubTaskInEpic(int epicId, String name, String description);
 
     //Вывод подзадачи по идентификатору
     Subtask receiveSubtasksUseID(int subtaskId);
@@ -45,7 +45,7 @@ public interface TaskManager {
 
     // Методы для простых задач.
     //Метод добавления простой задачи
-    void addTask(String name, String description) throws IOException;
+    void addTask(String name, String description);
 
     //Метод удаление всех задач
     void deleteAllTask();

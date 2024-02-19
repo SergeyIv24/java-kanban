@@ -15,59 +15,71 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     Path file; //Поле файла с данными менеджера
     private final HistoryManager history = Managers.getDefaultHistory();
 
-    public FileBackedTaskManager() throws IOException {
+    public FileBackedTaskManager() {
         Path newFile = Paths.get(
                 "C:\\Учеба\\Java 2023 - 2024" +
                         "\\Задачи\\Проекты ЯП\\Спринт 4\\java-kanban\\src\\manager\\File.csv");
         //Если файл не существует
         if (!Files.exists(newFile)) {
-            file = Files.createFile(newFile); //Создание файла
+            try {
+                file = Files.createFile(newFile); //Создание файла
+            } catch (IOException exception) {
+                throw new ManagerSaveException("Ошибка создания файла");
+            }
             try (FileWriter writer = new FileWriter(newFile.toFile())) { //Заполнение названием колонок
                 writer.write("id,type,name,status,description,epic");
-            } //todo catch??
-
+            } catch (IOException exception) {
+                throw new ManagerSaveException("Ошибка создания файла");
+            }
         }
         file = newFile; //Присвоение в поле класса
     }
 
     //Метод сохранения данных
-    public void save() throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(file.toFile()));
-        for (Integer id : tasksTable.keySet()) {
-            writer.write(tasksTable.get(id).toString() + "\n");
-        }
-        writer.write("\n"); //Пустая строка отделяет обычные задачи
-        for (Integer id : epicTable.keySet()) {
-            writer.write(epicTable.get(id).toString() + "\n");
-        }
-        writer.write("\n"); //Пустая строка отделяет эпики
-        for (Integer id : subtaskTable.keySet()) {
-            writer.write(subtaskTable.get(id).toString() + "\n");
-        }
-        writer.write("\n"); //Пустая строка отделяет подзадачи
+    public void save(){
 
-        writer.write(historyToString(history)); //Запись истории
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file.toFile()))) {
+            for (Integer id : tasksTable.keySet()) {
+                writer.write(tasksTable.get(id).toString() + "\n");
+            }
+            writer.write("\n"); //Пустая строка отделяет обычные задачи
+            for (Integer id : epicTable.keySet()) {
+                writer.write(epicTable.get(id).toString() + "\n");
+            }
+            writer.write("\n"); //Пустая строка отделяет эпики
+            for (Integer id : subtaskTable.keySet()) {
+                writer.write(subtaskTable.get(id).toString() + "\n");
+            }
+            writer.write("\n"); //Пустая строка отделяет подзадачи
 
+            writer.write(historyToString(history)); //Запись истории
+        } catch (IOException exception) {
+            throw new ManagerSaveException("Ошибка при записи файла");
+        }
     }
 
-    public static FileBackedTaskManager loadFromFile(File file) throws IOException {
-        FileBackedTaskManager backedManager = new FileBackedTaskManager();
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        while (reader.ready()) {
-            String line = reader.readLine(); //Чтение строки
-            int id = Character.getNumericValue(line.charAt(0)); //Получение id
-            Task task = Task.fromString(line); //Строка в объект Task
+    public static FileBackedTaskManager loadFromFile(File file){
+        FileBackedTaskManager backedManager;
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            backedManager = new FileBackedTaskManager();
+            while (reader.ready()) {
+                String line = reader.readLine(); //Чтение строки
+                int id = Character.getNumericValue(line.charAt(0)); //Получение id
+                Task task = Task.fromString(line); //Строка в объект Task
 
-            //Если объект типа Task
-            if (task.getClass() == Task.class) {
-                backedManager.getTaskTable().put(id, task); //В соответствующую мапу
-            } else if (task.getClass() == Epic.class) {
-                backedManager.getEpicTable().put(id, (Epic) task);
-            } else {
-                backedManager.getSubtaskTable().put(id, (Subtask) task);
+                //Если объект типа Task
+                if (task.getClass() == Task.class) {
+                    backedManager.getTaskTable().put(id, task); //В соответствующую мапу
+                } else if (task.getClass() == Epic.class) {
+                    backedManager.getEpicTable().put(id, (Epic) task);
+                } else {
+                    backedManager.getSubtaskTable().put(id, (Subtask) task);
+                }
             }
-
+        } catch (IOException exception) {
+            throw new ManagerSaveException("Ошибка при загрузке данных");
         }
+
         return backedManager;
     }
 
@@ -93,7 +105,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 //Методы для эпиков
     //Создание эпика
     @Override
-    public void createEpic(String name, String description) throws IOException {
+    public void createEpic(String name, String description) {
         super.createEpic(name, description);
         save();
     }
@@ -103,7 +115,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 //Методы для подзадач эпиков
     //Создание подзадачи
     @Override
-    public void addSubTaskInEpic(int epicId, String name, String description) throws IOException {
+    public void addSubTaskInEpic(int epicId, String name, String description) {
         super.addSubTaskInEpic(epicId, name, description);
         save();
     }
@@ -114,7 +126,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 //Методы для обычных задач
     //Создание задачи
     @Override
-    public void addTask(String name, String description) throws IOException {
+    public void addTask(String name, String description){
         super.addTask(name, description);
         save();
     }
