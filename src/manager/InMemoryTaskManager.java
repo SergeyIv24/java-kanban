@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class InMemoryTaskManager implements TaskManager {
-    private final HistoryManager history = Managers.getDefaultHistory();
+    protected final HistoryManager history = Managers.getDefaultHistory(); // поля должны быть унаследованы
 
     private int counter = 0;
     protected HashMap<Integer, Task> tasksTable; //Объявление мапы для обычных задач

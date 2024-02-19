@@ -1,15 +1,47 @@
 package manager;
-
-import tasks.Subtask;
-import tasks.Task;
-
-import java.io.IOException;
+import java.io.File;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
+        FileBackedTaskManager manager = new FileBackedTaskManager();
+        File file = new File("C:\\Учеба\\Java 2023 - 2024" +
+                "\\Задачи\\Проекты ЯП\\Спринт 4\\java-kanban\\src\\manager\\File.csv");
+        //Тест эпиков
+        //Эпик 1
+        manager.createEpic("Устроить праздник", "Устраиваем званный ужин"); //1
+        manager.addSubTaskInEpic(1, "Сходить в магазин", "Купить макароны");//2
+        manager.addSubTaskInEpic(1, "Вернутся домой", "Там будем готовить"); //3
+        manager.addSubTaskInEpic(1, "Готовим ужин", "Желательно вкусный"); //4
+        manager.addSubTaskInEpic(1, "Зовем гостей", "Ждем гостей"); //5
+        //FileBackedTaskManager.loadFromFile(file);
+        manager.createEpic("Доехать до дома", "Едем домой"); //6
 
-        InMemoryTaskManager manager = new InMemoryTaskManager();
+        //Обычные задачи
+        manager.addTask("Проверить", "Правильность работы"); //7
+        manager.addTask("Сдать работу", "До НГ"); //8
+        manager.addTask("Обычная", "задача"); //9
+        manager.addTask("задача", "обычная"); //10
+
+        //Запись истории, вызвав методы получения задач по Id
+        manager.receiveOneTask(8);
+        manager.receiveOneEpic(1);
+        manager.receiveOneEpic(6);
+        manager.receiveSubtasksUseID(4);
+        manager.receiveSubtasksUseID(3);
+        manager.receiveSubtasksUseID(2);
+        manager.receiveOneTask(8);
+        manager.receiveOneTask(7);
+        manager.receiveOneTask(10);
+        FileBackedTaskManager.loadFromFile(file);
+
+
+
+
+
+
+
+/*        InMemoryTaskManager manager = new InMemoryTaskManager();
         //Тест эпиков
         //Эпик 1
         manager.createEpic("Устроить праздник", "Устраиваем званный ужин"); //1
@@ -71,7 +103,7 @@ public class Main {
         //Вывод истории. Удаленные элементы не отображаются в истории
         for (Task task : manager.getHistory().getListOfHistory()) {
             System.out.println("История после удаления " + task);
-        }
+        }*/
 
 
 

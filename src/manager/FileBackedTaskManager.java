@@ -13,7 +13,7 @@ import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
     Path file; //Поле файла с данными менеджера
-    private final HistoryManager history = Managers.getDefaultHistory();
+    //private final HistoryManager history = Managers.getDefaultHistory();
 
     public FileBackedTaskManager() {
         Path newFile = Paths.get(
@@ -26,18 +26,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             } catch (IOException exception) {
                 throw new ManagerSaveException("Ошибка создания файла");
             }
-            try (FileWriter writer = new FileWriter(newFile.toFile())) { //Заполнение названием колонок
-                writer.write("id,type,name,status,description,epic");
-            } catch (IOException exception) {
-                throw new ManagerSaveException("Ошибка создания файла");
-            }
+
         }
         file = newFile; //Присвоение в поле класса
     }
 
     //Метод сохранения данных
     public void save(){
-
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file.toFile()))) {
             for (Integer id : tasksTable.keySet()) {
                 writer.write(tasksTable.get(id).toString() + "\n");
@@ -52,7 +47,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             }
             writer.write("\n"); //Пустая строка отделяет подзадачи
 
-            writer.write(historyToString(history)); //Запись истории
+            if (!history.getListOfHistory().isEmpty()) { //Если история не пустая - запись
+                writer.write(historyToString(history)); //Запись истории
+            }
+
         } catch (IOException exception) {
             throw new ManagerSaveException("Ошибка при записи файла");
         }
@@ -60,11 +58,25 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     public static FileBackedTaskManager loadFromFile(File file){
         FileBackedTaskManager backedManager;
+        String line = "";
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             backedManager = new FileBackedTaskManager();
             while (reader.ready()) {
-                String line = reader.readLine(); //Чтение строки
-                int id = Character.getNumericValue(line.charAt(0)); //Получение id
+                line = reader.readLine(); //Чтение строки
+                if (line.isEmpty()) { //Если строка пустая, дальнейшая обработка не нужна
+                    continue;
+                }
+
+                String idStr = ""; //Чтобы из строки получить id, если в нем больше  цифры
+                for (int i = 0; i <= 3; i++) {
+                    if (Character.isDigit(line.charAt(i))) {
+                        idStr = idStr + line.charAt(i);
+                    } else {
+                        break;
+                    }
+                }
+                int id = Character.getNumericValue(idStr.charAt(0)); //Получение id
+
                 Task task = Task.fromString(line); //Строка в объект Task
 
                 //Если объект типа Task
@@ -80,6 +92,27 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             throw new ManagerSaveException("Ошибка при загрузке данных");
         }
 
+        //Последняя строка - история, если не пустая
+        String[] arrForHistory = new String[0];
+        if (!line.isEmpty()) {
+            arrForHistory = line.split(","); // История в массив строк
+        }
+
+        for (int i = 0; i < arrForHistory.length; i++) { //Цикл по массиву строк
+            int id = -1; //Стартовое значение id
+            id = Integer.parseInt(arrForHistory[i]); // id String в int
+            if (backedManager.getEpicTable().containsKey(id)) { //Если id есть в массиве эпиков
+                backedManager.getHistory().addTaskInHistory(backedManager.getEpicTable().get(id)); //Добавление в историю
+            }
+
+            if (backedManager.getSubtaskTable().containsKey(id)) { //Если id есть в массиве подзадач
+                backedManager.getHistory().addTaskInHistory(backedManager.getSubtaskTable().get(id)); //Добавление в историю
+            }
+
+            if (backedManager.getTaskTable().containsKey(id)) { //Если id есть в массиве задач
+                backedManager.getHistory().addTaskInHistory(backedManager.getTaskTable().get(id)); //Добавление в историю
+            }
+        }
         return backedManager;
     }
 
@@ -87,7 +120,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     public static String historyToString(HistoryManager manager) {
         String idOfHistory = ""; //Выходная строка
         for (Task task : manager.getListOfHistory()) { //Цикл по элементам истории
-            idOfHistory += task.getId() + ",";
+            idOfHistory = idOfHistory + task.getId() + ",";
         }
         return idOfHistory;
     }
@@ -102,12 +135,44 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         return idOfHistory;
     }
 
+
 //Методы для эпиков
     //Создание эпика
     @Override
     public void createEpic(String name, String description) {
         super.createEpic(name, description);
         save();
+    }
+
+
+    //После удаления задачи, файл перезаписывается
+    @Override
+    public String deleteAllEpics() {
+        super.deleteAllEpics();
+        save();
+        return "Все эпики удалены";
+    }
+
+    //Удаление эпика по id
+    @Override
+    public void deleteEpic(int epicId) {
+        super.deleteEpic(epicId);
+        save();
+    }
+
+    //Обновление эпика
+    @Override
+    public void updateEpic(Epic epic) {
+        super.updateEpic(epic);
+        save();
+    }
+
+    //Получение эпика по id, запись истории, обновление файла
+    @Override
+    public Epic receiveOneEpic(int epicId) {
+        Epic epic = super.receiveOneEpic(epicId);
+        save();
+        return epic;
     }
 
 
@@ -120,7 +185,36 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         save();
     }
 
+    //Удаление всех подзадач эпика
+    @Override
+    public void deleteAllSubtasksOfEpic(int epicId) {
+        super.deleteAllSubtasksOfEpic(epicId);
+        save();
+    }
 
+    //Удаление подзадачи по идентификатору
+    @Override
+    public boolean deleteParticularSubtask(int subtaskId) {
+        boolean result = super.deleteParticularSubtask(subtaskId);
+        save();
+        return result;
+    }
+
+    //Обновление подзадачи
+    @Override
+    public boolean updateSubtask(Subtask subtask) {
+        boolean result = super.updateSubtask(subtask);
+        save();
+        return result;
+    }
+
+    //Получение подзадачи по идентификатору, запись в историю, сохранение в файл
+    @Override
+    public Subtask receiveSubtasksUseID(int subtaskId) {
+        Subtask subtask = super.receiveSubtasksUseID(subtaskId);
+        save();
+        return subtask;
+    }
 
 
 //Методы для обычных задач
@@ -129,6 +223,33 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     public void addTask(String name, String description){
         super.addTask(name, description);
         save();
+    }
+
+    @Override
+    public void deleteAllTask() {
+        super.deleteAllTask();
+        save();
+    }
+
+    //Удаление по идентификатору
+    @Override
+    public void deleteUseID(int ID) {
+        super.deleteUseID(ID);
+        save();
+    }
+
+    @Override
+    public void updateTask(Task task) {
+        super.updateTask(task);
+        save();
+    }
+
+    //Метод вывода по идентификатору
+    @Override
+    public Task receiveOneTask(int id) {
+        Task task = super.receiveOneTask(id);
+        save();
+        return task;
     }
 
 }
