@@ -1,5 +1,7 @@
 package manager;
 
+import tasks.Epic;
+import tasks.Subtask;
 import tasks.Task;
 
 import java.io.*;
@@ -48,10 +50,25 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     }
 
-    public static FileBackedTaskManager loadFromFile() {
+    public static FileBackedTaskManager loadFromFile(File file) throws IOException {
+        FileBackedTaskManager backedManager = new FileBackedTaskManager();
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        while (reader.ready()) {
+            String line = reader.readLine(); //Чтение строки
+            int id = Character.getNumericValue(line.charAt(0)); //Получение id
+            Task task = Task.fromString(line); //Строка в объект Task
 
+            //Если объект типа Task
+            if (task.getClass() == Task.class) {
+                backedManager.getTaskTable().put(id, task); //В соответствующую мапу
+            } else if (task.getClass() == Epic.class) {
+                backedManager.getEpicTable().put(id, (Epic) task);
+            } else {
+                backedManager.getSubtaskTable().put(id, (Subtask) task);
+            }
 
-        return null;
+        }
+        return backedManager;
     }
 
     //Список истории в строку для записи в файл. В конце файла хранятся только id задач истории

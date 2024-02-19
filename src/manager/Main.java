@@ -3,9 +3,11 @@ package manager;
 import tasks.Subtask;
 import tasks.Task;
 
+import java.io.IOException;
+
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         InMemoryTaskManager manager = new InMemoryTaskManager();
         //Тест эпиков
