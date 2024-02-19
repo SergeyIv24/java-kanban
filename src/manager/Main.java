@@ -1,5 +1,6 @@
 package manager;
 import java.io.File;
+import tasks.*;
 
 public class Main {
 
@@ -14,7 +15,8 @@ public class Main {
         manager.addSubTaskInEpic(1, "Вернутся домой", "Там будем готовить"); //3
         manager.addSubTaskInEpic(1, "Готовим ужин", "Желательно вкусный"); //4
         manager.addSubTaskInEpic(1, "Зовем гостей", "Ждем гостей"); //5
-        //FileBackedTaskManager.loadFromFile(file);
+
+        //Эпик 2
         manager.createEpic("Доехать до дома", "Едем домой"); //6
 
         //Обычные задачи
@@ -34,6 +36,10 @@ public class Main {
         manager.receiveOneTask(7);
         manager.receiveOneTask(10);
         FileBackedTaskManager.loadFromFile(file);
+        //Вывод истории до удаления задач. Повторов нет, порядок вызова сохранен
+        for (Task task : manager.getHistory().getListOfHistory()) {
+            System.out.println(task);
+        }
 
 
 
