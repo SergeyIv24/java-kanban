@@ -5,9 +5,7 @@ import tasks.Subtask;
 import tasks.Task;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +53,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                     continue;
                 }
 
-                String idStr = ""; //Чтобы из строки получить id, если в нем больше  цифры
+                String idStr = ""; //Чтобы из строки получить id, если в нем больше цифры
                 for (int i = 0; i <= 3; i++) {
                     if (Character.isDigit(line.charAt(i))) {
                         idStr = idStr + line.charAt(i);
@@ -90,7 +88,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         }
 
         for (int i = 0; i < arrForHistory.length; i++) { //Цикл по массиву строк
-            int id = -1; //Стартовое значение id
+            int id; //Стартовое значение id
             id = Integer.parseInt(arrForHistory[i]); // id String в int
             if (backedManager.getEpicTable().containsKey(id)) { //Если id есть в массиве эпиков
                 backedManager.getHistory().addTaskInHistory(backedManager.getEpicTable().get(id)); //Добавление в историю
