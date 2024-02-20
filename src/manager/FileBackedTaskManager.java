@@ -12,24 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
-    Path file; //Поле файла с данными менеджера
-    //private final HistoryManager history = Managers.getDefaultHistory();
+    public Path file; //Поле файла с данными менеджера
 
-    public FileBackedTaskManager() {
-        Path newFile = Paths.get(
-                "C:\\Учеба\\Java 2023 - 2024" +
-                        "\\Задачи\\Проекты ЯП\\Спринт 4\\java-kanban\\src\\manager\\File.csv");
-        //Если файл не существует
-        if (!Files.exists(newFile)) {
-            try {
-                file = Files.createFile(newFile); //Создание файла
-            } catch (IOException exception) {
-                throw new ManagerSaveException("Ошибка создания файла");
-            }
-
-        }
-        file = newFile; //Присвоение в поле класса
+    public FileBackedTaskManager(Path file) {
+        this.file = file;
     }
+
 
     //Метод сохранения данных
     public void save(){
@@ -60,7 +48,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         FileBackedTaskManager backedManager;
         String line = "";
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            backedManager = new FileBackedTaskManager();
+            backedManager = new FileBackedTaskManager(file.toPath());
             while (reader.ready()) {
                 line = reader.readLine(); //Чтение строки
                 if (line.isEmpty()) { //Если строка пустая, дальнейшая обработка не нужна
@@ -77,15 +65,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 }
                 int id = Character.getNumericValue(idStr.charAt(0)); //Получение id
 
-                Task task = Task.fromString(line); //Строка в объект Task
 
+                String[] lineArr = line.split(",");
                 //Если объект типа Task
-                if (task.getClass() == Task.class) {
+                if (lineArr[1].equalsIgnoreCase("TASK")) {
+                    Task task = Task.fromString(lineArr); //Строка в объект Task
                     backedManager.getTaskTable().put(id, task); //В соответствующую мапу
-                } else if (task.getClass() == Epic.class) {
-                    backedManager.getEpicTable().put(id, (Epic) task);
-                } else {
-                    backedManager.getSubtaskTable().put(id, (Subtask) task);
+                } else if (lineArr[1].equalsIgnoreCase("EPIC")) {
+                    Epic epic = Epic.fromString(lineArr); //Строка в объект Epic
+                    backedManager.getEpicTable().put(id, epic);
+                } else if (lineArr[1].equalsIgnoreCase("SUBTASK")) {
+                    Subtask subtask = Subtask.fromString(lineArr); //Строка в объект subtask
+                    backedManager.getSubtaskTable().put(id, subtask);
                 }
             }
         } catch (IOException exception) {

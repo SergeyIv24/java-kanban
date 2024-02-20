@@ -49,12 +49,6 @@ public class Task {
         return hash;
     }
 
-/*    @Override
-    public String toString() {
-        String result = "Task{name = '" + name + "\'" + " description = '" + description + "\'" +
-                 " ID = '" + id + "\'" + " status = \'" + status + "\'}";
-        return result;
-    }*/
 
     @Override
     public String toString() {
@@ -62,11 +56,11 @@ public class Task {
     }
 
     //Из строки в объект Task
-    public static Task fromString(String value) {
-        String[] valueInArr = value.split(","); //Строку в массив по разделителю
-        Task task = new Task(valueInArr[2], valueInArr[4], Integer.parseInt(valueInArr[0])); //Элементы в конструктор
+    public static Task fromString(String[]  value) {
+        //String[] value = value.split(","); //Строку в массив по разделителю
+        Task task = new Task(value[2], value[4], Integer.parseInt(value[0])); //Элементы в конструктор
         //Для сохранения статуса задач
-        switch (valueInArr[3]) {
+        switch (value[3]) {
             case "IN_PROGRESS": //Если элемент массива IN_PROGRESS
                 task.status = StatusOfTask.IN_PROGRESS; //Обновление статуса
                 break;
