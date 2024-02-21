@@ -80,14 +80,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         }
 
         //Последняя строка - история, если не пустая
-        String[] arrForHistory = new String[0];
+        List<Integer> listForHistory = new ArrayList<>();
         if (!line.isEmpty()) {
-            arrForHistory = line.split(","); // История в массив строк
+            listForHistory = historyFromString(line);
         }
 
-        for (int i = 0; i < arrForHistory.length; i++) { //Цикл по массиву строк
-            int id; //Стартовое значение id
-            id = Integer.parseInt(arrForHistory[i]); // id String в int
+        for (Integer historyId : listForHistory) { //Цикл по массиву строк
+            int id = historyId; //Стартовое значение id
+
             if (backedManager.getEpicTable().containsKey(id)) { //Если id есть в массиве эпиков
                 backedManager.getHistory().addTaskInHistory(backedManager.getEpicTable().get(id)); //Добавление в историю
             }
