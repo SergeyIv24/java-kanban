@@ -23,18 +23,13 @@ public class Epic extends Task {
     }
 
     //Из строки в объект Epic
-    public static Epic fromString(String[]  value) {
-        //String[] value = value.split(","); //Строку в массив по разделителю
-        Epic epic = new Epic(value[2], value[4], Integer.parseInt(value[0])); //Элементы в конструктор
-        //Для сохранения статуса задач
-        switch (value[3]) {
-            case "IN_PROGRESS": //Если элемент массива IN_PROGRESS
-                epic.status = StatusOfTask.IN_PROGRESS; //Обновление статуса
-                break;
-            case "DONE":
-                epic.status = StatusOfTask.DONE;
-                break;
-        }
+    public static Epic fromString(String[]  epicInStr) {
+        final int id = Integer.parseInt(epicInStr[0]);
+        final String name = epicInStr[2];
+        final String description = epicInStr[4];
+        final String status = epicInStr[3];
+        Epic epic = new Epic(name, description, id); //Элементы в конструктор
+        epic.status = StatusOfTask.valueOf(status);
         return epic;
     }
 

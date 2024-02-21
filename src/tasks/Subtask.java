@@ -15,18 +15,13 @@ public class Subtask extends Task {
     }
 
     //Из строки в объект subtask
-    public static Subtask fromString(String[]  value) {
-        //String[] value = value.split(","); //Строку в массив по разделителю
-        Subtask subtask = new Subtask(value[2], value[4], Integer.parseInt(value[0])); //Элементы в конструктор
-        //Для сохранения статуса задач
-        switch (value[3]) {
-            case "IN_PROGRESS": //Если элемент массива IN_PROGRESS
-                subtask.status = StatusOfTask.IN_PROGRESS; //Обновление статуса
-                break;
-            case "DONE":
-                subtask.status = StatusOfTask.DONE;
-                break;
-        }
+    public static Subtask fromString(String[]  subtaskInStr) {
+        final int id = Integer.parseInt(subtaskInStr[0]);
+        final String name = subtaskInStr[2];
+        final String description = subtaskInStr[4];
+        final String status = subtaskInStr[3];
+        Subtask subtask = new Subtask(name, description, id); //Элементы в конструктор
+        subtask.status = StatusOfTask.valueOf(status);
         return subtask;
     }
 }
