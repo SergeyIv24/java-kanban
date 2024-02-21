@@ -61,20 +61,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                         break;
                     }
                 }
-                int id = Character.getNumericValue(idStr.charAt(0)); //Получение id
-
 
                 String[] lineArr = line.split(",");
                 //Если объект типа Task
                 if (lineArr[1].equalsIgnoreCase("TASK")) {
                     Task task = Task.fromString(lineArr); //Строка в объект Task
-                    backedManager.getTaskTable().put(id, task); //В соответствующую мапу
+                    backedManager.getTaskTable().put(task.getId(), task); //В соответствующую мапу
                 } else if (lineArr[1].equalsIgnoreCase("EPIC")) {
                     Epic epic = Epic.fromString(lineArr); //Строка в объект Epic
-                    backedManager.getEpicTable().put(id, epic);
+                    backedManager.getEpicTable().put(epic.getId(), epic);
                 } else if (lineArr[1].equalsIgnoreCase("SUBTASK")) {
                     Subtask subtask = Subtask.fromString(lineArr); //Строка в объект subtask
-                    backedManager.getSubtaskTable().put(id, subtask);
+                    backedManager.getSubtaskTable().put(subtask.getId(), subtask);
                 }
             }
         } catch (IOException exception) {
