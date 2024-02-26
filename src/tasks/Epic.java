@@ -1,7 +1,6 @@
 package tasks;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 //Класс эпик
 public class Epic extends Task {
     private ArrayList<Subtask> subtasks;

@@ -53,15 +53,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                     continue;
                 }
 
-                String idStr = ""; //Чтобы из строки получить id, если в нем больше цифры
-                for (int i = 0; i <= 3; i++) {
-                    if (Character.isDigit(line.charAt(i))) {
-                        idStr = idStr + line.charAt(i);
-                    } else {
-                        break;
-                    }
-                }
-
                 String[] lineArr = line.split(",");
                 //Если объект типа Task
                 if (lineArr[1].equalsIgnoreCase("TASK")) {

@@ -2,7 +2,6 @@ package manager; //отдельный пакет для менеджера
 
 import tasks.*; //Импорт всех классов из пакета tasks
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
