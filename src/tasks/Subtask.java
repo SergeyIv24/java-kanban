@@ -8,10 +8,20 @@ public class Subtask extends Task {
         status = StatusOfTask.NEW;
     }
 
+
     @Override
     public String toString() {
-        String result = "Subtask{name = '" + name + "\'" + " description = '" + description + "\'" +
-                " ID = '" + id + "\'" + " status = \'" + status + "\'}";
-        return result;
+        return id + "," +"SUBTASK," + name + "," + status + "," + description + ",";
+    }
+
+    //Из строки в объект subtask
+    public static Subtask fromString(String[]  subtaskInStr) {
+        final int id = Integer.parseInt(subtaskInStr[0]);
+        final String name = subtaskInStr[2];
+        final String description = subtaskInStr[4];
+        final String status = subtaskInStr[3];
+        Subtask subtask = new Subtask(name, description, id); //Элементы в конструктор
+        subtask.status = StatusOfTask.valueOf(status);
+        return subtask;
     }
 }

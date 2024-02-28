@@ -49,11 +49,22 @@ public class Task {
         return hash;
     }
 
+
     @Override
     public String toString() {
-        String result = "Task{name = '" + name + "\'" + " description = '" + description + "\'" +
-                 " ID = '" + id + "\'" + " status = \'" + status + "\'}";
-        return result;
+        return id + "," + "TASK," + name + "," + status + "," + description + ",";
     }
+
+    //Из строки в объект Task
+    public static Task fromString(String[]  taskInStr) {
+        final int id = Integer.parseInt(taskInStr[0]);
+        final String name = taskInStr[2];
+        final String description = taskInStr[4];
+        final String status = taskInStr[3];
+        Task task = new Task(name, description, id); //Элементы в конструктор
+        task.status = StatusOfTask.valueOf(status);
+        return task;
+    }
+
 
 }
