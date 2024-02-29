@@ -1,22 +1,41 @@
 package tasks; //Отдельный пакет для всех классов задач
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+
 //Обычная задача
 public class Task {
     protected String name;
     protected String description;
     protected final int id;
     protected StatusOfTask status;
+    protected Duration duration; //Продолжительность в минутах
+    protected LocalDateTime startTime; //Время начала задачи
+    protected DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyy, HH:mm"); //Формат для даты и времени
+
     //Todo добавить Duration min
     //Todo LocalDateTime startTime - время начала задачи
     //Todo метод getEndTime() - время окончания задачи startTime + duration
     //Todo Конструктор принимающий duration и startTime
 
+    //Конструктор без продолжительности и времени начала
     public Task(String name, String description, int id) {
         this.name = name;
         this.description = description;
         this.id = id;
         status = StatusOfTask.NEW; //Как только задача создана, она новая.
+    }
+
+    //Конструктор с продолжительностью и временем начала
+    public Task(String name, String description, int id, long minutes, String startTime) {
+        this.name = name;
+        this.description = description;
+        this.id = id;
+        status = StatusOfTask.NEW; //Как только задача создана, она новая.
+        duration = Duration.ofMinutes(minutes);
+        this.startTime = LocalDateTime.parse(startTime, formatter);
     }
 
     public int getId() {
@@ -30,6 +49,11 @@ public class Task {
     public void setStatus(String newStatus) {
         StatusOfTask statusStrToEnum = StatusOfTask.valueOf(newStatus);
         status = statusStrToEnum;
+    }
+
+    //Метод определения окончания задачи по началу и продолжительности
+    public LocalDateTime getEndTime(){ //Todo как использовать форматер?
+        return startTime.plus(duration);
     }
 
     @Override //Переопределяем в суперклассе, чтобы все другие унаследовали полностью готовый метод
