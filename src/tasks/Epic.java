@@ -5,6 +5,12 @@ import java.util.ArrayList;
 public class Epic extends Task {
     private ArrayList<Subtask> subtasks;
 
+    //Todo расчет поля startTime по первой задаче в списке
+    //Todo Duration по продолжительностям каждый подзадачи из списка
+    //Todo рассчитать поле endTime по последней задаче в списке
+    //Todo Конструктор принимающий duration и startTime
+
+
     public Epic(String name, String description, int id) {
         super(name, description, id);
         subtasks = new ArrayList<>();

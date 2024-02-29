@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public interface TaskManager {
+    //Todo смена сигнатур методов
 
     //Методы для эпиков
     //Создание эпика

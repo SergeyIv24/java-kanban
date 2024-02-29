@@ -7,13 +7,16 @@ public class Task {
     protected String description;
     protected final int id;
     protected StatusOfTask status;
+    //Todo добавить Duration min
+    //Todo LocalDateTime startTime - время начала задачи
+    //Todo метод getEndTime() - время окончания задачи startTime + duration
+    //Todo Конструктор принимающий duration и startTime
 
     public Task(String name, String description, int id) {
         this.name = name;
         this.description = description;
         this.id = id;
         status = StatusOfTask.NEW; //Как только задача создана, она новая.
-
     }
 
     public int getId() {

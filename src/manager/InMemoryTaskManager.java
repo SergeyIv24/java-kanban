@@ -21,11 +21,8 @@ public class InMemoryTaskManager implements TaskManager {
         subtaskTable = new HashMap<>();
     }
 
-    /**Геттеры сейчас используются в тестах, если в них нет ошибок
-        в тесте shouldBeNothingWhenAddSubtaskInEpicDoesntExist() (строка 58) при добавлении subtask в несуществующий Epic
-        в тесте shouldStorePreviousItemOfHistoryAndLastItem() (строка 74) проверка, что сохранение в историю корректно
-        Если эти тесты можно убрать, тогда можно убрать и геттеры
-    * */
+    //Todo метод сортировки задачи с TreeSet
+    //Todo циклы на stream, удалить временные переменные
 
     public HashMap<Integer, Epic> getEpicTable(){
         return epicTable;
