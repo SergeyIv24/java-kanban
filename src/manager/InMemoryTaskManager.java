@@ -14,15 +14,12 @@ public class InMemoryTaskManager implements TaskManager {
     protected Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
 
 
-
     public InMemoryTaskManager() {
         tasksTable = new HashMap<>(); // Инициализация мап
         epicTable = new HashMap<>();
         subtaskTable = new HashMap<>();
     }
 
-    //Todo метод сортировки задачи с TreeSet
-    //Todo циклы на stream, удалить временные переменные
 
     public HashMap<Integer, Epic> getEpicTable(){
         return epicTable;
@@ -36,8 +33,6 @@ public class InMemoryTaskManager implements TaskManager {
         return tasksTable;
     }
 
-
-
     public HistoryManager getHistory() {
         return history;
     }
@@ -48,6 +43,30 @@ public class InMemoryTaskManager implements TaskManager {
 
     public List<Task> getPrioritizedTasks() {
         return List.copyOf(prioritizedTasks);
+    }
+
+    //Метод поиска пересечений задач
+    public boolean isCrossingOther(Task task) {
+        //Если старт не задан, то пересечений не будет
+        if (task.getStartTime() == null) {
+            return false;
+        }
+
+        for (Task task1 : getPrioritizedTasks()) {
+            if (task.getEndTime().isBefore(task1.getEndTime())
+                && task.getStartTime().isAfter(task1.getStartTime())) {
+                return true;
+            }
+            if (task.getEndTime().isAfter(task1.getEndTime())
+                && task.getStartTime().isBefore(task1.getStartTime())) {
+                return true;
+            }
+            if (task.getStartTime().equals(task1.getStartTime())
+                    || task.getEndTime().equals(task1.getEndTime())) {
+                return true;
+            }
+        }
+        return false; //Пересечений нет
     }
 
 
@@ -121,10 +140,13 @@ public class InMemoryTaskManager implements TaskManager {
     //Добавление подзадачи в эпик
     @Override
     public void addSubTaskInEpic(int epicId, Subtask subtask){
+        if (isCrossingOther(subtask)) { //Если есть пересечение, задача не добавляется
+            return;
+        }
+
         Epic epic = epicTable.get(epicId); // Получение объекта эпика по ID
         if (epic != null) {
             counter += 1;
-            //Subtask subtask = new Subtask(name, description, counter); //Создание объекта подзадачи
             subtask.setId(counter);
             epic.getSubtasks().add(subtask); // Подзадач в список подзадач эпика
             subtaskTable.put(counter, subtask); // Подазадча в мапу подзадач
@@ -133,8 +155,6 @@ public class InMemoryTaskManager implements TaskManager {
         if (subtask.getStartTime() != null) {
             prioritizedTasks.add(subtask);
         }
-
-
     }
 
     //Получение подзадачи по идентификатору
@@ -209,8 +229,11 @@ public class InMemoryTaskManager implements TaskManager {
     //Метод добавления простой задачи
     @Override
     public void addTask(Task task){
+        if (isCrossingOther(task)) { //Если есть пересечение, не добавляется
+            return;
+        }
+
         counter += 1;
-        //Task task = new Task(name, description, counter);
         task.setId(counter);
         tasksTable.put(task.getId(), task);
         if (task.getStartTime() != null) {
