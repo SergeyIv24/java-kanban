@@ -15,10 +15,10 @@ public class Task {
     protected LocalDateTime startTime; //Время начала задачи
     protected DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyy, HH:mm"); //Формат для даты и времени
 
-    //Todo добавить Duration min
-    //Todo LocalDateTime startTime - время начала задачи
-    //Todo метод getEndTime() - время окончания задачи startTime + duration
-    //Todo Конструктор принимающий duration и startTime
+    //Todo добавить Duration min +
+    //Todo LocalDateTime startTime - время начала задачи +
+    //Todo метод getEndTime() - время окончания задачи startTime + duration +
+    //Todo Конструктор принимающий duration и startTime +
 
     //Конструктор без продолжительности и времени начала
     public Task(String name, String description, int id) {
