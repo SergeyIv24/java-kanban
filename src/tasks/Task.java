@@ -13,7 +13,9 @@ public class Task {
     protected StatusOfTask status;
     protected Duration duration; //Продолжительность в минутах
     protected LocalDateTime startTime; //Время начала задачи
+    protected LocalDateTime endTime;
     protected DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyy, HH:mm"); //Формат для даты и времени
+
 
     //Todo добавить Duration min +
     //Todo LocalDateTime startTime - время начала задачи +
@@ -57,7 +59,8 @@ public class Task {
 
     //Метод определения окончания задачи по началу и продолжительности
     public LocalDateTime getEndTime(){ //Todo как использовать форматер?
-        return startTime.plus(duration);
+        endTime = startTime.plus(duration);
+        return endTime;
     }
 
     @Override //Переопределяем в суперклассе, чтобы все другие унаследовали полностью готовый метод
@@ -93,9 +96,15 @@ public class Task {
         final String name = taskInStr[2];
         final String description = taskInStr[4];
         final String status = taskInStr[3];
+        final Duration duration = Duration.ofMinutes(Integer.parseInt(taskInStr[5]));
+        final LocalDateTime startTime = LocalDateTime.parse(taskInStr[6]);
+        final LocalDateTime endTime = LocalDateTime.parse(taskInStr[7]);
         Task task = new Task(name, description); //Элементы в конструктор
         task.setId(id);
         task.status = StatusOfTask.valueOf(status);
+        task.duration = duration;
+        task.startTime = startTime;
+        task.endTime = endTime;
         return task;
     }
 

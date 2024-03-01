@@ -46,7 +46,7 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return id + "," + "EPIC," + name + "," + status + "," + description + "," + description + "," + epicDuration
+        return id + "," + "EPIC," + name + "," + status + "," + description  + "," + epicDuration
                 + "," + epicStartTime + "," + epicEndTime;
     }
 
@@ -56,9 +56,15 @@ public class Epic extends Task {
         final String name = epicInStr[2];
         final String description = epicInStr[4];
         final String status = epicInStr[3];
+        final Duration duration = Duration.ofMinutes(Integer.parseInt(epicInStr[5]));
+        final LocalDateTime startTime = LocalDateTime.parse(epicInStr[6]); //todo formatter??
+        final LocalDateTime endTime = LocalDateTime.parse(epicInStr[7]);
         Epic epic = new Epic(name, description); //Элементы в конструктор
         epic.setId(id);
         epic.status = StatusOfTask.valueOf(status);
+        epic.epicDuration = duration;
+        epic.epicStartTime = startTime;
+        epic.epicEndTime = endTime;
         return epic;
     }
 
