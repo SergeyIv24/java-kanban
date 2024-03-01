@@ -3,7 +3,6 @@ package manager; //отдельный пакет для менеджера
 import tasks.*; //Импорт всех классов из пакета tasks
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
     protected final HistoryManager history = Managers.getDefaultHistory(); // поля должны быть унаследованы

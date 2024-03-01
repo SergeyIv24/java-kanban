@@ -8,11 +8,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public interface TaskManager {
-    //Todo смена сигнатур методов
 
     //Методы для эпиков
     //Создание эпика
-    void createEpic(Epic epic); //Todo новая сигнатура
+    void createEpic(Epic epic);
 
     //Получение эпика по идентификатору
     Epic receiveOneEpic(int epicId);
@@ -27,7 +26,7 @@ public interface TaskManager {
 
     //Методы для подзадач эпиков
     //Добавление подзадачи в эпик
-    void addSubTaskInEpic(int epicId, Subtask subtask); //Todo новая сигнатура
+    void addSubTaskInEpic(int epicId, Subtask subtask);
 
     //Вывод подзадачи по идентификатору
     Subtask receiveSubtasksUseID(int subtaskId);
@@ -46,7 +45,7 @@ public interface TaskManager {
 
     // Методы для простых задач.
     //Метод добавления простой задачи
-    void addTask(Task task); //Todo новая сигнатура
+    void addTask(Task task);
 
     //Метод удаление всех задач
     void deleteAllTask();

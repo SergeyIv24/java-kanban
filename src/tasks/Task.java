@@ -16,12 +16,6 @@ public class Task {
     protected LocalDateTime endTime;
     protected static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyy HH:mm"); //Формат для даты и времени
 
-
-    //Todo добавить Duration min +
-    //Todo LocalDateTime startTime - время начала задачи +
-    //Todo метод getEndTime() - время окончания задачи startTime + duration +
-    //Todo Конструктор принимающий duration и startTime +
-
     //Конструктор без продолжительности и времени начала
     public Task(String name, String description) {
         this.name = name;
@@ -60,7 +54,7 @@ public class Task {
     }
 
     //Метод определения окончания задачи по началу и продолжительности
-    public LocalDateTime getEndTime(){ //Todo как использовать форматер?
+    public LocalDateTime getEndTime(){
         if (startTime == null | duration == null) return null;
         endTime = startTime.plus(duration);
         return endTime;

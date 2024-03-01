@@ -14,11 +14,6 @@ public class Epic extends Task {
 
     private ArrayList<Subtask> subtasks;
 
-    //Todo расчет поля startTime по первой задаче в списке +
-    //Todo Duration по продолжительностям каждый подзадачи из списка +
-    //Todo рассчитать поле endTime по последней задаче в списке +
-    //Todo Конструктор принимающий duration и startTime
-
 
     public Epic(String name, String description) {
         super(name, description);
@@ -73,7 +68,7 @@ public class Epic extends Task {
         }
 
         final Duration duration = Duration.ofMinutes(Long.parseLong(epicInStr[5]));
-        final LocalDateTime startTime = LocalDateTime.parse(epicInStr[6], formatter); //todo formatter??
+        final LocalDateTime startTime = LocalDateTime.parse(epicInStr[6], formatter);
         final LocalDateTime endTime = LocalDateTime.parse(epicInStr[7], formatter);
 
         epic.epicDuration = duration;
