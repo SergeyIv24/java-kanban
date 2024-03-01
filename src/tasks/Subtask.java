@@ -19,7 +19,8 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return id + "," +"SUBTASK," + name + "," + status + "," + description + "," + duration.toMinutes() + ","
+        return id + "," +"SUBTASK," + name + "," + status + "," + description + ","
+                +((duration != null) ? duration.toMinutes() : duration) + ","
                 + ((startTime != null) ? startTime.format(formatter) + "," + getEndTime().format(formatter):
                 startTime + "," + getEndTime());
 
