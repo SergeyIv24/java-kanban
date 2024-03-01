@@ -113,6 +113,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateEpic(Epic epic) {
         int amountOfNew = 0; //Счет количества элементов со статусом NEW
         int amountOfDone = 0; //Счет количества элементов со статусом DONE
+        //Todo заменить цикл на стрим
         if (epic.getSubtasks() != null) {
             for (Subtask subtasks : epic.getSubtasks()) {
                 if (subtasks.getStatus() == StatusOfTask.NEW) { //Считается количество элементов со статусом NEW
@@ -172,7 +173,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteAllSubtasksOfEpic(int epicId) {
         Epic epic = epicTable.get(epicId); //Эпик по id
-
+        //Todo заменить цикл на стрим
         for (Subtask sub : epic.getSubtasks()) { //Удаление подзадачи из мапы подзадач по ключу
             subtaskTable.remove(sub.getId());
             history.removeItem(sub.getId()); //Удаление элемента из истории
@@ -196,6 +197,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public boolean updateSubtask(Subtask subtask) { //int subtaskId, String  name, String description, String status
         Epic newEpic = null; //Стартовое значение для запуска цикла
+        //Todo заменить цикл на стрим
         for (Epic epic : epicTable.values()) { //Цикл по значениям мапы эпиков
             int i = 0; //Счетчик индекса подзадачи в списке
             for (Subtask sub : epic.getSubtasks()) { //Цикл по подзадачам эпика
@@ -290,9 +292,4 @@ public class InMemoryTaskManager implements TaskManager {
             tasksTable.put(task.getId(), task); //Заменяет собой прошлый объект в мапе
         }
     }
-
-
-
-
-
 }
