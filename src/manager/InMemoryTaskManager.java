@@ -2,8 +2,8 @@ package manager; //отдельный пакет для менеджера
 
 import tasks.*; //Импорт всех классов из пакета tasks
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
     protected final HistoryManager history = Managers.getDefaultHistory(); // поля должны быть унаследованы
@@ -12,6 +12,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected HashMap<Integer, Task> tasksTable; //Объявление мапы для обычных задач
     protected HashMap<Integer, Epic> epicTable; //Объявление мапы для эпиков
     protected HashMap<Integer, Subtask> subtaskTable; //Объявление мапы для отдельного хранения подзадач
+    protected Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
 
 
 
@@ -46,6 +47,10 @@ public class InMemoryTaskManager implements TaskManager {
         return counter;
     }
 
+    public List<Task> getPrioritizedTasks() {
+        return List.copyOf(prioritizedTasks);
+    }
+
 
 //Методы для эпиков
 
@@ -54,7 +59,6 @@ public class InMemoryTaskManager implements TaskManager {
     public void createEpic(Epic epic){
         counter += 1; //ID считается с 1
         epic.setId(counter);
-        //Epic epic = new Epic(name, description, counter); //Создание объектов
         epicTable.put(counter, epic); //Эпик в мапу эпиков
         epic.solveStartTimeAndDuration(); //Расчет времени при создании Эпика
     }
@@ -126,6 +130,9 @@ public class InMemoryTaskManager implements TaskManager {
             epic.getSubtasks().add(subtask); // Подзадач в список подзадач эпика
             subtaskTable.put(counter, subtask); // Подазадча в мапу подзадач
             epic.solveStartTimeAndDuration(); //Пересчет времени при добавлении подзадачи
+        }
+        if (subtask.getStartTime() != null) {
+            prioritizedTasks.add(subtask);
         }
 
 
@@ -207,6 +214,9 @@ public class InMemoryTaskManager implements TaskManager {
         //Task task = new Task(name, description, counter);
         task.setId(counter);
         tasksTable.put(task.getId(), task);
+        if (task.getStartTime() != null) {
+            prioritizedTasks.add(task);
+        }
     }
 
     //Метод удаление всех задач

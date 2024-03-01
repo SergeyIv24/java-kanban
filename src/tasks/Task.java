@@ -38,6 +38,10 @@ public class Task {
         this.startTime = LocalDateTime.parse(startTime, formatter);
     }
 
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
     public int getId() {
         return id;
     }

@@ -22,8 +22,8 @@ public class Main {
         manager.createEpic(new Epic("Доехать до дома", "Едем домой")); //6
 
         //Обычные задачи
-        manager.addTask(new Task("Проверить", "Правильность работы")); //7
-        manager.addTask(new Task("Сдать работу", "До НГ")); //8
+        manager.addTask(new Task("Проверить", "Правильность работы", 5000, "01.01.0001 10:00")); //7
+        manager.addTask(new Task("Сдать работу", "До НГ", 100, "10.12.1000 10:15")); //8
         manager.addTask(new Task("Обычная", "задача")); //9
         manager.addTask(new Task("задача", "обычная")); //10
 
@@ -42,7 +42,7 @@ public class Main {
         for (Task task : manager.getHistory().getListOfHistory()) {
             System.out.println(task);
         }
-
+        System.out.println(manager.prioritizedTasks);
 
 
 
