@@ -51,9 +51,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Создание эпика
     @Override
-    public void createEpic(String name, String description){
+    public void createEpic(Epic epic){
         counter += 1; //ID считается с 1
-        Epic epic = new Epic(name, description, counter); //Создание объектов
+        epic.setId(counter);
+        //Epic epic = new Epic(name, description, counter); //Создание объектов
         epicTable.put(counter, epic); //Эпик в мапу эпиков
     }
 
@@ -115,11 +116,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Добавление подзадачи в эпик
     @Override
-    public void addSubTaskInEpic(int epicId, String name, String description){
+    public void addSubTaskInEpic(int epicId, Subtask subtask){
         Epic epic = epicTable.get(epicId); // Получение объекта эпика по ID
         if (epic != null) {
             counter += 1;
-            Subtask subtask = new Subtask(name, description, counter); //Создание объекта подзадачи
+            //Subtask subtask = new Subtask(name, description, counter); //Создание объекта подзадачи
+            subtask.setId(counter);
             epic.getSubtasks().add(subtask); // Подзадач в список подзадач эпика
             subtaskTable.put(counter, subtask); // Подазадча в мапу подзадач
         }
@@ -197,9 +199,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Метод добавления простой задачи
     @Override
-    public void addTask(String name, String description){
+    public void addTask(Task task){
         counter += 1;
-        Task task = new Task(name, description, counter);
+        //Task task = new Task(name, description, counter);
+        task.setId(counter);
         tasksTable.put(task.getId(), task);
     }
 

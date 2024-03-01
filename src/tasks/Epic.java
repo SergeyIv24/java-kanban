@@ -19,8 +19,8 @@ public class Epic extends Task {
     //Todo Конструктор принимающий duration и startTime
 
 
-    public Epic(String name, String description, int id) {
-        super(name, description, id);
+    public Epic(String name, String description) {
+        super(name, description);
         subtasks = new ArrayList<>();
     }
 
@@ -55,7 +55,8 @@ public class Epic extends Task {
         final String name = epicInStr[2];
         final String description = epicInStr[4];
         final String status = epicInStr[3];
-        Epic epic = new Epic(name, description, id); //Элементы в конструктор
+        Epic epic = new Epic(name, description); //Элементы в конструктор
+        epic.setId(id);
         epic.status = StatusOfTask.valueOf(status);
         return epic;
     }

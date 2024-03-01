@@ -12,7 +12,7 @@ public interface TaskManager {
 
     //Методы для эпиков
     //Создание эпика
-    void createEpic(String name, String description);
+    void createEpic(Epic epic); //Todo новая сигнатура
 
     //Получение эпика по идентификатору
     Epic receiveOneEpic(int epicId);
@@ -27,7 +27,7 @@ public interface TaskManager {
 
     //Методы для подзадач эпиков
     //Добавление подзадачи в эпик
-    void addSubTaskInEpic(int epicId, String name, String description);
+    void addSubTaskInEpic(int epicId, Subtask subtask); //Todo новая сигнатура
 
     //Вывод подзадачи по идентификатору
     Subtask receiveSubtasksUseID(int subtaskId);
@@ -46,7 +46,7 @@ public interface TaskManager {
 
     // Методы для простых задач.
     //Метод добавления простой задачи
-    void addTask(String name, String description);
+    void addTask(Task task); //Todo новая сигнатура
 
     //Метод удаление всех задач
     void deleteAllTask();

@@ -1,6 +1,7 @@
 import manager.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
@@ -23,9 +24,9 @@ public class TestsBackedManager {
         managers = new Managers();
         testHistory = managers.getDefaultHistory();
         testObj = Managers.getFileBackedTaskManager(tempFile);
-        testObj.addTask("Полет", "Нормальный"); //id 1
-        testObj.createEpic("Тест", "Тест"); //id 2
-        testObj.createEpic("Тестовый", "Эпик"); //id 3
+        testObj.addTask(new Task("Полет", "Нормальный")); //id 1
+        testObj.createEpic(new Epic("Тест", "Тест")); //id 2
+        testObj.createEpic(new Epic("Тестовый", "Эпик")); //id 3
         testObj.receiveOneTask(1);
         testObj.receiveOneEpic(2);
         testObj.receiveOneEpic(3);
@@ -61,7 +62,7 @@ public class TestsBackedManager {
     @Test
     public void shouldBeNothingWhenAddSubtaskInEpicDoesntExist() {
         FileBackedTaskManager.loadFromFile(tempFile);
-        testObj.addSubTaskInEpic(4, "Подзадача", "Не должна быть добавлена"); //id 4 нет
+        testObj.addSubTaskInEpic(4, new Subtask("Подзадача", "Не должна быть добавлена")); //id 4 нет
         //Проверка есть ли в одной из мап Subtask, относящийся к несуществующему эпику
         assertNull(testObj.getEpicTable().get(4), "Something went wrong");
         assertNull(testObj.getSubtaskTable().get(4), "Something went wrong");
@@ -88,9 +89,9 @@ public class TestsBackedManager {
     public void shouldUniqueIdWhenCreateTask() {
         FileBackedTaskManager.loadFromFile(tempFile);
         //При создании любой задачи id увеличивается, поэтому всегда уникален
-        testObj.createEpic("Уникальность", "Id"); // id 4
+        testObj.createEpic(new Epic("Уникальность", "Id")); // id 4
         assertEquals(4, testObj.getCounter());
-        testObj.createEpic("Уникальность", "Id"); //id 5
+        testObj.createEpic(new Epic("Уникальность", "Id")); //id 5
         assertEquals(5, testObj.getCounter());
     }
 
@@ -98,14 +99,14 @@ public class TestsBackedManager {
     @Test
     public void shouldNotFoundSubtaskWhenIsGivenIdWhichDoesntExist() {
         FileBackedTaskManager.loadFromFile(tempFile);
-        assertFalse(testObj.updateSubtask(new Subtask("Такой", "не существует", 15)));
+        assertFalse(testObj.updateSubtask(new Subtask("Такой", "не существует")));
     }
 
     //Проверка, что задача создается и ее можно найти
     @Test
     public void shouldCreateTaskAndFindIts() {
         FileBackedTaskManager.loadFromFile(tempFile);
-        testObj.addTask("1", "2"); //id 4
+        testObj.addTask(new Task("1", "2")); //id 4
         assertNotNull(testObj.receiveOneTask(4));
     }
 
@@ -113,8 +114,8 @@ public class TestsBackedManager {
     @Test
     public void shouldCreateAndFindEpicAndSubtask() {
         FileBackedTaskManager.loadFromFile(tempFile);
-        testObj.createEpic("1", "2"); //id 4
-        testObj.addSubTaskInEpic(4, "Подзадача", "Подзадача"); // id 5
+        testObj.createEpic(new Epic("1", "2")); //id 4
+        testObj.addSubTaskInEpic(4, new Subtask("Подзадача", "Подзадача")); // id 5
         assertNotNull(testObj.receiveOneEpic(4));
         assertNotNull(testObj.receiveSubtasksUseID(5));
     }
@@ -123,8 +124,9 @@ public class TestsBackedManager {
     @Test
     public void shouldChangeStatus() {
         FileBackedTaskManager.loadFromFile(tempFile);
-        testObj.addSubTaskInEpic(2, "Сходить в магазин", "Купить макароны"); //id 4
-        Subtask subtask1 = new Subtask("Сходить в магазин", "Купить макароны", 4);
+        testObj.addSubTaskInEpic(2, new Subtask("Сходить в магазин", "Купить макароны")); //id 4
+        Subtask subtask1 = new Subtask("Сходить в магазин", "Купить макароны");
+        subtask1.setId(4);
         subtask1.setStatus("DONE");
         testObj.updateSubtask(subtask1);
         assertEquals("DONE", testObj.receiveOneEpic(2).getStatus().toString());
@@ -134,7 +136,8 @@ public class TestsBackedManager {
     @Test
     public void shouldChangeStatusOfTask() {
         FileBackedTaskManager.loadFromFile(tempFile);
-        Task taskTest = new Task("Смена", "Статуса", 1);
+        Task taskTest = new Task("Смена", "Статуса");
+        taskTest.setId(1);
         taskTest.setStatus("IN_PROGRESS");
         testObj.updateTask(taskTest);
         assertEquals("IN_PROGRESS", testObj.receiveOneTask(1).getStatus().toString());

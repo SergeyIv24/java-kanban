@@ -3,8 +3,8 @@ package tasks;
 //Класс подзадачи
 public class Subtask extends Task {
 
-    public Subtask(String name, String description, int id) {
-        super(name, description, id);
+    public Subtask(String name, String description) {
+        super(name, description);
         status = StatusOfTask.NEW;
     }
 
@@ -20,7 +20,8 @@ public class Subtask extends Task {
         final String name = subtaskInStr[2];
         final String description = subtaskInStr[4];
         final String status = subtaskInStr[3];
-        Subtask subtask = new Subtask(name, description, id); //Элементы в конструктор
+        Subtask subtask = new Subtask(name, description); //Элементы в конструктор
+        subtask.setId(id);
         subtask.status = StatusOfTask.valueOf(status);
         return subtask;
     }

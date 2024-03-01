@@ -9,7 +9,7 @@ import java.util.Objects;
 public class Task {
     protected String name;
     protected String description;
-    protected final int id;
+    protected int id;
     protected StatusOfTask status;
     protected Duration duration; //Продолжительность в минутах
     protected LocalDateTime startTime; //Время начала задачи
@@ -21,10 +21,10 @@ public class Task {
     //Todo Конструктор принимающий duration и startTime +
 
     //Конструктор без продолжительности и времени начала
-    public Task(String name, String description, int id) {
+    public Task(String name, String description) {
         this.name = name;
         this.description = description;
-        this.id = id;
+        //this.id = id;
         status = StatusOfTask.NEW; //Как только задача создана, она новая.
     }
 
@@ -40,6 +40,10 @@ public class Task {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public StatusOfTask getStatus() {
@@ -88,7 +92,8 @@ public class Task {
         final String name = taskInStr[2];
         final String description = taskInStr[4];
         final String status = taskInStr[3];
-        Task task = new Task(name, description, id); //Элементы в конструктор
+        Task task = new Task(name, description); //Элементы в конструктор
+        task.setId(id);
         task.status = StatusOfTask.valueOf(status);
         return task;
     }

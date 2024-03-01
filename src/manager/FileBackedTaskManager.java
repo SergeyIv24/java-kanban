@@ -117,8 +117,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 //Методы для эпиков
     //Создание эпика
     @Override
-    public void createEpic(String name, String description) {
-        super.createEpic(name, description);
+    public void createEpic(Epic epic) {
+        super.createEpic(epic);
         save();
     }
 
@@ -158,8 +158,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 //Методы для подзадач эпиков
     //Создание подзадачи
     @Override
-    public void addSubTaskInEpic(int epicId, String name, String description) {
-        super.addSubTaskInEpic(epicId, name, description);
+    public void addSubTaskInEpic(int epicId, Subtask subtask) {
+        super.addSubTaskInEpic(epicId, subtask);
         save();
     }
 
@@ -198,8 +198,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 //Методы для обычных задач
     //Создание задачи
     @Override
-    public void addTask(String name, String description){
-        super.addTask(name, description);
+    public void addTask(Task task){
+        super.addTask(task);
         save();
     }
 
