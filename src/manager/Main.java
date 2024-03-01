@@ -13,10 +13,10 @@ public class Main {
         //Тест эпиков
         //Эпик 1
         manager.createEpic(new Epic("Устроить праздник", "Устраиваем званный ужин")); //1
-        manager.addSubTaskInEpic(1, new Subtask("Сходить в магазин", "Купить макароны"));//2
-        manager.addSubTaskInEpic(1, new Subtask("Вернутся домой", "Там будем готовить")); //3
-        manager.addSubTaskInEpic(1, new Subtask("Готовим ужин", "Желательно вкусный")); //4
-        manager.addSubTaskInEpic(1, new Subtask("Зовем гостей", "Ждем гостей")); //5
+        manager.addSubTaskInEpic(1, new Subtask("Сходить в магазин", "Купить макароны", 100L, "01.03.2024 12:30"));//2
+        manager.addSubTaskInEpic(1, new Subtask("Вернутся домой", "Там будем готовить", 320L, "03.03.2024 12:30")); //3
+        manager.addSubTaskInEpic(1, new Subtask("Готовим ужин", "Желательно вкусный", 470L, "04.03.2024 12:30")); //4
+        manager.addSubTaskInEpic(1, new Subtask("Зовем гостей", "Ждем гостей", 91L, "06.03.2024 12:30")); //5
 
         //Эпик 2
         manager.createEpic(new Epic("Доехать до дома", "Едем домой")); //6

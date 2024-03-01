@@ -11,11 +11,18 @@ public class Subtask extends Task {
         status = StatusOfTask.NEW;
     }
 
+    public Subtask(String name, String description, long minutes, String startTime) {
+        super(name, description, minutes, startTime);
+        status = StatusOfTask.NEW;
+    }
+
 
     @Override
     public String toString() {
-        return id + "," +"SUBTASK," + name + "," + status + "," + description + "," + duration
-                + "," + startTime + "," + getEndTime();
+        return id + "," +"SUBTASK," + name + "," + status + "," + description + "," + duration.toMinutes() + ","
+                + ((startTime != null) ? startTime.format(formatter) + "," + getEndTime().format(formatter):
+                startTime + "," + getEndTime());
+
     }
 
     //Из строки в объект subtask
@@ -24,12 +31,18 @@ public class Subtask extends Task {
         final String name = subtaskInStr[2];
         final String description = subtaskInStr[4];
         final String status = subtaskInStr[3];
-        final Duration duration = Duration.ofMinutes(Integer.parseInt(subtaskInStr[5]));
-        final LocalDateTime startTime = LocalDateTime.parse(subtaskInStr[6]);
-        final LocalDateTime endTime = LocalDateTime.parse(subtaskInStr[7]);
         Subtask subtask = new Subtask(name, description); //Элементы в конструктор
         subtask.setId(id);
         subtask.status = StatusOfTask.valueOf(status);
+
+        if (subtaskInStr[5].equals("null")) {
+            return subtask;
+        }
+
+        final Duration duration = Duration.ofMinutes(Long.parseLong(subtaskInStr[5]));
+        final LocalDateTime startTime = LocalDateTime.parse(subtaskInStr[6], formatter);
+        final LocalDateTime endTime = LocalDateTime.parse(subtaskInStr[7], formatter);
+
         subtask.duration = duration;
         subtask.startTime = startTime;
         subtask.endTime = endTime;

@@ -14,7 +14,7 @@ public class Task {
     protected Duration duration; //Продолжительность в минутах
     protected LocalDateTime startTime; //Время начала задачи
     protected LocalDateTime endTime;
-    protected DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyy, HH:mm"); //Формат для даты и времени
+    protected static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyy HH:mm"); //Формат для даты и времени
 
 
     //Todo добавить Duration min +
@@ -26,15 +26,13 @@ public class Task {
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
-        //this.id = id;
         status = StatusOfTask.NEW; //Как только задача создана, она новая.
     }
 
     //Конструктор с продолжительностью и временем начала
-    public Task(String name, String description, int id, long minutes, String startTime) {
+    public Task(String name, String description, long minutes, String startTime) {
         this.name = name;
         this.description = description;
-        this.id = id;
         status = StatusOfTask.NEW; //Как только задача создана, она новая.
         duration = Duration.ofMinutes(minutes);
         this.startTime = LocalDateTime.parse(startTime, formatter);
@@ -59,6 +57,7 @@ public class Task {
 
     //Метод определения окончания задачи по началу и продолжительности
     public LocalDateTime getEndTime(){ //Todo как использовать форматер?
+        if (startTime == null | duration == null) return null;
         endTime = startTime.plus(duration);
         return endTime;
     }
@@ -86,8 +85,11 @@ public class Task {
 
     @Override
     public String toString() {
-        return id + "," + "TASK," + name + "," + status + "," + description + "," + duration + "," + startTime
-                + "," + getEndTime();
+        return id + "," + "TASK," + name + "," + status + "," + description + ","
+                + ((duration != null) ? duration.toMinutes() : duration) + ","
+                + ((startTime != null) ? startTime.format(formatter) + "," + getEndTime().format(formatter)
+                : startTime + "," + getEndTime());
+
     }
 
     //Из строки в объект Task
@@ -96,12 +98,18 @@ public class Task {
         final String name = taskInStr[2];
         final String description = taskInStr[4];
         final String status = taskInStr[3];
-        final Duration duration = Duration.ofMinutes(Integer.parseInt(taskInStr[5]));
-        final LocalDateTime startTime = LocalDateTime.parse(taskInStr[6]);
-        final LocalDateTime endTime = LocalDateTime.parse(taskInStr[7]);
         Task task = new Task(name, description); //Элементы в конструктор
         task.setId(id);
         task.status = StatusOfTask.valueOf(status);
+
+        if (taskInStr[5].equals("null")) {
+            return task;
+        }
+
+        final Duration duration = Duration.ofMinutes(Long.parseLong(taskInStr[5]));
+        final LocalDateTime startTime = LocalDateTime.parse(taskInStr[6], formatter);
+        final LocalDateTime endTime = LocalDateTime.parse(taskInStr[7], formatter);
+
         task.duration = duration;
         task.startTime = startTime;
         task.endTime = endTime;

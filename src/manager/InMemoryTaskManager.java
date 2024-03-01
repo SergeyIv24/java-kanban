@@ -56,6 +56,7 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setId(counter);
         //Epic epic = new Epic(name, description, counter); //Создание объектов
         epicTable.put(counter, epic); //Эпик в мапу эпиков
+        epic.solveStartTimeAndDuration(); //Расчет времени при создании Эпика
     }
 
     //Получение эпика по идентификатору
@@ -124,7 +125,9 @@ public class InMemoryTaskManager implements TaskManager {
             subtask.setId(counter);
             epic.getSubtasks().add(subtask); // Подзадач в список подзадач эпика
             subtaskTable.put(counter, subtask); // Подазадча в мапу подзадач
+            epic.solveStartTimeAndDuration(); //Пересчет времени при добавлении подзадачи
         }
+
 
     }
 
