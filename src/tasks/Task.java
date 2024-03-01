@@ -83,7 +83,8 @@ public class Task {
 
     @Override
     public String toString() {
-        return id + "," + "TASK," + name + "," + status + "," + description + ",";
+        return id + "," + "TASK," + name + "," + status + "," + description + "," + duration + "," + startTime
+                + "," + getEndTime();
     }
 
     //Из строки в объект Task
