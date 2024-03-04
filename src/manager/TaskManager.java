@@ -4,7 +4,6 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -19,6 +18,7 @@ public interface TaskManager {
 
     //Удаление всех эпиков
     String deleteAllEpics();
+
     //Удаление эпика по идентификатору
     void deleteEpic(int epicId);
 
@@ -52,7 +52,7 @@ public interface TaskManager {
     void deleteAllTask();
 
     //Удаление по идентификатору
-    void deleteUseID(int ID);
+    void deleteUseID(int id);
 
     //Метод возвращающий коллекцию всех обычных задач
     ArrayList<Task> receiveAllTasks();
