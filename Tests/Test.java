@@ -2,7 +2,6 @@
 import manager.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
@@ -11,7 +10,7 @@ import tasks.Task;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class Tests extends TaskManagerTests{
+public class Test extends TaskManagerTests{
     Managers managers;
     InMemoryTaskManager testObj;
     HistoryManager testHistory;
@@ -32,35 +31,35 @@ public class Tests extends TaskManagerTests{
 
     //Объекты обычные задачи с одинаковым id равны
     @Override
-    @Test
+    @org.junit.jupiter.api.Test
     public void shouldBeEqualsWhenTheSameId() {
         assertSame(testObj.receiveOneTask(0), testObj.receiveOneTask(0), "Something went wrong");
     }
 
     //Наследники Task с одинаковы id равны
     @Override
-    @Test
+    @org.junit.jupiter.api.Test
     public void shouldBeEqualsSubTasksWhenTheSameId() {
         assertSame(testObj.receiveOneEpic(2).get(), testObj.receiveOneEpic(2).get(), "Something went wrong");
     }
 
     //Утилитарный класс инициализирует HistoryManager
     @Override
-    @Test
+    @org.junit.jupiter.api.Test
     public void managersShouldBeNotNullAfterInnit() {
         assertNotNull(testHistory);
     }
 
     //Утилитарный класс инициализирует TaskManager
     @Override
-    @Test
+    @org.junit.jupiter.api.Test
     public void inMemoryTaskManagerShouldBeNotNullAfterInnit() {
         assertNotNull(testObj);
     }
 
     //Добавление subtask в несуществующий Epic.
     @Override
-    @Test
+    @org.junit.jupiter.api.Test
     public void shouldBeNothingWhenAddSubtaskInEpicDoesntExist(){
         testObj.addSubTaskInEpic(4, new Subtask("Подзадача", "Не должна быть добавлена")); //id 4 нет
         //Проверка есть ли в одной из мап Subtask, относящийся к несуществующему эпику
@@ -71,14 +70,14 @@ public class Tests extends TaskManagerTests{
 
     //Проверка, что история существует
     @Override
-    @Test
+    @org.junit.jupiter.api.Test
     public void historyShouldExist() {
         assertFalse(testObj.getHistory().getListOfHistory().isEmpty()); //В истории должно быть 3 элемента
     }
 
     //Проверка, что в истории хранится предыдущий элемент и последний
     @Override
-    @Test
+    @org.junit.jupiter.api.Test
     public void shouldStorePreviousItemOfHistoryAndLastItem() {
         //Последний вызванный элемент был с id 3, должен быть равен объекту с тем же id из мапы
         assertTrue(testObj.getHistory().getListOfHistory().get(2).equals(testObj.getEpicTable().get(3)));
@@ -88,7 +87,7 @@ public class Tests extends TaskManagerTests{
 
     //Проверка, что история хранит только уникальные элементы
     @Override
-    @Test
+    @org.junit.jupiter.api.Test
     public void shouldStoreUniqueThings() {
         for (int i = 0; i < testObj.getHistory().getListOfHistory().size(); i++) {
             for (int j = 0; j < testObj.getHistory().getListOfHistory().size(); j++) {
@@ -102,7 +101,7 @@ public class Tests extends TaskManagerTests{
 
     //Проверка удаления элементов истории из начала
     @Override
-    @Test
+    @org.junit.jupiter.api.Test
     public void shouldRemoveItemsFromStart() {
         Task removingTaskFromStart = testObj.getHistory().getListOfHistory().get(0);
         testObj.getHistory().removeItem(1);
@@ -111,7 +110,7 @@ public class Tests extends TaskManagerTests{
 
     //Проверка удаления элементов истории c конца
     @Override
-    @Test
+    @org.junit.jupiter.api.Test
     public void shouldRemoveItemFromEnd() {
         Task removingTaskFromEnd = testObj.getHistory().getListOfHistory().get(2);
         testObj.getHistory().removeItem(3);
@@ -120,7 +119,7 @@ public class Tests extends TaskManagerTests{
 
     //Проверка, что при создании Task или наследников id уникален
     @Override
-    @Test
+    @org.junit.jupiter.api.Test
     public void shouldUniqueIdWhenCreateTask() {
         //При создании любой задачи id увеличивается, поэтому всегда уникален
         testObj.createEpic(new Epic("Уникальность", "Id")); // id 4
@@ -131,14 +130,14 @@ public class Tests extends TaskManagerTests{
 
     //Проверка, что обновляемая subtask, есть в хранилище
     @Override
-    @Test
+    @org.junit.jupiter.api.Test
     public void shouldNotFoundSubtaskWhenIsGivenIdWhichDoesntExist() {
         assertFalse(testObj.updateSubtask(new Subtask("Такой", "не существует")));
     }
 
     //Проверка, что задача создается и ее можно найти
     @Override
-    @Test
+    @org.junit.jupiter.api.Test
     public void shouldCreateTaskAndFindIts() {
         testObj.addTask(new Task("1", "2")); //id 4
         assertNotNull(testObj.receiveOneTask(4));
@@ -146,7 +145,7 @@ public class Tests extends TaskManagerTests{
 
     //Проверка, что Subtask и Epic создаются и могут быть найдены по id
     @Override
-    @Test
+    @org.junit.jupiter.api.Test
     public void shouldCreateAndFindEpicAndSubtask() {
         testObj.createEpic(new Epic("1", "2")); //id 4
         testObj.addSubTaskInEpic(4, new Subtask("Подзадача", "Подзадача")); // id 5
@@ -156,7 +155,7 @@ public class Tests extends TaskManagerTests{
 
     //Изменение статуса эпика
     @Override
-    @Test
+    @org.junit.jupiter.api.Test
     public void shouldChangeStatus() {
         testObj.addSubTaskInEpic(2, new Subtask("Сходить в магазин", "Купить макароны")); //id 4
         Subtask subtask1 = new Subtask("Сходить в магазин", "Купить макароны");
@@ -168,7 +167,7 @@ public class Tests extends TaskManagerTests{
 
     //Обновление статуса подзадачи
     @Override
-    @Test
+    @org.junit.jupiter.api.Test
     public void shouldChangeStatusOfTask() {
         Task taskTest = new Task("Смена", "Статуса");
         taskTest.setId(1);
