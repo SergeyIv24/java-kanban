@@ -8,7 +8,6 @@ import tasks.Subtask;
 import tasks.Task;
 
 
-import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
