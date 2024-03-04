@@ -9,10 +9,10 @@ import java.util.ArrayList;
 
 public class InMemoryHistoryManage implements HistoryManager {
 
-    static class Node <E> {
+    static class Node<E> {
         E data;
-        Node <E> prev;
-        Node <E> next;
+        Node<E> prev;
+        Node<E> next;
 
         Node(E data, Node<E> prev, Node<E> next) {
             this.data = data;
