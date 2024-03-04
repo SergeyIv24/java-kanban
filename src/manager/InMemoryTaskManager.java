@@ -21,19 +21,19 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
 
-    public HashMap<Integer, Epic> getEpicTable() {
+    public HashMap<Integer, Epic> getEpicTable(){
         return epicTable;
     }
 
-    public HashMap<Integer, Subtask> getSubtaskTable() {
+    public HashMap<Integer, Subtask> getSubtaskTable(){
         return subtaskTable;
     }
 
-    public HashMap<Integer, Task> getTaskTable() {
+    public HashMap<Integer, Task> getTaskTable(){
         return tasksTable;
     }
 
-    public HistoryManager getHistory() {
+    public HistoryManager getHistory(){
         return history;
     }
 
