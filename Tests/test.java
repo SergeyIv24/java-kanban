@@ -10,7 +10,7 @@ import tasks.Task;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class Test extends TaskManagerTests{
+public class test extends TaskManagerTests{
     Managers managers;
     InMemoryTaskManager testObj;
     HistoryManager testHistory;
