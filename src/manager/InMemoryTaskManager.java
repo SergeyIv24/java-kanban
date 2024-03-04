@@ -21,15 +21,15 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
 
-    public HashMap<Integer, Epic> getEpicTable(){
+    public HashMap<Integer, Epic> getEpicTable() {
         return epicTable;
     }
 
-    public HashMap<Integer, Subtask> getSubtaskTable(){
+    public HashMap<Integer, Subtask> getSubtaskTable() {
         return subtaskTable;
     }
 
-    public HashMap<Integer, Task> getTaskTable(){
+    public HashMap<Integer, Task> getTaskTable() {
         return tasksTable;
     }
 
@@ -74,7 +74,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Создание эпика
     @Override
-    public void createEpic(Epic epic){
+    public void createEpic(Epic epic) {
         counter += 1; //ID считается с 1
         epic.setId(counter);
         epicTable.put(counter, epic); //Эпик в мапу эпиков
@@ -142,7 +142,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Добавление подзадачи в эпик
     @Override
-    public void addSubTaskInEpic(int epicId, Subtask subtask){
+    public void addSubTaskInEpic(int epicId, Subtask subtask) {
         if (isCrossingOther(subtask)) { //Если есть пересечение, задача не добавляется
             return;
         }
@@ -232,7 +232,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Метод добавления простой задачи
     @Override
-    public void addTask(Task task){
+    public void addTask(Task task) {
         if (isCrossingOther(task)) { //Если есть пересечение, не добавляется
             return;
         }

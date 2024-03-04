@@ -19,7 +19,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
 
     //Метод сохранения данных
-    public void save(){
+    public void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file.toFile()))) {
             for (Integer id : tasksTable.keySet()) {
                 writer.write(tasksTable.get(id).toString() + "\n");
@@ -43,7 +43,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         }
     }
 
-    public static FileBackedTaskManager loadFromFile(File file){
+    public static FileBackedTaskManager loadFromFile(File file) {
         FileBackedTaskManager backedManager;
         String line = "";
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -199,7 +199,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 //Методы для обычных задач
     //Создание задачи
     @Override
-    public void addTask(Task task){
+    public void addTask(Task task) {
         super.addTask(task);
         save();
     }
