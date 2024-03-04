@@ -212,8 +212,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     //Удаление по идентификатору
     @Override
-    public void deleteUseID(int ID) {
-        super.deleteUseID(ID);
+    public void deleteUseID(int id) {
+        super.deleteUseID(id);
         save();
     }
 
