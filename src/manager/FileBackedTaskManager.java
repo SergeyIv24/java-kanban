@@ -8,6 +8,7 @@ import java.io.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
     public Path file; //Поле файла с данными менеджера
@@ -147,8 +148,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     //Получение эпика по id, запись истории, обновление файла
     @Override
-    public Epic receiveOneEpic(int epicId) {
-        Epic epic = super.receiveOneEpic(epicId);
+    public Optional<Epic> receiveOneEpic(int epicId) {
+        Optional<Epic> epic = super.receiveOneEpic(epicId);
         save();
         return epic;
     }
@@ -188,8 +189,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     //Получение подзадачи по идентификатору, запись в историю, сохранение в файл
     @Override
-    public Subtask receiveSubtasksUseID(int subtaskId) {
-        Subtask subtask = super.receiveSubtasksUseID(subtaskId);
+    public Optional<Subtask> receiveSubtasksUseID(int subtaskId) {
+        Optional<Subtask> subtask = super.receiveSubtasksUseID(subtaskId);
         save();
         return subtask;
     }
@@ -224,8 +225,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     //Метод вывода по идентификатору
     @Override
-    public Task receiveOneTask(int id) {
-        Task task = super.receiveOneTask(id);
+    public Optional<Task> receiveOneTask(int id) {
+        Optional<Task> task = super.receiveOneTask(id);
         save();
         return task;
     }

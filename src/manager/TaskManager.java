@@ -6,6 +6,7 @@ import tasks.Task;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public interface TaskManager {
 
@@ -14,7 +15,7 @@ public interface TaskManager {
     void createEpic(Epic epic);
 
     //Получение эпика по идентификатору
-    Epic receiveOneEpic(int epicId);
+    Optional<Epic> receiveOneEpic(int epicId);
 
     //Удаление всех эпиков
     String deleteAllEpics();
@@ -29,7 +30,7 @@ public interface TaskManager {
     void addSubTaskInEpic(int epicId, Subtask subtask);
 
     //Вывод подзадачи по идентификатору
-    Subtask receiveSubtasksUseID(int subtaskId);
+    Optional<Subtask> receiveSubtasksUseID(int subtaskId);
 
     //Удаление всех подзадач одного эпика
     void deleteAllSubtasksOfEpic(int epicId);
@@ -60,7 +61,7 @@ public interface TaskManager {
     ArrayList<Task> receiveSubtasksAndTasks();
 
     //Метод вывода по идентификатору
-    Task receiveOneTask(int id);
+    Optional<Task> receiveOneTask(int id);
 
     //Обновление задачи
     void updateTask(Task task);

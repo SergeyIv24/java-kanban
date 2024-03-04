@@ -1,4 +1,5 @@
 import manager.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
@@ -11,13 +12,14 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class TestsBackedManager {
+public class TestsBackedManager extends TaskManagerTests {
 
     Managers managers;
     FileBackedTaskManager testObj;
     HistoryManager testHistory;
     File tempFile;
 
+    @Override
     @BeforeEach
     public void createTask1AndTask2() throws IOException {
         tempFile = File.createTempFile("file.csv", null);
@@ -33,32 +35,37 @@ public class TestsBackedManager {
     }
 
     //Объекты обычные задачи с одинаковым id равны
+    @Override
     @Test
     public void shouldBeEqualsWhenTheSameId() {
         FileBackedTaskManager.loadFromFile(tempFile);
-        assertSame(testObj.receiveOneTask(1), testObj.receiveOneTask(1), "Something went wrong");
+        assertSame(testObj.receiveOneTask(1).get(), testObj.receiveOneTask(1).get(), "Something went wrong");
     }
 
     //Наследники Task с одинаковы id равны
+    @Override
     @Test
     public void shouldBeEqualsSubTasksWhenTheSameId() {
         FileBackedTaskManager.loadFromFile(tempFile);
-        assertSame(testObj.receiveOneEpic(2), testObj.receiveOneEpic(2), "Something went wrong");
+        assertSame(testObj.receiveOneEpic(2).get(), testObj.receiveOneEpic(2).get(), "Something went wrong");
     }
 
     //Утилитарный класс инициализирует HistoryManager
+    @Override
     @Test
     public void managersShouldBeNotNullAfterInnit() {
         assertNotNull(testHistory);
     }
 
     //Утилитарный класс инициализирует TaskManager
+    @Override
     @Test
     public void inMemoryTaskManagerShouldBeNotNullAfterInnit() {
         assertNotNull(testObj);
     }
 
     //Добавление subtask в несуществующий Epic.
+    @Override
     @Test
     public void shouldBeNothingWhenAddSubtaskInEpicDoesntExist() {
         FileBackedTaskManager.loadFromFile(tempFile);
@@ -70,12 +77,14 @@ public class TestsBackedManager {
     }
 
     //Проверка, что история существует
+    @Override
     @Test
     public void historyShouldExist() {
         assertFalse(testObj.getHistory().getListOfHistory().isEmpty()); //В истории должно быть 3 элемента
     }
 
     //Проверка, что в истории хранится предыдущий элемент и последний
+    @Override
     @Test
     public void shouldStorePreviousItemOfHistoryAndLastItem() {
         FileBackedTaskManager.loadFromFile(tempFile);
@@ -84,7 +93,43 @@ public class TestsBackedManager {
         assertTrue(testObj.getHistory().getListOfHistory().get(1).equals(testObj.getEpicTable().get(2)));
     }
 
+    //Проверка, что история хранит только уникальные элементы
+    @Override
+    @Test
+    public void shouldStoreUniqueThings() {
+        FileBackedTaskManager.loadFromFile(tempFile);
+        for (int i = 0; i < testObj.getHistory().getListOfHistory().size(); i++) {
+            for (int j = 0; j < testObj.getHistory().getListOfHistory().size(); j++) {
+                if (i != j) {
+                    Assertions.assertNotEquals(testObj.getHistory().getListOfHistory().get(i),
+                            testObj.getHistory().getListOfHistory().get(j));
+                }
+            }
+        }
+    }
+
+    //Проверка удаления элементов истории из начала
+    @Override
+    @Test
+    public void shouldRemoveItemsFromStart() {
+        FileBackedTaskManager.loadFromFile(tempFile);
+        Task removingTaskFromStart = testObj.getHistory().getListOfHistory().get(0);
+        testObj.getHistory().removeItem(1);
+        assertFalse(testObj.getHistory().getListOfHistory().contains(removingTaskFromStart));
+    }
+
+    //Проверка удаления элементов истории c конца
+    @Override
+    @Test
+    public void shouldRemoveItemFromEnd() {
+        FileBackedTaskManager.loadFromFile(tempFile);
+        Task removingTaskFromEnd = testObj.getHistory().getListOfHistory().get(2);
+        testObj.getHistory().removeItem(3);
+        assertFalse(testObj.getHistory().getListOfHistory().contains(removingTaskFromEnd));
+    }
+
     //Проверка, что при создании Task или наследников id уникален
+    @Override
     @Test
     public void shouldUniqueIdWhenCreateTask() {
         FileBackedTaskManager.loadFromFile(tempFile);
@@ -96,6 +141,7 @@ public class TestsBackedManager {
     }
 
     //Проверка, что обновляемая subtask, есть в хранилище
+    @Override
     @Test
     public void shouldNotFoundSubtaskWhenIsGivenIdWhichDoesntExist() {
         FileBackedTaskManager.loadFromFile(tempFile);
@@ -103,6 +149,7 @@ public class TestsBackedManager {
     }
 
     //Проверка, что задача создается и ее можно найти
+    @Override
     @Test
     public void shouldCreateTaskAndFindIts() {
         FileBackedTaskManager.loadFromFile(tempFile);
@@ -111,6 +158,7 @@ public class TestsBackedManager {
     }
 
     //Проверка, что Subtask и Epic создаются и могут быть найдены по id
+    @Override
     @Test
     public void shouldCreateAndFindEpicAndSubtask() {
         FileBackedTaskManager.loadFromFile(tempFile);
@@ -121,6 +169,7 @@ public class TestsBackedManager {
     }
 
     //Изменение статуса эпика
+    @Override
     @Test
     public void shouldChangeStatus() {
         FileBackedTaskManager.loadFromFile(tempFile);
@@ -129,10 +178,11 @@ public class TestsBackedManager {
         subtask1.setId(4);
         subtask1.setStatus("DONE");
         testObj.updateSubtask(subtask1);
-        assertEquals("DONE", testObj.receiveOneEpic(2).getStatus().toString());
+        assertEquals("DONE", testObj.receiveOneEpic(2).get().getStatus().toString());
     }
 
     //Обновление статуса подзадачи
+    @Override
     @Test
     public void shouldChangeStatusOfTask() {
         FileBackedTaskManager.loadFromFile(tempFile);
@@ -140,16 +190,19 @@ public class TestsBackedManager {
         taskTest.setId(1);
         taskTest.setStatus("IN_PROGRESS");
         testObj.updateTask(taskTest);
-        assertEquals("IN_PROGRESS", testObj.receiveOneTask(1).getStatus().toString());
+        assertEquals("IN_PROGRESS", testObj.receiveOneTask(1).get().getStatus().toString());
     }
 
-
-
-    //Todo тест истории на дубли
-    //Todo тест удаления пункта истории из начала середины и конца
-    //Todo тест отлова исключений при работе с файлами
-
-
-
+    //Проверка исключений
+    @Test
+    public void shouldThrowRightException() {
+        Assertions.assertThrows(ManagerSaveException.class, () -> {
+            File file = new File("C:\\File.csv");
+            FileBackedTaskManager.loadFromFile(file);
+        });
+        Assertions.assertDoesNotThrow(() ->{
+            FileBackedTaskManager.loadFromFile(tempFile);
+        });
+    }
 
 }

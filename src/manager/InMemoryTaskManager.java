@@ -83,12 +83,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Получение эпика по идентификатору
     @Override
-    public Epic receiveOneEpic(int epicId) {
-        if (epicTable.containsKey(epicId)) { //Проверка наличия ключа в мапе
+    public Optional<Epic> receiveOneEpic(int epicId) {
+        Optional<Epic> particularEpic = epicTable.values().stream().filter(epic -> epic.getId() == epicId).findFirst();
+        if (particularEpic.isPresent()) {
             history.addTaskInHistory(epicTable.get(epicId)); //Добавление вызванной задачи в историю
-            return epicTable.get(epicId);
+            return particularEpic;
+        } else {
+            return Optional.empty();
         }
-        return null;
     }
 
     //Удаление всех эпиков
@@ -160,12 +162,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Получение подзадачи по идентификатору
     @Override
-    public Subtask receiveSubtasksUseID(int subtaskId) {
-        if (subtaskTable.containsKey(subtaskId)) {
+    public Optional<Subtask> receiveSubtasksUseID(int subtaskId) {
+        Optional<Subtask> particularSubtask = subtaskTable.values().stream().filter(subtask -> subtask.getId() == subtaskId).findFirst();
+        if (particularSubtask.isPresent()) {
             history.addTaskInHistory(subtaskTable.get(subtaskId)); //Добавление вызванной задачи в историю
-            return subtaskTable.get(subtaskId);
+            return particularSubtask;
+        } else {
+            return Optional.empty();
         }
-        return null;
     }
 
 
@@ -173,7 +177,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteAllSubtasksOfEpic(int epicId) {
         Epic epic = epicTable.get(epicId); //Эпик по id
-        //Todo заменить цикл на стрим
         for (Subtask sub : epic.getSubtasks()) { //Удаление подзадачи из мапы подзадач по ключу
             subtaskTable.remove(sub.getId());
             history.removeItem(sub.getId()); //Удаление элемента из истории
@@ -197,7 +200,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public boolean updateSubtask(Subtask subtask) { //int subtaskId, String  name, String description, String status
         Epic newEpic = null; //Стартовое значение для запуска цикла
-        //Todo заменить цикл на стрим
         for (Epic epic : epicTable.values()) { //Цикл по значениям мапы эпиков
             int i = 0; //Счетчик индекса подзадачи в списке
             for (Subtask sub : epic.getSubtasks()) { //Цикл по подзадачам эпика
@@ -275,14 +277,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Метод вывода по идентификатору
     @Override
-    public Task receiveOneTask(int id) {
-        if (tasksTable.containsKey(id)) {
+    public Optional<Task> receiveOneTask(int id) {
+        Optional<Task> particularTask = tasksTable.values().stream().filter(task -> task.getId() == id).findFirst();
+        if (particularTask.isPresent()) {
             history.addTaskInHistory(tasksTable.get(id)); //Добавление вызванной задачи в историю
-            return tasksTable.get(id);
+            return particularTask;
         } else {
-            return null;
+            return Optional.empty();
         }
-
     }
 
     //Обновление задачи
