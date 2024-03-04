@@ -54,7 +54,7 @@ public class Task {
     }
 
     //Метод определения окончания задачи по началу и продолжительности
-    public LocalDateTime getEndTime(){
+    public LocalDateTime getEndTime() {
         if (startTime == null | duration == null) return null;
         endTime = startTime.plus(duration);
         return endTime;
