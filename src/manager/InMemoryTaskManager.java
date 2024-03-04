@@ -74,7 +74,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Создание эпика
     @Override
-    public void createEpic(Epic epic){
+    public void createEpic(Epic epic) {
         counter += 1; //ID считается с 1
         epic.setId(counter);
         epicTable.put(counter, epic); //Эпик в мапу эпиков
@@ -207,7 +207,7 @@ public class InMemoryTaskManager implements TaskManager {
                     newEpic = epic;
                     break; //Если if сработал не нужно продолжать цикл
                 }
-                i ++; //Увеличения счетчика индекса
+                i++; //Увеличения счетчика индекса
             }
         }
         if (newEpic != null) { //Если эпик по id подзадачи найден
@@ -252,10 +252,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Удаление по идентификатору
     @Override
-    public void deleteUseID(int ID) {
-        if (tasksTable.containsKey(ID)) {
-            tasksTable.remove(ID, tasksTable.get(ID));
-            history.removeItem(ID); //Удаление элемента из истории
+    public void deleteUseID(int id) {
+        if (tasksTable.containsKey(id)) {
+            tasksTable.remove(id, tasksTable.get(id));
+            history.removeItem(id); //Удаление элемента из истории
         }
     }
 
