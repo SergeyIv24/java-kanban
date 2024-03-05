@@ -2,8 +2,8 @@ package tasks; //Отдельный пакет для всех классов з
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+import tasks.Constants;
 
 //Обычная задача
 public class Task {
@@ -14,7 +14,7 @@ public class Task {
     protected Duration duration; //Продолжительность в минутах
     protected LocalDateTime startTime; //Время начала задачи
     protected LocalDateTime endTime;
-    protected static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyy HH:mm"); //Формат для даты и времени
+    //protected static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyy HH:mm"); //Формат для даты и времени
 
     //Конструктор без продолжительности и времени начала
     public Task(String name, String description) {
@@ -29,7 +29,7 @@ public class Task {
         this.description = description;
         status = StatusOfTask.NEW; //Как только задача создана, она новая.
         duration = Duration.ofMinutes(minutes);
-        this.startTime = LocalDateTime.parse(startTime, formatter);
+        this.startTime = LocalDateTime.parse(startTime, Constants.FORMATTER);
     }
 
     public LocalDateTime getStartTime() {
@@ -85,7 +85,7 @@ public class Task {
     public String toString() {
         return id + "," + "TASK," + name + "," + status + "," + description + ","
                 + ((duration != null) ? duration.toMinutes() : duration) + ","
-                + ((startTime != null) ? startTime.format(formatter) + "," + getEndTime().format(formatter)
+                + ((startTime != null) ? startTime.format(Constants.FORMATTER) + "," + getEndTime().format(Constants.FORMATTER)
                 : startTime + "," + getEndTime());
 
     }
@@ -105,8 +105,8 @@ public class Task {
         }
 
         final Duration duration = Duration.ofMinutes(Long.parseLong(taskInStr[5]));
-        final LocalDateTime startTime = LocalDateTime.parse(taskInStr[6], formatter);
-        final LocalDateTime endTime = LocalDateTime.parse(taskInStr[7], formatter);
+        final LocalDateTime startTime = LocalDateTime.parse(taskInStr[6], Constants.FORMATTER);
+        final LocalDateTime endTime = LocalDateTime.parse(taskInStr[7], Constants.FORMATTER);
 
         task.duration = duration;
         task.startTime = startTime;

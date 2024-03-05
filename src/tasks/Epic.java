@@ -49,7 +49,8 @@ public class Epic extends Task {
     public String toString() {
         return id + "," + "EPIC," + name + "," + status + "," + description  + ","
                 + ((epicDuration != null) ? epicDuration.toMinutes() : epicDuration)
-                + "," + ((epicStartTime != null) ? epicStartTime.format(formatter) + "," + epicEndTime.format(formatter)
+                + "," + ((epicStartTime != null) ? epicStartTime.format(Constants.FORMATTER) +
+                 "," + epicEndTime.format(Constants.FORMATTER)
                 : epicStartTime + "," + epicEndTime);
     }
 
@@ -68,8 +69,8 @@ public class Epic extends Task {
         }
 
         final Duration duration = Duration.ofMinutes(Long.parseLong(epicInStr[5]));
-        final LocalDateTime startTime = LocalDateTime.parse(epicInStr[6], formatter);
-        final LocalDateTime endTime = LocalDateTime.parse(epicInStr[7], formatter);
+        final LocalDateTime startTime = LocalDateTime.parse(epicInStr[6], Constants.FORMATTER);
+        final LocalDateTime endTime = LocalDateTime.parse(epicInStr[7], Constants.FORMATTER);
 
         epic.epicDuration = duration;
         epic.epicStartTime = startTime;

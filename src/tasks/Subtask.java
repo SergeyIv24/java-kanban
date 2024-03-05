@@ -21,7 +21,8 @@ public class Subtask extends Task {
     public String toString() {
         return id + "," + "SUBTASK," + name + "," + status + "," + description + ","
                 + ((duration != null) ? duration.toMinutes() : duration) + ","
-                + ((startTime != null) ? startTime.format(formatter) + "," + getEndTime().format(formatter) :
+                + ((startTime != null) ? startTime.format(Constants.FORMATTER) + ","
+                + getEndTime().format(Constants.FORMATTER) :
                 startTime + "," + getEndTime());
 
     }
@@ -41,8 +42,8 @@ public class Subtask extends Task {
         }
 
         final Duration duration = Duration.ofMinutes(Long.parseLong(subtaskInStr[5]));
-        final LocalDateTime startTime = LocalDateTime.parse(subtaskInStr[6], formatter);
-        final LocalDateTime endTime = LocalDateTime.parse(subtaskInStr[7], formatter);
+        final LocalDateTime startTime = LocalDateTime.parse(subtaskInStr[6], Constants.FORMATTER);
+        final LocalDateTime endTime = LocalDateTime.parse(subtaskInStr[7], Constants.FORMATTER);
 
         subtask.duration = duration;
         subtask.startTime = startTime;

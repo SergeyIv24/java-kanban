@@ -3,6 +3,7 @@ package manager; //отдельный пакет для менеджера
 import tasks.*; //Импорт всех классов из пакета tasks
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
     protected final HistoryManager history = Managers.getDefaultHistory(); // поля должны быть унаследованы
@@ -11,7 +12,8 @@ public class InMemoryTaskManager implements TaskManager {
     protected HashMap<Integer, Task> tasksTable; //Объявление мапы для обычных задач
     protected HashMap<Integer, Epic> epicTable; //Объявление мапы для эпиков
     protected HashMap<Integer, Subtask> subtaskTable; //Объявление мапы для отдельного хранения подзадач
-    protected Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
+    protected Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime,
+            Comparator.nullsLast(Comparator.naturalOrder())).thenComparing(Task::getId));
 
 
     public InMemoryTaskManager() {
@@ -178,6 +180,7 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epicTable.get(epicId); //Эпик по id
         for (Subtask sub : epic.getSubtasks()) { //Удаление подзадачи из мапы подзадач по ключу
             subtaskTable.remove(sub.getId());
+            prioritizedTasks.remove(sub);
             history.removeItem(sub.getId()); //Удаление элемента из истории
         }
         epic.getSubtasks().clear(); //Удаление элементов из списка
@@ -190,6 +193,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (subtaskTable.containsKey(subtaskId)) {
             subtaskTable.remove(subtaskId);
             history.removeItem(subtaskId); //Удаление элемента из истории
+            prioritizedTasks.remove(subtaskTable.get(subtaskId));
             return true;
         }
         return false;
@@ -212,6 +216,8 @@ public class InMemoryTaskManager implements TaskManager {
         }
         if (newEpic != null) { //Если эпик по id подзадачи найден
             updateEpic(newEpic); //Вызов метода обновления статуса эпика
+            prioritizedTasks.remove(subtask);
+            prioritizedTasks.add(subtask);
             return true;
         } else {
             return false;
@@ -247,6 +253,10 @@ public class InMemoryTaskManager implements TaskManager {
     //Метод удаление всех задач
     @Override
     public void deleteAllTask() {
+        prioritizedTasks = prioritizedTasks
+                .stream()
+                .filter(task -> task.getClass() != Task.class) //Если объект в коллекции Task, удаляется, тк удаляются все Task
+                .collect(Collectors.toSet());
         tasksTable.clear();
     }
 
@@ -254,6 +264,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteUseID(int id) {
         if (tasksTable.containsKey(id)) {
+            prioritizedTasks.remove(tasksTable.get(id));prioritizedTasks.remove(tasksTable.get(id));
             tasksTable.remove(id, tasksTable.get(id));
             history.removeItem(id); //Удаление элемента из истории
         }
@@ -291,6 +302,8 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateTask(Task task) { //Полное обновление задачи
         if (tasksTable.containsKey(task.getId())) {
             tasksTable.put(task.getId(), task); //Заменяет собой прошлый объект в мапе
+            prioritizedTasks.remove(task);
+            prioritizedTasks.add(task);
         }
     }
 }

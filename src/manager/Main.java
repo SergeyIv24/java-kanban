@@ -43,6 +43,12 @@ public class Main {
             System.out.println(task);
         }
         System.out.println(manager.prioritizedTasks);
+        manager.deleteUseID(6);
+        System.out.println(manager.prioritizedTasks);
+        manager.deleteAllTask();
+        System.out.println(manager.prioritizedTasks);
+        manager.deleteAllSubtasksOfEpic(1);
+        System.out.println(manager.prioritizedTasks);
 
 
 
