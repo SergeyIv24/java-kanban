@@ -8,6 +8,7 @@ import java.io.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
     public Path file; //Поле файла с данными менеджера
@@ -18,7 +19,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
 
     //Метод сохранения данных
-    public void save(){
+    public void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file.toFile()))) {
             for (Integer id : tasksTable.keySet()) {
                 writer.write(tasksTable.get(id).toString() + "\n");
@@ -42,7 +43,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         }
     }
 
-    public static FileBackedTaskManager loadFromFile(File file){
+    public static FileBackedTaskManager loadFromFile(File file) {
         FileBackedTaskManager backedManager;
         String line = "";
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -117,8 +118,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 //Методы для эпиков
     //Создание эпика
     @Override
-    public void createEpic(String name, String description) {
-        super.createEpic(name, description);
+    public void createEpic(Epic epic) {
+        super.createEpic(epic);
         save();
     }
 
@@ -147,8 +148,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     //Получение эпика по id, запись истории, обновление файла
     @Override
-    public Epic receiveOneEpic(int epicId) {
-        Epic epic = super.receiveOneEpic(epicId);
+    public Optional<Epic> receiveOneEpic(int epicId) {
+        Optional<Epic> epic = super.receiveOneEpic(epicId);
         save();
         return epic;
     }
@@ -158,8 +159,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 //Методы для подзадач эпиков
     //Создание подзадачи
     @Override
-    public void addSubTaskInEpic(int epicId, String name, String description) {
-        super.addSubTaskInEpic(epicId, name, description);
+    public void addSubTaskInEpic(int epicId, Subtask subtask) {
+        super.addSubTaskInEpic(epicId, subtask);
         save();
     }
 
@@ -188,8 +189,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     //Получение подзадачи по идентификатору, запись в историю, сохранение в файл
     @Override
-    public Subtask receiveSubtasksUseID(int subtaskId) {
-        Subtask subtask = super.receiveSubtasksUseID(subtaskId);
+    public Optional<Subtask> receiveSubtasksUseID(int subtaskId) {
+        Optional<Subtask> subtask = super.receiveSubtasksUseID(subtaskId);
         save();
         return subtask;
     }
@@ -198,8 +199,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 //Методы для обычных задач
     //Создание задачи
     @Override
-    public void addTask(String name, String description){
-        super.addTask(name, description);
+    public void addTask(Task task) {
+        super.addTask(task);
         save();
     }
 
@@ -211,8 +212,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     //Удаление по идентификатору
     @Override
-    public void deleteUseID(int ID) {
-        super.deleteUseID(ID);
+    public void deleteUseID(int id) {
+        super.deleteUseID(id);
         save();
     }
 
@@ -224,8 +225,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     //Метод вывода по идентификатору
     @Override
-    public Task receiveOneTask(int id) {
-        Task task = super.receiveOneTask(id);
+    public Optional<Task> receiveOneTask(int id) {
+        Optional<Task> task = super.receiveOneTask(id);
         save();
         return task;
     }

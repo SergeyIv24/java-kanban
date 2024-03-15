@@ -4,20 +4,21 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public interface TaskManager {
 
     //Методы для эпиков
     //Создание эпика
-    void createEpic(String name, String description);
+    void createEpic(Epic epic);
 
     //Получение эпика по идентификатору
-    Epic receiveOneEpic(int epicId);
+    Optional<Epic> receiveOneEpic(int epicId);
 
     //Удаление всех эпиков
     String deleteAllEpics();
+
     //Удаление эпика по идентификатору
     void deleteEpic(int epicId);
 
@@ -26,10 +27,10 @@ public interface TaskManager {
 
     //Методы для подзадач эпиков
     //Добавление подзадачи в эпик
-    void addSubTaskInEpic(int epicId, String name, String description);
+    void addSubTaskInEpic(int epicId, Subtask subtask);
 
     //Вывод подзадачи по идентификатору
-    Subtask receiveSubtasksUseID(int subtaskId);
+    Optional<Subtask> receiveSubtasksUseID(int subtaskId);
 
     //Удаление всех подзадач одного эпика
     void deleteAllSubtasksOfEpic(int epicId);
@@ -45,13 +46,13 @@ public interface TaskManager {
 
     // Методы для простых задач.
     //Метод добавления простой задачи
-    void addTask(String name, String description);
+    void addTask(Task task);
 
     //Метод удаление всех задач
     void deleteAllTask();
 
     //Удаление по идентификатору
-    void deleteUseID(int ID);
+    void deleteUseID(int id);
 
     //Метод возвращающий коллекцию всех обычных задач
     ArrayList<Task> receiveAllTasks();
@@ -60,7 +61,7 @@ public interface TaskManager {
     ArrayList<Task> receiveSubtasksAndTasks();
 
     //Метод вывода по идентификатору
-    Task receiveOneTask(int id);
+    Optional<Task> receiveOneTask(int id);
 
     //Обновление задачи
     void updateTask(Task task);

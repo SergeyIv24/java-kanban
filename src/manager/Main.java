@@ -12,20 +12,20 @@ public class Main {
 
         //Тест эпиков
         //Эпик 1
-        manager.createEpic("Устроить праздник", "Устраиваем званный ужин"); //1
-        manager.addSubTaskInEpic(1, "Сходить в магазин", "Купить макароны");//2
-        manager.addSubTaskInEpic(1, "Вернутся домой", "Там будем готовить"); //3
-        manager.addSubTaskInEpic(1, "Готовим ужин", "Желательно вкусный"); //4
-        manager.addSubTaskInEpic(1, "Зовем гостей", "Ждем гостей"); //5
+        manager.createEpic(new Epic("Устроить праздник", "Устраиваем званный ужин")); //1
+        manager.addSubTaskInEpic(1, new Subtask("Сходить в магазин", "Купить макароны", 100L, "01.03.2024 12:30"));//2
+        manager.addSubTaskInEpic(1, new Subtask("Вернутся домой", "Там будем готовить", 320L, "01.03.2024 12:30")); //3
+        manager.addSubTaskInEpic(1, new Subtask("Готовим ужин", "Желательно вкусный", 470L, "14.05.2024 12:30")); //4
+        manager.addSubTaskInEpic(1, new Subtask("Зовем гостей", "Ждем гостей", 91L, "12.02.2024 12:30")); //5
 
         //Эпик 2
-        manager.createEpic("Доехать до дома", "Едем домой"); //6
+        manager.createEpic(new Epic("Доехать до дома", "Едем домой")); //6
 
         //Обычные задачи
-        manager.addTask("Проверить", "Правильность работы"); //7
-        manager.addTask("Сдать работу", "До НГ"); //8
-        manager.addTask("Обычная", "задача"); //9
-        manager.addTask("задача", "обычная"); //10
+        manager.addTask(new Task("Проверить", "Правильность работы", 5000, "01.01.0001 10:00")); //7
+        manager.addTask(new Task("Сдать работу", "До НГ", 100, "10.12.1000 10:15")); //8
+        manager.addTask(new Task("Обычная", "задача")); //9
+        manager.addTask(new Task("задача", "обычная")); //10
 
         //Запись истории, вызвав методы получения задач по Id
         manager.receiveOneTask(8);
@@ -42,7 +42,13 @@ public class Main {
         for (Task task : manager.getHistory().getListOfHistory()) {
             System.out.println(task);
         }
-
+        System.out.println(manager.prioritizedTasks);
+        manager.deleteUseID(6);
+        System.out.println(manager.prioritizedTasks);
+        manager.deleteAllTask();
+        System.out.println(manager.prioritizedTasks);
+        manager.deleteAllSubtasksOfEpic(1);
+        System.out.println(manager.prioritizedTasks);
 
 
 

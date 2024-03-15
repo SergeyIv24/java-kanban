@@ -2,8 +2,8 @@ package manager; //отдельный пакет для менеджера
 
 import tasks.*; //Импорт всех классов из пакета tasks
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
     protected final HistoryManager history = Managers.getDefaultHistory(); // поля должны быть унаследованы
@@ -12,7 +12,8 @@ public class InMemoryTaskManager implements TaskManager {
     protected HashMap<Integer, Task> tasksTable; //Объявление мапы для обычных задач
     protected HashMap<Integer, Epic> epicTable; //Объявление мапы для эпиков
     protected HashMap<Integer, Subtask> subtaskTable; //Объявление мапы для отдельного хранения подзадач
-
+    protected Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime,
+            Comparator.nullsLast(Comparator.naturalOrder())).thenComparing(Task::getId));
 
 
     public InMemoryTaskManager() {
@@ -21,25 +22,18 @@ public class InMemoryTaskManager implements TaskManager {
         subtaskTable = new HashMap<>();
     }
 
-    /**Геттеры сейчас используются в тестах, если в них нет ошибок
-        в тесте shouldBeNothingWhenAddSubtaskInEpicDoesntExist() (строка 58) при добавлении subtask в несуществующий Epic
-        в тесте shouldStorePreviousItemOfHistoryAndLastItem() (строка 74) проверка, что сохранение в историю корректно
-        Если эти тесты можно убрать, тогда можно убрать и геттеры
-    * */
 
-    public HashMap<Integer, Epic> getEpicTable(){
+    public HashMap<Integer, Epic> getEpicTable() {
         return epicTable;
     }
 
-    public HashMap<Integer, Subtask> getSubtaskTable(){
+    public HashMap<Integer, Subtask> getSubtaskTable() {
         return subtaskTable;
     }
 
-    public HashMap<Integer, Task> getTaskTable(){
+    public HashMap<Integer, Task> getTaskTable() {
         return tasksTable;
     }
-
-
 
     public HistoryManager getHistory() {
         return history;
@@ -49,25 +43,56 @@ public class InMemoryTaskManager implements TaskManager {
         return counter;
     }
 
+    public List<Task> getPrioritizedTasks() {
+        return List.copyOf(prioritizedTasks);
+    }
+
+    //Метод поиска пересечений задач
+    public boolean isCrossingOther(Task task) {
+        //Если старт не задан, то пересечений не будет
+        if (task.getStartTime() == null) {
+            return false;
+        }
+
+        for (Task task1 : getPrioritizedTasks()) {
+            if (task.getEndTime().isBefore(task1.getEndTime())
+                && task.getStartTime().isAfter(task1.getStartTime())) {
+                return true;
+            }
+            if (task.getEndTime().isAfter(task1.getEndTime())
+                && task.getStartTime().isBefore(task1.getStartTime())) {
+                return true;
+            }
+            if (task.getStartTime().equals(task1.getStartTime())
+                    || task.getEndTime().equals(task1.getEndTime())) {
+                return true;
+            }
+        }
+        return false; //Пересечений нет
+    }
+
 
 //Методы для эпиков
 
     //Создание эпика
     @Override
-    public void createEpic(String name, String description){
+    public void createEpic(Epic epic) {
         counter += 1; //ID считается с 1
-        Epic epic = new Epic(name, description, counter); //Создание объектов
+        epic.setId(counter);
         epicTable.put(counter, epic); //Эпик в мапу эпиков
+        epic.solveStartTimeAndDuration(); //Расчет времени при создании Эпика
     }
 
     //Получение эпика по идентификатору
     @Override
-    public Epic receiveOneEpic(int epicId) {
-        if (epicTable.containsKey(epicId)) { //Проверка наличия ключа в мапе
+    public Optional<Epic> receiveOneEpic(int epicId) {
+        Optional<Epic> particularEpic = epicTable.values().stream().filter(epic -> epic.getId() == epicId).findFirst();
+        if (particularEpic.isPresent()) {
             history.addTaskInHistory(epicTable.get(epicId)); //Добавление вызванной задачи в историю
-            return epicTable.get(epicId);
+            return particularEpic;
+        } else {
+            return Optional.empty();
         }
-        return null;
     }
 
     //Удаление всех эпиков
@@ -118,25 +143,34 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Добавление подзадачи в эпик
     @Override
-    public void addSubTaskInEpic(int epicId, String name, String description){
+    public void addSubTaskInEpic(int epicId, Subtask subtask) {
+        if (isCrossingOther(subtask)) { //Если есть пересечение, задача не добавляется
+            return;
+        }
+
         Epic epic = epicTable.get(epicId); // Получение объекта эпика по ID
         if (epic != null) {
             counter += 1;
-            Subtask subtask = new Subtask(name, description, counter); //Создание объекта подзадачи
+            subtask.setId(counter);
             epic.getSubtasks().add(subtask); // Подзадач в список подзадач эпика
             subtaskTable.put(counter, subtask); // Подазадча в мапу подзадач
+            epic.solveStartTimeAndDuration(); //Пересчет времени при добавлении подзадачи
         }
-
+        if (subtask.getStartTime() != null) {
+            prioritizedTasks.add(subtask);
+        }
     }
 
     //Получение подзадачи по идентификатору
     @Override
-    public Subtask receiveSubtasksUseID(int subtaskId) {
-        if (subtaskTable.containsKey(subtaskId)) {
+    public Optional<Subtask> receiveSubtasksUseID(int subtaskId) {
+        Optional<Subtask> particularSubtask = subtaskTable.values().stream().filter(subtask -> subtask.getId() == subtaskId).findFirst();
+        if (particularSubtask.isPresent()) {
             history.addTaskInHistory(subtaskTable.get(subtaskId)); //Добавление вызванной задачи в историю
-            return subtaskTable.get(subtaskId);
+            return particularSubtask;
+        } else {
+            return Optional.empty();
         }
-        return null;
     }
 
 
@@ -144,9 +178,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteAllSubtasksOfEpic(int epicId) {
         Epic epic = epicTable.get(epicId); //Эпик по id
-
         for (Subtask sub : epic.getSubtasks()) { //Удаление подзадачи из мапы подзадач по ключу
             subtaskTable.remove(sub.getId());
+            prioritizedTasks.remove(sub);
             history.removeItem(sub.getId()); //Удаление элемента из истории
         }
         epic.getSubtasks().clear(); //Удаление элементов из списка
@@ -159,6 +193,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (subtaskTable.containsKey(subtaskId)) {
             subtaskTable.remove(subtaskId);
             history.removeItem(subtaskId); //Удаление элемента из истории
+            prioritizedTasks.remove(subtaskTable.get(subtaskId));
             return true;
         }
         return false;
@@ -176,11 +211,13 @@ public class InMemoryTaskManager implements TaskManager {
                     newEpic = epic;
                     break; //Если if сработал не нужно продолжать цикл
                 }
-                i ++; //Увеличения счетчика индекса
+                i++; //Увеличения счетчика индекса
             }
         }
         if (newEpic != null) { //Если эпик по id подзадачи найден
             updateEpic(newEpic); //Вызов метода обновления статуса эпика
+            prioritizedTasks.remove(subtask);
+            prioritizedTasks.add(subtask);
             return true;
         } else {
             return false;
@@ -200,24 +237,36 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Метод добавления простой задачи
     @Override
-    public void addTask(String name, String description){
+    public void addTask(Task task) {
+        if (isCrossingOther(task)) { //Если есть пересечение, не добавляется
+            return;
+        }
+
         counter += 1;
-        Task task = new Task(name, description, counter);
+        task.setId(counter);
         tasksTable.put(task.getId(), task);
+        if (task.getStartTime() != null) {
+            prioritizedTasks.add(task);
+        }
     }
 
     //Метод удаление всех задач
     @Override
     public void deleteAllTask() {
+        prioritizedTasks = prioritizedTasks
+                .stream()
+                .filter(task -> task.getClass() != Task.class) //Если объект в коллекции Task, удаляется, тк удаляются все Task
+                .collect(Collectors.toSet());
         tasksTable.clear();
     }
 
     //Удаление по идентификатору
     @Override
-    public void deleteUseID(int ID) {
-        if (tasksTable.containsKey(ID)) {
-            tasksTable.remove(ID, tasksTable.get(ID));
-            history.removeItem(ID); //Удаление элемента из истории
+    public void deleteUseID(int id) {
+        if (tasksTable.containsKey(id)) {
+            prioritizedTasks.remove(tasksTable.get(id));prioritizedTasks.remove(tasksTable.get(id));
+            tasksTable.remove(id, tasksTable.get(id));
+            history.removeItem(id); //Удаление элемента из истории
         }
     }
 
@@ -238,14 +287,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Метод вывода по идентификатору
     @Override
-    public Task receiveOneTask(int id) {
-        if (tasksTable.containsKey(id)) {
+    public Optional<Task> receiveOneTask(int id) {
+        Optional<Task> particularTask = tasksTable.values().stream().filter(task -> task.getId() == id).findFirst();
+        if (particularTask.isPresent()) {
             history.addTaskInHistory(tasksTable.get(id)); //Добавление вызванной задачи в историю
-            return tasksTable.get(id);
+            return particularTask;
         } else {
-            return null;
+            return Optional.empty();
         }
-
     }
 
     //Обновление задачи
@@ -253,11 +302,8 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateTask(Task task) { //Полное обновление задачи
         if (tasksTable.containsKey(task.getId())) {
             tasksTable.put(task.getId(), task); //Заменяет собой прошлый объект в мапе
+            prioritizedTasks.remove(task);
+            prioritizedTasks.add(task);
         }
     }
-
-
-
-
-
 }

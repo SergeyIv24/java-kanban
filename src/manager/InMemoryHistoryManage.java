@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class InMemoryHistoryManage implements HistoryManager {
 
-    static class Node <E> {
+    static class Node<E> {
         E data;
         Node<E> prev;
         Node<E> next;
@@ -19,6 +19,7 @@ public class InMemoryHistoryManage implements HistoryManager {
             this.prev = prev;
             this.next = next;
         }
+
          //Переопределен, так как при использовании собственных классов в HashMap, следует переопределить хеш функцию.
         @Override
         public final int hashCode() {
