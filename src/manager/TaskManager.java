@@ -7,6 +7,17 @@ import tasks.Task;
 import java.util.ArrayList;
 import java.util.Optional;
 
+//Todo endpoints для каждого метода в этом интерфейсе
+//Todo 5 групп методов и их пути: /tasks, /subtasks, /Epics, /history, /prioritized
+//Todo для каждого пути - несколько методов: GET - чтение, POST - обновление, DELETE - удаление
+//Todo коды: 200 - успешно выполнено, возврат, 201 - успешно обновлено, возврата нет
+//Todo коды: 404 - задача не найдена, 406 - пересечение задач, 500 - ошибки при выполнении запроса
+//Todo обмен данными в JSON
+//Todo HttpTaskServer - порт 8080, метод main для старта
+//Todo обработчик для каждого пути, привязать к пути
+//Todo добавить библиотеку GSON
+//Todo тесты
+
 public interface TaskManager {
 
     //Методы для эпиков
