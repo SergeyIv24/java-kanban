@@ -199,9 +199,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 //Методы для обычных задач
     //Создание задачи
     @Override
-    public void addTask(Task task) {
+    public boolean addTask(Task task) {
         super.addTask(task);
         save();
+        return true;
     }
 
     @Override

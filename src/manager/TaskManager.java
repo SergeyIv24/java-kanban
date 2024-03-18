@@ -57,7 +57,7 @@ public interface TaskManager {
 
     // Методы для простых задач.
     //Метод добавления простой задачи
-    void addTask(Task task);
+    boolean addTask(Task task);
 
     //Метод удаление всех задач
     void deleteAllTask();

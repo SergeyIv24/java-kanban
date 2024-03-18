@@ -237,9 +237,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Метод добавления простой задачи
     @Override
-    public void addTask(Task task) {
+    public boolean addTask(Task task) {
         if (isCrossingOther(task)) { //Если есть пересечение, не добавляется
-            return;
+            return false;
         }
 
         counter += 1;
@@ -248,6 +248,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (task.getStartTime() != null) {
             prioritizedTasks.add(task);
         }
+        return true;
     }
 
     //Метод удаление всех задач
