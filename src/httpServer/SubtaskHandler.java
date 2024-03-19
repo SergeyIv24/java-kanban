@@ -51,6 +51,20 @@ public class SubtaskHandler implements HttpHandler {
                 return;
 
             case "DELETE":
+                Optional<Integer> idForDeleting = HttpTaskServer.parseId(exchange); //id задачи
+                if (idForDeleting.isEmpty()) {
+                    requestBodyWriter(exchange, 404, "Задача не существует");
+                    return;
+                }
+                Optional<Subtask> subtask = manager.receiveSubtasksUseID(idForDeleting.get());
+
+                if (subtask.isEmpty()) {
+                    requestBodyWriter(exchange, 404, "Задача не существует");
+                    return;
+                }
+                manager.deleteParticularSubtask(idForDeleting.get());
+                requestBodyWriter(exchange, 201, "");
+                return;
         }
 
     }
