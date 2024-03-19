@@ -25,11 +25,17 @@ public class EpicHandler implements HttpHandler {
                 System.out.println(epicAdding);
                 System.out.println(epicAdding.getSubtasks());
                 manager.createEpic(epicAdding);
-
                 requestBodyWriter(exchange, 201, "");
                 return;
-
             case "DELETE":
+                Optional<Integer> idForDeleting = HttpTaskServer.parseId(exchange); //id задачи
+                Optional<Epic> epic = manager.receiveOneEpic(idForDeleting.get());
+                if (epic.isEmpty()) {
+                    requestBodyWriter(exchange, 404, "Эпик не существует");
+                    return;
+                }
+                manager.deleteEpic(idForDeleting.get());
+                requestBodyWriter(exchange, 200, "");
         }
     }
 }

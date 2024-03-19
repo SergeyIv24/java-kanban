@@ -134,9 +134,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     //Удаление эпика по id
     @Override
-    public void deleteEpic(int epicId) {
-        super.deleteEpic(epicId);
-        save();
+    public boolean deleteEpic(int epicId) {
+        if (super.deleteEpic(epicId)) {
+            save();
+            return true;
+        }
+        return false;
     }
 
     //Обновление эпика

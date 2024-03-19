@@ -31,7 +31,7 @@ public interface TaskManager {
     String deleteAllEpics();
 
     //Удаление эпика по идентификатору
-    void deleteEpic(int epicId);
+    boolean deleteEpic(int epicId);
 
     //Обновление статуса эпика
     void updateEpic(Epic epic);

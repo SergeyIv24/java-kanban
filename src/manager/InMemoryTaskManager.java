@@ -105,12 +105,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Удаление эпика по идентификатору
     @Override
-    public void deleteEpic(int epicId) {
+    public boolean deleteEpic(int epicId) {
         if (epicTable.containsKey(epicId)) { //Если эпик в мапе
             deleteAllSubtasksOfEpic(epicId);
             epicTable.remove(epicId, epicTable.get(epicId));
             history.removeItem(epicId);
+            return true;
         }
+        return false;
     }
 
     //Обновление статуса эпика
@@ -179,6 +181,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteAllSubtasksOfEpic(int epicId) {
         Epic epic = epicTable.get(epicId); //Эпик по id
+        if (epic.getSubtasks() == null) {
+            return;
+        }
         for (Subtask sub : epic.getSubtasks()) { //Удаление подзадачи из мапы подзадач по ключу
             subtaskTable.remove(sub.getId());
             prioritizedTasks.remove(sub);
