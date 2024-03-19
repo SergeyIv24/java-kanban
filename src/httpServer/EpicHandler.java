@@ -3,7 +3,6 @@ package httpServer;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import tasks.Epic;
-import tasks.Task;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -19,6 +18,19 @@ public class EpicHandler implements HttpHandler {
         String requestMethod = exchange.getRequestMethod();
         switch (requestMethod) {
             case "GET":
+                Optional<Integer> idForGetting = HttpTaskServer.parseId(exchange); //id эпика
+                if (idForGetting.isEmpty()) {
+                    requestBodyWriter(exchange, 404, "Эпик не существует");
+                    return;
+                }
+                Optional<Epic> epic = manager.receiveOneEpic(idForGetting.get());
+                if (!epic.isEmpty()) {
+                    String epicJson = gsonBuilder.toJson(epic.get().toString());
+                    requestBodyWriter(exchange, 200, epicJson);
+                }
+                requestBodyWriter(exchange, 404, "Эпик не существует");
+                return;
+
             case "POST":
                 String requestBody = new String(exchange.getRequestBody().readAllBytes(), DEFAULT_CHARSET);
                 Epic epicAdding = gsonBuilder.fromJson(requestBody, Epic.class); //Десириализация
@@ -27,10 +39,11 @@ public class EpicHandler implements HttpHandler {
                 manager.createEpic(epicAdding);
                 requestBodyWriter(exchange, 201, "");
                 return;
+
             case "DELETE":
                 Optional<Integer> idForDeleting = HttpTaskServer.parseId(exchange); //id задачи
-                Optional<Epic> epic = manager.receiveOneEpic(idForDeleting.get());
-                if (epic.isEmpty()) {
+                Optional<Epic> epicDel = manager.receiveOneEpic(idForDeleting.get());
+                if (epicDel.isEmpty()) {
                     requestBodyWriter(exchange, 404, "Эпик не существует");
                     return;
                 }
