@@ -1,7 +1,5 @@
 package tasks;
 
-import com.google.gson.annotations.Expose;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,6 +20,10 @@ public class Epic extends Task {
 
     public ArrayList<Subtask> getSubtasks() {
         return subtasks;
+    }
+
+    public void createSubtasks() {
+        this.subtasks = new ArrayList<>();
     }
 
     //Расчет временных полей

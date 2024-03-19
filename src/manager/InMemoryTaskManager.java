@@ -146,15 +146,19 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Добавление подзадачи в эпик
     @Override
-    public void addSubTaskInEpic(int epicId, Subtask subtask) {
+    public boolean addSubTaskInEpic(int epicId, Subtask subtask) {
         if (isCrossingOther(subtask)) { //Если есть пересечение, задача не добавляется
-            return;
+            return false;
         }
 
         Epic epic = epicTable.get(epicId); // Получение объекта эпика по ID
         if (epic != null) {
             counter += 1;
             subtask.setId(counter);
+            subtask.setStatus("NEW");
+            if (epic.getSubtasks() == null) {
+                epic.createSubtasks();
+            }
             epic.getSubtasks().add(subtask); // Подзадач в список подзадач эпика
             subtaskTable.put(counter, subtask); // Подазадча в мапу подзадач
             epic.solveStartTimeAndDuration(); //Пересчет времени при добавлении подзадачи
@@ -162,6 +166,8 @@ public class InMemoryTaskManager implements TaskManager {
         if (subtask.getStartTime() != null) {
             prioritizedTasks.add(subtask);
         }
+
+        return true;
     }
 
     //Получение подзадачи по идентификатору

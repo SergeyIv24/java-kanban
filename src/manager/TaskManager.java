@@ -38,7 +38,7 @@ public interface TaskManager {
 
     //Методы для подзадач эпиков
     //Добавление подзадачи в эпик
-    void addSubTaskInEpic(int epicId, Subtask subtask);
+    boolean addSubTaskInEpic(int epicId, Subtask subtask);
 
     //Вывод подзадачи по идентификатору
     Optional<Subtask> receiveSubtasksUseID(int subtaskId);
