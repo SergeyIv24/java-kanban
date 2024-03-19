@@ -113,16 +113,6 @@ public class HttpTaskServer {
                     requestBodyWriter(exchange, 404, "Задача не существует");
                     return;
 
-
-
-
-
-
-
-
-
-
-
                 case "DELETE":
                     Optional<Integer> idForDeleting = HttpTaskServer.parseId(exchange); //id задачи
                     if (idForDeleting.isEmpty()) { //Если нет id, удаление всех задач
@@ -220,37 +210,6 @@ class DurationTimeAdapter extends TypeAdapter<Duration> {
         return Duration.ofMinutes(Long.parseLong(jsonReader.nextString()));
     }
 }
-
-/*class StatusAdapter extends TypeAdapter<StatusOfTask> {
-    @Override
-    public void write(JsonWriter jsonWriter, StatusOfTask value) throws IOException {
-        jsonWriter.value(value.toString());
-
-    }
-
-    @Override
-    public StatusOfTask read(JsonReader jsonReader) throws IOException {
-        return StatusOfTask.valueOf(jsonReader.nextString());
-    }
-}*/
-
-
-
-
-
-
-/*class Adapter extends TypeAdapter<Task> {
-
-    @Override
-    public void write(JsonWriter jsonWriter, Task task) throws IOException {
-
-    }
-
-    @Override
-    public Task read(JsonReader jsonReader) throws IOException {
-        return new Task(jsonReader.toString(), jsonReader.toString());
-    }
-}*/
 
 class ListTokenType extends TypeToken<List<Task>> {
 
