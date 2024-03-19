@@ -1,6 +1,7 @@
 package manager;
 
 import com.google.gson.*;
+import com.google.gson.annotations.Expose;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.sun.net.httpserver.HttpExchange;
@@ -25,6 +26,7 @@ public class HttpServer1 {
     public static Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, new LocalDataTimeAdapter())
             .registerTypeAdapter(Duration.class, new DurationTimeAdapter())
+            .excludeFieldsWithoutExposeAnnotation()
             .create();
 
     public static void main(String[] args) throws IOException {
@@ -92,12 +94,18 @@ public class HttpServer1 {
 
 
     static class TaskTest {
+
         public String name;
         public String description;
+        @Expose (deserialize = false)
         protected int id;
+        @Expose (deserialize = false)
         protected StatusOfTask status;
+        @Expose (deserialize = false)
         protected Duration duration; //Продолжительность в минутах
+        @Expose (deserialize = false)
         protected LocalDateTime startTime; //Время начала задачи
+        @Expose (deserialize = false)
         protected LocalDateTime endTime;
 
         public TaskTest(String name, String description) {

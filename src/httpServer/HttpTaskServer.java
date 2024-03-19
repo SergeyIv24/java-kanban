@@ -1,12 +1,16 @@
-package manager;
+package httpServer;
 
 import com.google.gson.*;
+import com.google.gson.annotations.Expose;
+import com.google.gson.internal.Excluder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import manager.FileBackedTaskManager;
+import manager.Managers;
 import tasks.Constants;
 import tasks.Task;
 
@@ -26,14 +30,14 @@ import java.util.Optional;
 public class HttpTaskServer {
 
     public static final int PORT = 8080; //Порт программы
+    public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     public static FileBackedTaskManager manager;
     public static Gson gsonBuilder = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, new LocalDataTimeAdapter())
             .registerTypeAdapter(Duration.class, new DurationTimeAdapter())
-            //.registerTypeAdapter(StatusOfTask.class, new StatusAdapter())
             .create();
 
-    private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
+
 
     public static void main(String[] args) throws IOException {
         File file = new File("C:\\Учеба\\Java 2023 - 2024" +
@@ -48,7 +52,7 @@ public class HttpTaskServer {
         server.start(); // Запуск сервера
     }
 
-   private static Optional<Integer> parseId(HttpExchange exchange) {
+   protected static Optional<Integer> parseId(HttpExchange exchange) {
        URI requestURI = exchange.getRequestURI(); //URI
        String parameters = requestURI.getQuery();
        if (parameters != null) { //Если параметры пути есть
@@ -58,16 +62,16 @@ public class HttpTaskServer {
        return Optional.empty(); //Если id нет пустой Optional
    }
 
-   private static void requestBodyWriter(HttpExchange exchange, int rCode, String body) throws IOException {
+   protected static void requestBodyWriter(HttpExchange exchange, int rCode, String body) throws IOException {
         try (OutputStream os = exchange.getResponseBody()) {
-            exchange.sendResponseHeaders(rCode, 0); //Ошибка
+            exchange.sendResponseHeaders(rCode, 0);
             os.write(body.getBytes(DEFAULT_CHARSET));
         }
    }
 
     //Обработчик задач
-    static class TasksHandler implements HttpHandler {
-        @Override
+    //static class TasksHandler implements HttpHandler {
+        /*@Override
         public void handle(HttpExchange exchange) throws IOException {
             String requestMethod = exchange.getRequestMethod(); //Метод
             switch (requestMethod) {
@@ -130,23 +134,10 @@ public class HttpTaskServer {
                     manager.deleteUseID(idForDeleting.get());
                     requestBodyWriter(exchange, 200, ""); //Задача удалена по id (void)
             }
-        }
-    }
+        }*/
+    //}
 
     static class SubtaskHandler implements HttpHandler {
-        @Override
-        public void handle(HttpExchange exchange) {
-            String requestMethod = exchange.getRequestMethod();
-
-            switch (requestMethod) {
-                case "GET":
-                case "POST":
-                case "DELETE":
-            }
-        }
-    }
-
-    static class EpicHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) {
             String requestMethod = exchange.getRequestMethod();

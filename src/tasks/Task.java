@@ -3,6 +3,8 @@ package tasks; //Отдельный пакет для всех классов з
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
+
+import com.google.gson.annotations.Expose;
 import tasks.Constants;
 
 //Обычная задача

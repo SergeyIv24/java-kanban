@@ -79,6 +79,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void createEpic(Epic epic) {
         counter += 1; //ID считается с 1
         epic.setId(counter);
+        epic.setStatus("NEW");
         epicTable.put(counter, epic); //Эпик в мапу эпиков
         epic.solveStartTimeAndDuration(); //Расчет времени при создании Эпика
     }
