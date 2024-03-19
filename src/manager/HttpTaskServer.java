@@ -79,25 +79,16 @@ public class HttpTaskServer {
                         return;
                     }
 
-                    Task task = manager.receiveOneTask(idForGetting.get()).get(); //Получение задачи по id
+                    Optional<Task> task = manager.receiveOneTask(idForGetting.get()); //Получение задачи по id
 
-                    if (task == null) { //Если задачи нет
+                    if (task.isEmpty()) { //Если задачи нет
                         requestBodyWriter(exchange, 404, "Задача не существует");
                         return;
                     }
 
-                    String taskJson = gsonBuilder.toJson(task); //Возврат запрашиваемой задачи
+                    String taskJson = gsonBuilder.toJson(task.get()); //Возврат запрашиваемой задачи
                     requestBodyWriter(exchange, 200, taskJson);
                     return;
-
-
-
-
-
-
-
-
-
 
                 case "POST":
                     String requestBody = new String(exchange.getRequestBody().readAllBytes(), DEFAULT_CHARSET);
