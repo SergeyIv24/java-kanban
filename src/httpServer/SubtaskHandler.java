@@ -24,20 +24,37 @@ public class SubtaskHandler implements HttpHandler {
 
         switch (requestMethod) {
             case "GET":
+                Optional<Integer> idForGetting = HttpTaskServer.parseId(exchange); //id задачи
+                Headers epicIdInHeaders = exchange.getRequestHeaders();
+                int epicId = 0;
+
+                if (epicIdInHeaders.containsKey("X-epicId")) {
+                    epicId = Integer.parseInt(epicIdInHeaders.get("X-epicId").get(0));
+                }
+
+                if (manager.receiveOneEpic(epicId).isEmpty()
+                        || manager.receiveSubtasksUseID(idForGetting.get()).isEmpty()) { //Если эпика нет, то и задач нет
+                    requestBodyWriter(exchange, 404, "Задача не существует");
+                    return;
+                }
+
+                requestBodyWriter(exchange, 200, gsonBuilder.toJson(manager.receiveSubtasksUseID(idForGetting.get())));
+                return;
+
 
             case "POST":
                 //В InMemoryTaskManager метод addSubtask(int epicId, Subtask subtask), принимает id эпика к которому
                 //относится. Для POST запроса на создание подзадачи epicId передается в заголовке запроса.
                 String requestBody = new String(exchange.getRequestBody().readAllBytes(), DEFAULT_CHARSET);
-                Headers epicIdInHeaders = exchange.getRequestHeaders();
-                int epicId = 0;
-                if (epicIdInHeaders.containsKey("X-epicId")) {
-                    epicId = Integer.parseInt(epicIdInHeaders.get("X-epicId").get(0));
+                Headers epicIdInHeadersForAdd = exchange.getRequestHeaders();
+                int epicIdForAdd = 0;
+                if (epicIdInHeadersForAdd.containsKey("X-epicId")) {
+                    epicIdForAdd = Integer.parseInt(epicIdInHeadersForAdd.get("X-epicId").get(0));
                 }
                 Optional<Integer> idForPosting = HttpTaskServer.parseId(exchange); //id задачи
                 Subtask subtaskAdding = gsonBuilder.fromJson(requestBody, Subtask.class); //Десириализация
                 if (idForPosting.isEmpty()) {
-                    manager.addSubTaskInEpic(epicId, subtaskAdding);
+                    manager.addSubTaskInEpic(epicIdForAdd, subtaskAdding);
                     requestBodyWriter(exchange, 201, "");
                     return;
                 }
