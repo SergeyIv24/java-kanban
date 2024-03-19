@@ -75,6 +75,6 @@ public interface TaskManager {
     Optional<Task> receiveOneTask(int id);
 
     //Обновление задачи
-    void updateTask(Task task);
+    boolean updateTask(Task task);
 
 }

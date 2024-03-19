@@ -200,9 +200,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     //Создание задачи
     @Override
     public boolean addTask(Task task) {
-        super.addTask(task);
-        save();
-        return true;
+        if (super.addTask(task)) {
+            save();
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -219,9 +222,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     @Override
-    public void updateTask(Task task) {
-        super.updateTask(task);
-        save();
+    public boolean updateTask(Task task) {
+        if (super.updateTask(task)) {
+            save();
+            return true;
+        }
+        return false;
+
     }
 
     //Метод вывода по идентификатору

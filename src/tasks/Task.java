@@ -14,7 +14,6 @@ public class Task {
     protected Duration duration; //Продолжительность в минутах
     protected LocalDateTime startTime; //Время начала задачи
     protected LocalDateTime endTime;
-    //protected static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyy HH:mm"); //Формат для даты и времени
 
     //Конструктор без продолжительности и времени начала
     public Task(String name, String description) {
@@ -27,7 +26,7 @@ public class Task {
     public Task(String name, String description, long minutes, String startTime) {
         this.name = name;
         this.description = description;
-        status = StatusOfTask.NEW; //Как только задача создана, она новая.
+        this.status = StatusOfTask.NEW; //Как только задача создана, она новая.
         duration = Duration.ofMinutes(minutes);
         this.startTime = LocalDateTime.parse(startTime, Constants.FORMATTER);
     }

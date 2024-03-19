@@ -1,5 +1,5 @@
-/*
-package manager;
+
+/*package manager;
 import java.io.File;
 import tasks.*;
 
@@ -50,13 +50,16 @@ public class Main {
         System.out.println(manager.prioritizedTasks);
         manager.deleteAllSubtasksOfEpic(1);
         System.out.println(manager.prioritizedTasks);
+    }
+}*/
 
 
 
 
 
 
-*/
+
+
 /*        InMemoryTaskManager manager = new InMemoryTaskManager();
         //Тест эпиков
         //Эпик 1
@@ -119,7 +122,7 @@ public class Main {
         //Вывод истории. Удаленные элементы не отображаются в истории
         for (Task task : manager.getHistory().getListOfHistory()) {
             System.out.println("История после удаления " + task);
-        }*//*
+        }
 
 
 

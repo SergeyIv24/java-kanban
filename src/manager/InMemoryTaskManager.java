@@ -244,6 +244,7 @@ public class InMemoryTaskManager implements TaskManager {
 
         counter += 1;
         task.setId(counter);
+        task.setStatus("NEW");
         tasksTable.put(task.getId(), task);
         if (task.getStartTime() != null) {
             prioritizedTasks.add(task);
@@ -300,11 +301,13 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Обновление задачи
     @Override
-    public void updateTask(Task task) { //Полное обновление задачи
+    public boolean updateTask(Task task) { //Полное обновление задачи
         if (tasksTable.containsKey(task.getId())) {
             tasksTable.put(task.getId(), task); //Заменяет собой прошлый объект в мапе
             prioritizedTasks.remove(task);
             prioritizedTasks.add(task);
+            return true;
         }
+        return false;
     }
 }

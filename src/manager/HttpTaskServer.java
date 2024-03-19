@@ -1,10 +1,13 @@
 package manager;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import tasks.Constants;
 import tasks.Task;
 
 import java.io.File;
@@ -14,27 +17,29 @@ import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
 
 public class HttpTaskServer {
 
     public static final int PORT = 8080; //Порт программы
     public static FileBackedTaskManager manager;
-    public static Gson gson = new Gson();
+    public static Gson gsonBuilder = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, new LocalDataTimeAdapter())
+            .registerTypeAdapter(Duration.class, new DurationTimeAdapter())
+            //.registerTypeAdapter(StatusOfTask.class, new StatusAdapter())
+            .create();
+
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
-
     public static void main(String[] args) throws IOException {
-        //manager = Managers.getFileBackedTaskManager(File.createTempFile("file.csv", null));
         File file = new File("C:\\Учеба\\Java 2023 - 2024" +
                 "\\Задачи\\Проекты ЯП\\Спринт 4\\java-kanban\\src\\manager\\File.csv");
         manager = Managers.getFileBackedTaskManager(file);
-
-
-
         HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0); //Сервер + привязка порта
-                                                                                        //совет + бэклог
         server.createContext("/tasks", new TasksHandler()); //Связь пути и обработчика
         server.createContext("/subtasks", new SubtaskHandler());
         server.createContext("/epics", new EpicHandler());
@@ -43,18 +48,14 @@ public class HttpTaskServer {
         server.start(); // Запуск сервера
     }
 
-
-
-
    private static Optional<Integer> parseId(HttpExchange exchange) {
        URI requestURI = exchange.getRequestURI(); //URI
-       String path = requestURI.getPath(); // Путь
-       String[] pathArray = path.split("/");
-
-       if (pathArray.length != 2) { // Если пользователь передал id в параметрах пути
-            return Optional.of(Integer.parseInt(pathArray[2])); //Возврат id в Optional
+       String parameters = requestURI.getQuery();
+       if (parameters != null) { //Если параметры пути есть
+           String idStr = parameters.split("=")[1];
+           return Optional.of(Integer.parseInt(idStr));
        }
-        return Optional.empty(); //Если id нет пустой Optional
+       return Optional.empty(); //Если id нет пустой Optional
    }
 
    private static void requestBodyWriter(HttpExchange exchange, int rCode, String body) throws IOException {
@@ -73,30 +74,62 @@ public class HttpTaskServer {
                 case "GET":
                     Optional<Integer> idForGetting = HttpTaskServer.parseId(exchange); //id задачи
                     if (idForGetting.isEmpty()) { //Если id нет
-                        manager.receiveAllTasks(); //Возврат всех задач
-                        String allTasksJson = gson.toJson(manager.receiveAllTasks());
+                        String allTasksJson = gsonBuilder.toJson(manager.receiveAllTasks().toString());
                         requestBodyWriter(exchange, 200, allTasksJson);
                         return;
                     }
 
-                    Optional<Task> task = manager.receiveOneTask(idForGetting.get()); //Получение задачи по id
+                    Task task = manager.receiveOneTask(idForGetting.get()).get(); //Получение задачи по id
 
-                    if (task.isEmpty()) { //Если задачи нет
+                    if (task == null) { //Если задачи нет
                         requestBodyWriter(exchange, 404, "Задача не существует");
                         return;
                     }
 
-                    String taskJson = gson.toJson(task.get()); //Возврат запрашиваемой задачи
+                    String taskJson = gsonBuilder.toJson(task); //Возврат запрашиваемой задачи
                     requestBodyWriter(exchange, 200, taskJson);
                     return;
 
 
+
+
+
+
+
+
+
+
                 case "POST":
+                    String requestBody = new String(exchange.getRequestBody().readAllBytes(), DEFAULT_CHARSET);
                     Optional<Integer> idForPosting = HttpTaskServer.parseId(exchange); //id задачи
-                    if (idForPosting.isEmpty()) {
-
-
+                    Task taskAdding = gsonBuilder.fromJson(requestBody, Task.class); //Десириализация
+                    System.out.println(taskAdding.toString()); //Todo check working
+                    if (idForPosting.isEmpty()) { //Если id не передан
+                        if (!manager.addTask(taskAdding)) { //Если есть пересечение по времени
+                            requestBodyWriter(exchange, 406, "Задача пересекается с существующей");
+                            return;
+                        }
+                        requestBodyWriter(exchange, 201, ""); //Пересечений нет
+                        return;
                     }
+
+                    //id передан
+                    taskAdding.setId(idForPosting.get());
+                    if (manager.updateTask(taskAdding)) {
+                        requestBodyWriter(exchange, 201, "");
+                        return;
+                    }
+                    requestBodyWriter(exchange, 404, "Задача не существует");
+                    return;
+
+
+
+
+
+
+
+
+
 
 
                 case "DELETE":
@@ -171,6 +204,62 @@ public class HttpTaskServer {
         }
     }
 }
+
+class LocalDataTimeAdapter extends TypeAdapter<LocalDateTime> {
+    @Override
+    public void write(JsonWriter out, LocalDateTime value) throws IOException {
+        out.value(value.format(Constants.FORMATTER));
+    }
+
+    @Override
+    public LocalDateTime read(JsonReader jsonReader) throws IOException {
+        return LocalDateTime.parse(jsonReader.nextString(), Constants.FORMATTER);
+    }
+}
+
+class DurationTimeAdapter extends TypeAdapter<Duration> {
+
+    @Override
+    public void write(JsonWriter jsonWriter, Duration value) throws IOException {
+        jsonWriter.value(value.toString());
+    }
+
+    @Override
+    public Duration read(JsonReader jsonReader) throws IOException {
+        return Duration.ofMinutes(Long.parseLong(jsonReader.nextString()));
+    }
+}
+
+/*class StatusAdapter extends TypeAdapter<StatusOfTask> {
+    @Override
+    public void write(JsonWriter jsonWriter, StatusOfTask value) throws IOException {
+        jsonWriter.value(value.toString());
+
+    }
+
+    @Override
+    public StatusOfTask read(JsonReader jsonReader) throws IOException {
+        return StatusOfTask.valueOf(jsonReader.nextString());
+    }
+}*/
+
+
+
+
+
+
+/*class Adapter extends TypeAdapter<Task> {
+
+    @Override
+    public void write(JsonWriter jsonWriter, Task task) throws IOException {
+
+    }
+
+    @Override
+    public Task read(JsonReader jsonReader) throws IOException {
+        return new Task(jsonReader.toString(), jsonReader.toString());
+    }
+}*/
 
 class ListTokenType extends TypeToken<List<Task>> {
 
