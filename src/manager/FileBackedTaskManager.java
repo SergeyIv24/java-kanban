@@ -163,11 +163,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     //Создание подзадачи
     @Override
     public boolean addSubTaskInEpic(int epicId, Subtask subtask) {
-        if (super.addSubTaskInEpic(epicId, subtask)) {
-            save();
-            return true;
-        }
-        return false;
+        boolean result = super.addSubTaskInEpic(epicId, subtask);
+        save();
+        return result;
     }
 
     //Удаление всех подзадач эпика

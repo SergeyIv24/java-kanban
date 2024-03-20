@@ -203,9 +203,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteParticularSubtask(int subtaskId) {
         if (subtaskTable.containsKey(subtaskId)) {
+            prioritizedTasks.remove(subtaskTable.get(subtaskId));
             subtaskTable.remove(subtaskId);
             history.removeItem(subtaskId); //Удаление элемента из истории
-            prioritizedTasks.remove(subtaskTable.get(subtaskId));
+
         }
     }
 
@@ -218,6 +219,7 @@ public class InMemoryTaskManager implements TaskManager {
             for (Subtask sub : epic.getSubtasks()) { //Цикл по подзадачам эпика
                 if (sub.getId() == subtask.getId()) { //Если найден по id
                     epic.getSubtasks().set(i, subtask); //Замена элемента в списке
+                    subtaskTable.put(subtask.getId(), subtask);
                     newEpic = epic;
                     break; //Если if сработал не нужно продолжать цикл
                 }

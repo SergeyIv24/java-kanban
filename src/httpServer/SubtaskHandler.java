@@ -62,12 +62,11 @@ public class SubtaskHandler implements HttpHandler {
                     return;
                 }
                 subtaskAdding.setId(idForPosting.get());
-
-                if (!manager.updateSubtask(subtaskAdding)) {
+                boolean isUpdated = manager.updateSubtask(subtaskAdding);
+                if (!isUpdated) {
                     requestBodyWriter(exchange, 406, "Задача пересекается с существующей");
                     return;
                 }
-                manager.updateSubtask(subtaskAdding);
                 requestBodyWriter(exchange, 201, ""); //Пересечений нет
                 return;
 
