@@ -11,10 +11,9 @@ import java.time.Duration;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class TestsHttpTasks {
+public class HttpTasksTest {
     static URI uri;
     static HttpClient client;
-    HttpTaskServer server = new HttpTaskServer();
     @BeforeAll
     public static void createClient() {
         uri = URI.create("http://localhost:8080/tasks");
@@ -29,7 +28,7 @@ public class TestsHttpTasks {
     }
 
     @AfterEach
-    public void stopServer() throws IOException {
+    public void stopServer(){
         HttpTaskServer.stopServer();
     }
 
@@ -51,7 +50,7 @@ public class TestsHttpTasks {
                 .uri(uri)
                 .build();
         HttpResponse.BodyHandler<String> handlerPost = HttpResponse.BodyHandlers.ofString();
-        HttpResponse<String> responsePost = client.send(request, handlerPost);
+        client.send(request, handlerPost);
 
         HttpRequest getAllTask = HttpRequest.newBuilder()
                 .GET()
@@ -79,7 +78,7 @@ public class TestsHttpTasks {
                 .uri(uri)
                 .build();
         HttpResponse.BodyHandler<String> handlerPost = HttpResponse.BodyHandlers.ofString();
-        HttpResponse<String> responsePost = client.send(request, handlerPost);
+        client.send(request, handlerPost);
 
         HttpRequest requestDelete = HttpRequest.newBuilder()
                 .DELETE()

@@ -7,10 +7,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestsHttpEpics {
+public class HttpEpicsTest {
     static URI uri;
     static HttpClient client;
 
@@ -28,7 +27,7 @@ public class TestsHttpEpics {
     }
 
     @AfterEach
-    public void stopServer() throws IOException {
+    public void stopServer() {
         HttpTaskServer.stopServer();
     }
 
@@ -51,7 +50,7 @@ public class TestsHttpEpics {
                 .uri(uri)
                 .build();
         HttpResponse.BodyHandler<String> handlerPost = HttpResponse.BodyHandlers.ofString();
-        HttpResponse<String> responsePost = client.send(requestPost, handlerPost);
+        client.send(requestPost, handlerPost);
 
         URI uriWithQuary = URI.create("http://localhost:8080/epics?id=1");
         HttpRequest requestGet = HttpRequest.newBuilder()
@@ -69,7 +68,7 @@ public class TestsHttpEpics {
                 .uri(uri)
                 .build();
         HttpResponse.BodyHandler<String> handlerPost = HttpResponse.BodyHandlers.ofString();
-        HttpResponse<String> responsePost = client.send(requestPost, handlerPost);
+        client.send(requestPost, handlerPost);
 
         URI uriWithQuary = URI.create("http://localhost:8080/epics?id=1");
         HttpRequest requestDelete = HttpRequest.newBuilder()

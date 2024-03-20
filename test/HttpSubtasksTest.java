@@ -11,10 +11,9 @@ import java.time.Duration;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class TestsHttpSubtasks {
+public class HttpSubtasksTest {
     static URI uri;
     static HttpClient client;
-    HttpTaskServer server = new HttpTaskServer();
 
     @BeforeAll
     public static void createClient() {
@@ -30,7 +29,7 @@ public class TestsHttpSubtasks {
     }
 
     @AfterEach
-    public void stopServer() throws IOException {
+    public void stopServer() {
         HttpTaskServer.stopServer();
     }
 
@@ -54,7 +53,7 @@ public class TestsHttpSubtasks {
                 .header("X-epicId", "1")
                 .build();
         HttpResponse.BodyHandler<String> handlerPost = HttpResponse.BodyHandlers.ofString();
-        HttpResponse<String> responsePost = client.send(requestPost, handlerPost);
+        client.send(requestPost, handlerPost);
 
         URI uriWithQuare = URI.create("http://localhost:8080/subtasks?id=2");
         HttpRequest getSubtask = HttpRequest.newBuilder()
