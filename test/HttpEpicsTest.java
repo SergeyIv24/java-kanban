@@ -44,7 +44,6 @@ public class HttpEpicsTest {
 
     @Test
     public void shouldGetEpic() throws IOException, InterruptedException {
-
         HttpRequest requestPost = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString("{\"name\": \"TestEpic\",\"description\": \"TEST\"}"))
                 .uri(uri)
