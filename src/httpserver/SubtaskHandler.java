@@ -4,7 +4,6 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import tasks.Subtask;
-
 import java.io.IOException;
 import java.util.Optional;
 import static httpserver.HttpTaskServer.gsonBuilder;
