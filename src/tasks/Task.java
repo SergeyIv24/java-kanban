@@ -4,9 +4,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import com.google.gson.annotations.Expose;
-import tasks.Constants;
-
 //Обычная задача
 public class Task {
     protected String name;
