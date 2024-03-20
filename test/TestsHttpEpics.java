@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TestsHttpEpics {
     static URI uri;
     static HttpClient client;
-    HttpTaskServer server = new HttpTaskServer();
+
     @BeforeAll
     public static void createClient() {
         uri = URI.create("http://localhost:8080/epics");
