@@ -2,12 +2,9 @@ package httpServer;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import httpServer.HttpTaskServer;
 import tasks.Task;
-
 import java.io.IOException;
 import java.util.Optional;
-
 import static httpServer.HttpTaskServer.gsonBuilder;
 import static httpServer.HttpTaskServer.manager;
 import static httpServer.HttpTaskServer.DEFAULT_CHARSET;
@@ -33,8 +30,9 @@ public class TasksHandler implements HttpHandler {
                     requestBodyWriter(exchange, 404, "Задача не существует");
                     return;
                 }
+                String task1 = task.get().toString();
 
-                String taskJson = gsonBuilder.toJson(task.get()); //Возврат запрашиваемой задачи
+                String taskJson = gsonBuilder.toJson(task1); //Возврат запрашиваемой задачи
                 requestBodyWriter(exchange, 200, taskJson);
                 return;
 
@@ -78,5 +76,4 @@ public class TasksHandler implements HttpHandler {
                 requestBodyWriter(exchange, 200, ""); //Задача удалена по id (void)
         }
     }
-
 }

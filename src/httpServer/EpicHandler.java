@@ -24,7 +24,7 @@ public class EpicHandler implements HttpHandler {
                     return;
                 }
                 Optional<Epic> epic = manager.receiveOneEpic(idForGetting.get());
-                if (!epic.isEmpty()) {
+                if (epic.isPresent()) {
                     String epicJson = gsonBuilder.toJson(epic.get().toString());
                     requestBodyWriter(exchange, 200, epicJson);
                 }
@@ -34,8 +34,6 @@ public class EpicHandler implements HttpHandler {
             case "POST":
                 String requestBody = new String(exchange.getRequestBody().readAllBytes(), DEFAULT_CHARSET);
                 Epic epicAdding = gsonBuilder.fromJson(requestBody, Epic.class); //Десириализация
-                System.out.println(epicAdding);
-                System.out.println(epicAdding.getSubtasks());
                 manager.createEpic(epicAdding);
                 requestBodyWriter(exchange, 201, "");
                 return;

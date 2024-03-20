@@ -179,10 +179,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     //Удаление подзадачи по идентификатору
     @Override
-    public boolean deleteParticularSubtask(int subtaskId) {
-        boolean result = super.deleteParticularSubtask(subtaskId);
+    public void deleteParticularSubtask(int subtaskId) {
+        super.deleteParticularSubtask(subtaskId);
         save();
-        return result;
     }
 
     //Обновление подзадачи

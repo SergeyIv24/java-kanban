@@ -47,7 +47,7 @@ public interface TaskManager {
     void deleteAllSubtasksOfEpic(int epicId);
 
     //Удаление подзадачи по идентификатору
-    boolean deleteParticularSubtask(int subtaskId);
+    void deleteParticularSubtask(int subtaskId);
 
     //Обновление подзадачи по идентификатору, смена статуса
     boolean updateSubtask(Subtask subtask);

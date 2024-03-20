@@ -201,14 +201,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Удаление подзадачи по идентификатору
     @Override
-    public boolean deleteParticularSubtask(int subtaskId) {
+    public void deleteParticularSubtask(int subtaskId) {
         if (subtaskTable.containsKey(subtaskId)) {
             subtaskTable.remove(subtaskId);
             history.removeItem(subtaskId); //Удаление элемента из истории
             prioritizedTasks.remove(subtaskTable.get(subtaskId));
-            return true;
         }
-        return false;
     }
 
     //Обновление подзадачи по идентификатору, смена статуса

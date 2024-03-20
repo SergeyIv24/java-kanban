@@ -3,13 +3,10 @@ package httpServer;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import httpServer.HttpTaskServer;
 import tasks.Subtask;
-import tasks.Task;
 
 import java.io.IOException;
 import java.util.Optional;
-
 import static httpServer.HttpTaskServer.gsonBuilder;
 import static httpServer.HttpTaskServer.manager;
 import static httpServer.HttpTaskServer.DEFAULT_CHARSET;
@@ -37,52 +34,54 @@ public class SubtaskHandler implements HttpHandler {
                     requestBodyWriter(exchange, 404, "Задача не существует");
                     return;
                 }
+                int idSub = idForGetting.get();
+                String subtaskForGetting = gsonBuilder.toJson(manager.receiveSubtasksUseID(idSub).get().toString());
 
-                requestBodyWriter(exchange, 200, gsonBuilder.toJson(manager.receiveSubtasksUseID(idForGetting.get())));
+                requestBodyWriter(exchange, 200, gsonBuilder.toJson(subtaskForGetting));
                 return;
-
 
             case "POST":
                 //В InMemoryTaskManager метод addSubtask(int epicId, Subtask subtask), принимает id эпика к которому
                 //относится. Для POST запроса на создание подзадачи epicId передается в заголовке запроса.
                 String requestBody = new String(exchange.getRequestBody().readAllBytes(), DEFAULT_CHARSET);
                 Headers epicIdInHeadersForAdd = exchange.getRequestHeaders();
-                int epicIdForAdd = 0;
-                if (epicIdInHeadersForAdd.containsKey("X-epicId")) {
-                    epicIdForAdd = Integer.parseInt(epicIdInHeadersForAdd.get("X-epicId").get(0));
-                }
                 Optional<Integer> idForPosting = HttpTaskServer.parseId(exchange); //id задачи
                 Subtask subtaskAdding = gsonBuilder.fromJson(requestBody, Subtask.class); //Десириализация
-                if (idForPosting.isEmpty()) {
-                    manager.addSubTaskInEpic(epicIdForAdd, subtaskAdding);
-                    requestBodyWriter(exchange, 201, "");
-                    return;
+
+                int epicIdForAdd = 0;
+                if (epicIdInHeadersForAdd.containsKey("X-epicId")) { //Если содержит epicId
+                    epicIdForAdd = Integer.parseInt(epicIdInHeadersForAdd.get("X-epicId").get(0));
                 }
 
-                if (manager.receiveSubtasksUseID(idForPosting.get()).isEmpty()) {
-                    requestBodyWriter(exchange, 404, "Задача не существует");
+                if (idForPosting.isEmpty()) { //Если id нет
+                    if (!manager.addSubTaskInEpic(epicIdForAdd, subtaskAdding)) {
+                        requestBodyWriter(exchange, 406, "Задача пересекается с существующей");
+                        return;
+                    }
+                    requestBodyWriter(exchange, 201, ""); //Пересечений нет
                     return;
                 }
-                manager.updateTask(subtaskAdding);
-                requestBodyWriter(exchange, 201, "");
+                subtaskAdding.setId(idForPosting.get());
+
+                if (!manager.updateSubtask(subtaskAdding)) {
+                    requestBodyWriter(exchange, 406, "Задача пересекается с существующей");
+                    return;
+                }
+                manager.updateSubtask(subtaskAdding);
+                requestBodyWriter(exchange, 201, ""); //Пересечений нет
                 return;
 
             case "DELETE":
                 Optional<Integer> idForDeleting = HttpTaskServer.parseId(exchange); //id задачи
-                if (idForDeleting.isEmpty()) {
-                    requestBodyWriter(exchange, 404, "Задача не существует");
-                    return;
-                }
-                Optional<Subtask> subtask = manager.receiveSubtasksUseID(idForDeleting.get());
+                int id = idForDeleting.get();
+                Optional<Subtask> subtaskForDeleting = manager.receiveSubtasksUseID(idForDeleting.get()); //Получение задачи по id
 
-                if (subtask.isEmpty()) {
+                if (subtaskForDeleting.isEmpty()) { //Если задачи не существует
                     requestBodyWriter(exchange, 404, "Задача не существует");
                     return;
                 }
-                manager.deleteParticularSubtask(idForDeleting.get());
-                requestBodyWriter(exchange, 201, "");
-                return;
+                manager.deleteParticularSubtask(id);
+                requestBodyWriter(exchange, 200, ""); //Задача удалена по id (void)
         }
-
     }
 }
