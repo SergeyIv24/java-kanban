@@ -1,10 +1,10 @@
-package httpServer;
+package httpserver;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
-import static httpServer.HttpTaskServer.gsonBuilder;
-import static httpServer.HttpTaskServer.manager;
-import static httpServer.HttpTaskServer.requestBodyWriter;
+import static httpserver.HttpTaskServer.gsonBuilder;
+import static httpserver.HttpTaskServer.manager;
+import static httpserver.HttpTaskServer.requestBodyWriter;
 
 public class HistoryHandler implements HttpHandler {
 

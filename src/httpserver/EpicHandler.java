@@ -1,4 +1,4 @@
-package httpServer;
+package httpserver;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -7,10 +7,10 @@ import tasks.Epic;
 import java.io.IOException;
 import java.util.Optional;
 
-import static httpServer.HttpTaskServer.gsonBuilder;
-import static httpServer.HttpTaskServer.manager;
-import static httpServer.HttpTaskServer.DEFAULT_CHARSET;
-import static httpServer.HttpTaskServer.requestBodyWriter;
+import static httpserver.HttpTaskServer.gsonBuilder;
+import static httpserver.HttpTaskServer.manager;
+import static httpserver.HttpTaskServer.DEFAULT_CHARSET;
+import static httpserver.HttpTaskServer.requestBodyWriter;
 
 public class EpicHandler implements HttpHandler {
     @Override

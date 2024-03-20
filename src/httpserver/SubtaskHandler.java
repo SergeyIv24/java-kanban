@@ -1,4 +1,4 @@
-package httpServer;
+package httpserver;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
@@ -7,10 +7,10 @@ import tasks.Subtask;
 
 import java.io.IOException;
 import java.util.Optional;
-import static httpServer.HttpTaskServer.gsonBuilder;
-import static httpServer.HttpTaskServer.manager;
-import static httpServer.HttpTaskServer.DEFAULT_CHARSET;
-import static httpServer.HttpTaskServer.requestBodyWriter;
+import static httpserver.HttpTaskServer.gsonBuilder;
+import static httpserver.HttpTaskServer.manager;
+import static httpserver.HttpTaskServer.DEFAULT_CHARSET;
+import static httpserver.HttpTaskServer.requestBodyWriter;
 
 public class SubtaskHandler implements HttpHandler {
 
