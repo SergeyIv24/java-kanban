@@ -1,6 +1,8 @@
 import httpserver.HttpTaskServer;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
+
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -23,6 +25,7 @@ public class HttpEpicsTest {
 
     @BeforeEach
     public void startServer() throws IOException {
+        HttpTaskServer.file = File.createTempFile("File.csv", null);
         HttpTaskServer.startServer();
     }
 

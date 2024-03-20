@@ -22,6 +22,8 @@ public class HttpTaskServer {
     public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     public static FileBackedTaskManager manager;
     static HttpServer server;
+    public static File file = new File("C:\\Учеба\\Java 2023 - 2024" +
+            "\\Задачи\\Проекты ЯП\\Спринт 4\\java-kanban\\src\\manager\\File.csv");
     public static Gson gsonBuilder = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, new LocalDataTimeAdapter())
             .registerTypeAdapter(Duration.class, new DurationTimeAdapter())
@@ -30,8 +32,6 @@ public class HttpTaskServer {
 
     public static void startServer() throws IOException {
         //File file = File.createTempFile("File.csv", null);
-        File file = new File("C:\\Учеба\\Java 2023 - 2024" +
-                "\\Задачи\\Проекты ЯП\\Спринт 4\\java-kanban\\src\\manager\\File.csv");
         manager = Managers.getFileBackedTaskManager(file);
         server = HttpServer.create(new InetSocketAddress(PORT), 0); //Сервер + привязка порта
         server.createContext("/tasks", new TasksHandler()); //Связь пути и обработчика
