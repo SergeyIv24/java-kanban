@@ -1,7 +1,6 @@
 import httpserver.HttpTaskServer;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -15,8 +14,8 @@ public class HttpEpicsTest {
     static URI uri;
     static HttpClient client;
 
-    @BeforeAll
-    public static void createClient() {
+    @BeforeEach
+    public void createClient() {
         uri = URI.create("http://localhost:8080/epics");
         client = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(10))
