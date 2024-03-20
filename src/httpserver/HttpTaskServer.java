@@ -71,26 +71,3 @@ public class HttpTaskServer {
    }
 }
 
-class LocalDataTimeAdapter extends TypeAdapter<LocalDateTime> {
-    @Override
-    public void write(JsonWriter out, LocalDateTime value) throws IOException {
-        out.value(value.format(Constants.FORMATTER));
-    }
-
-    @Override
-    public LocalDateTime read(JsonReader jsonReader) throws IOException {
-        return LocalDateTime.parse(jsonReader.nextString(), Constants.FORMATTER);
-    }
-}
-
-class DurationTimeAdapter extends TypeAdapter<Duration> {
-    @Override
-    public void write(JsonWriter jsonWriter, Duration value) throws IOException {
-        jsonWriter.value(value.toString());
-    }
-
-    @Override
-    public Duration read(JsonReader jsonReader) throws IOException {
-        return Duration.ofMinutes(Long.parseLong(jsonReader.nextString()));
-    }
-}
