@@ -17,7 +17,7 @@ public class HttpEpicsTest {
     public static void createClient() {
         uri = URI.create("http://localhost:8080/epics");
         client = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(20))
+                .connectTimeout(Duration.ofSeconds(10))
                 .build();
     }
 
