@@ -10,6 +10,7 @@ import static httpserver.HttpTaskServer.gsonBuilder;
 import static httpserver.HttpTaskServer.manager;
 import static httpserver.HttpTaskServer.DEFAULT_CHARSET;
 import static httpserver.HttpTaskServer.requestBodyWriter;
+import static httpserver.HttpConstance.*;
 
 public class SubtaskHandler implements HttpHandler {
 
@@ -30,13 +31,13 @@ public class SubtaskHandler implements HttpHandler {
 
                 if (manager.receiveOneEpic(epicId).isEmpty()
                         || manager.receiveSubtasksUseID(idForGetting.get()).isEmpty()) { //Если эпика нет, то и задач нет
-                    requestBodyWriter(exchange, 404, "Задача не существует");
+                    requestBodyWriter(exchange, NOT_FOUND, "Задача не существует");
                     return;
                 }
                 int idSub = idForGetting.get();
                 String subtaskForGetting = gsonBuilder.toJson(manager.receiveSubtasksUseID(idSub).get().toString());
 
-                requestBodyWriter(exchange, 200, gsonBuilder.toJson(subtaskForGetting));
+                requestBodyWriter(exchange, OK, gsonBuilder.toJson(subtaskForGetting));
                 return;
 
             case "POST":
@@ -54,19 +55,19 @@ public class SubtaskHandler implements HttpHandler {
 
                 if (idForPosting.isEmpty()) { //Если id нет
                     if (!manager.addSubTaskInEpic(epicIdForAdd, subtaskAdding)) {
-                        requestBodyWriter(exchange, 406, "Задача пересекается с существующей");
+                        requestBodyWriter(exchange, BAD_REQUEST, "Задача пересекается с существующей");
                         return;
                     }
-                    requestBodyWriter(exchange, 201, ""); //Пересечений нет
+                    requestBodyWriter(exchange, CREATED, ""); //Пересечений нет
                     return;
                 }
                 subtaskAdding.setId(idForPosting.get());
                 boolean isUpdated = manager.updateSubtask(subtaskAdding);
                 if (!isUpdated) {
-                    requestBodyWriter(exchange, 406, "Задача пересекается с существующей");
+                    requestBodyWriter(exchange, BAD_REQUEST, "Задача пересекается с существующей");
                     return;
                 }
-                requestBodyWriter(exchange, 201, ""); //Пересечений нет
+                requestBodyWriter(exchange, CREATED, ""); //Пересечений нет
                 return;
 
             case "DELETE":
@@ -75,11 +76,11 @@ public class SubtaskHandler implements HttpHandler {
                 Optional<Subtask> subtaskForDeleting = manager.receiveSubtasksUseID(idForDeleting.get()); //Получение задачи по id
 
                 if (subtaskForDeleting.isEmpty()) { //Если задачи не существует
-                    requestBodyWriter(exchange, 404, "Задача не существует");
+                    requestBodyWriter(exchange, NOT_FOUND, "Задача не существует");
                     return;
                 }
                 manager.deleteParticularSubtask(id);
-                requestBodyWriter(exchange, 200, ""); //Задача удалена по id (void)
+                requestBodyWriter(exchange, OK, ""); //Задача удалена по id (void)
         }
     }
 }

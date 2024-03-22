@@ -9,7 +9,7 @@ import static httpserver.HttpTaskServer.gsonBuilder;
 import static httpserver.HttpTaskServer.manager;
 import static httpserver.HttpTaskServer.DEFAULT_CHARSET;
 import static httpserver.HttpTaskServer.requestBodyWriter;
-
+import static httpserver.HttpConstance.*;
 
 public class TasksHandler implements HttpHandler {
     @Override
@@ -20,20 +20,20 @@ public class TasksHandler implements HttpHandler {
                 Optional<Integer> idForGetting = HttpTaskServer.parseId(exchange); //id задачи
                 if (idForGetting.isEmpty()) { //Если id нет
                     String allTasksJson = gsonBuilder.toJson(manager.receiveAllTasks().toString());
-                    requestBodyWriter(exchange, 200, allTasksJson);
+                    requestBodyWriter(exchange, OK, allTasksJson);
                     return;
                 }
 
                 Optional<Task> task = manager.receiveOneTask(idForGetting.get()); //Получение задачи по id
 
                 if (task.isEmpty()) { //Если задачи нет
-                    requestBodyWriter(exchange, 404, "Задача не существует");
+                    requestBodyWriter(exchange, NOT_FOUND, "Задача не существует");
                     return;
                 }
                 String task1 = task.get().toString();
 
                 String taskJson = gsonBuilder.toJson(task1); //Возврат запрашиваемой задачи
-                requestBodyWriter(exchange, 200, taskJson);
+                requestBodyWriter(exchange, OK, taskJson);
                 return;
 
             case "POST":
@@ -42,38 +42,38 @@ public class TasksHandler implements HttpHandler {
                 Task taskAdding = gsonBuilder.fromJson(requestBody, Task.class); //Десириализация
                 if (idForPosting.isEmpty()) { //Если id не передан
                     if (!manager.addTask(taskAdding)) { //Если есть пересечение по времени
-                        requestBodyWriter(exchange, 406, "Задача пересекается с существующей");
+                        requestBodyWriter(exchange, BAD_REQUEST, "Задача пересекается с существующей");
                         return;
                     }
-                    requestBodyWriter(exchange, 201, ""); //Пересечений нет
+                    requestBodyWriter(exchange, CREATED, ""); //Пересечений нет
                     return;
                 }
 
                 //id передан
                 taskAdding.setId(idForPosting.get());
                 if (manager.updateTask(taskAdding)) {
-                    requestBodyWriter(exchange, 201, "");
+                    requestBodyWriter(exchange, CREATED, "");
                     return;
                 }
-                requestBodyWriter(exchange, 404, "Задача не существует");
+                requestBodyWriter(exchange, NOT_FOUND, "Задача не существует");
                 return;
 
             case "DELETE":
                 Optional<Integer> idForDeleting = HttpTaskServer.parseId(exchange); //id задачи
                 if (idForDeleting.isEmpty()) { //Если нет id, удаление всех задач
                     manager.deleteAllTask();
-                    requestBodyWriter(exchange, 200, ""); //Удаление задач возвращает void
+                    requestBodyWriter(exchange, OK, ""); //Удаление задач возвращает void
                     return;
                 }
 
                 Optional<Task> taskForDeleting = manager.receiveOneTask(idForDeleting.get()); //Получение задачи по id
 
                 if (taskForDeleting.isEmpty()) { //Если задачи не существует
-                    requestBodyWriter(exchange, 404, "Задача не существует");
+                    requestBodyWriter(exchange, NOT_FOUND, "Задача не существует");
                     return;
                 }
                 manager.deleteUseID(idForDeleting.get());
-                requestBodyWriter(exchange, 200, ""); //Задача удалена по id (void)
+                requestBodyWriter(exchange, OK, ""); //Задача удалена по id (void)
         }
     }
 }

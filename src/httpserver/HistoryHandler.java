@@ -5,6 +5,7 @@ import java.io.IOException;
 import static httpserver.HttpTaskServer.gsonBuilder;
 import static httpserver.HttpTaskServer.manager;
 import static httpserver.HttpTaskServer.requestBodyWriter;
+import static httpserver.HttpConstance.*;
 
 public class HistoryHandler implements HttpHandler {
 
@@ -13,7 +14,7 @@ public class HistoryHandler implements HttpHandler {
         String requestMethod = exchange.getRequestMethod();
         switch (requestMethod) {
             case "GET":
-                requestBodyWriter(exchange, 200, gsonBuilder.toJson(manager.getHistory().getListOfHistory().toString()));
+                requestBodyWriter(exchange, OK, gsonBuilder.toJson(manager.getHistory().getListOfHistory().toString()));
         }
     }
 

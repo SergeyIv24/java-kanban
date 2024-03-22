@@ -32,7 +32,6 @@ public class HttpTaskServer {
 
 
     public static void startServer() throws IOException {
-        //File file = File.createTempFile("File.csv", null);
         manager = Managers.getFileBackedTaskManager(file);
         server = HttpServer.create(new InetSocketAddress(PORT), 0); //Сервер + привязка порта
         server.createContext("/tasks", new TasksHandler()); //Связь пути и обработчика

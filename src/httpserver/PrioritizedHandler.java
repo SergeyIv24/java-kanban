@@ -6,6 +6,7 @@ import java.io.IOException;
 import static httpserver.HttpTaskServer.gsonBuilder;
 import static httpserver.HttpTaskServer.manager;
 import static httpserver.HttpTaskServer.requestBodyWriter;
+import static httpserver.HttpConstance.*;
 
 public class PrioritizedHandler implements HttpHandler {
     @Override
@@ -14,7 +15,7 @@ public class PrioritizedHandler implements HttpHandler {
 
         switch (requestMethod) {
             case "GET":
-                requestBodyWriter(exchange, 200, gsonBuilder.toJson(manager.getPrioritizedTasks().toString()));
+                requestBodyWriter(exchange, OK, gsonBuilder.toJson(manager.getPrioritizedTasks().toString()));
         }
     }
 }
