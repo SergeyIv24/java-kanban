@@ -79,6 +79,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void createEpic(Epic epic) {
         counter += 1; //ID считается с 1
         epic.setId(counter);
+        epic.setStatus("NEW");
         epicTable.put(counter, epic); //Эпик в мапу эпиков
         epic.solveStartTimeAndDuration(); //Расчет времени при создании Эпика
     }
@@ -104,12 +105,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Удаление эпика по идентификатору
     @Override
-    public void deleteEpic(int epicId) {
+    public boolean deleteEpic(int epicId) {
         if (epicTable.containsKey(epicId)) { //Если эпик в мапе
             deleteAllSubtasksOfEpic(epicId);
             epicTable.remove(epicId, epicTable.get(epicId));
             history.removeItem(epicId);
+            return true;
         }
+        return false;
     }
 
     //Обновление статуса эпика
@@ -143,15 +146,19 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Добавление подзадачи в эпик
     @Override
-    public void addSubTaskInEpic(int epicId, Subtask subtask) {
+    public boolean addSubTaskInEpic(int epicId, Subtask subtask) {
         if (isCrossingOther(subtask)) { //Если есть пересечение, задача не добавляется
-            return;
+            return false;
         }
 
         Epic epic = epicTable.get(epicId); // Получение объекта эпика по ID
         if (epic != null) {
             counter += 1;
             subtask.setId(counter);
+            subtask.setStatus("NEW");
+            if (epic.getSubtasks() == null) {
+                epic.createSubtasks();
+            }
             epic.getSubtasks().add(subtask); // Подзадач в список подзадач эпика
             subtaskTable.put(counter, subtask); // Подазадча в мапу подзадач
             epic.solveStartTimeAndDuration(); //Пересчет времени при добавлении подзадачи
@@ -159,6 +166,8 @@ public class InMemoryTaskManager implements TaskManager {
         if (subtask.getStartTime() != null) {
             prioritizedTasks.add(subtask);
         }
+
+        return true;
     }
 
     //Получение подзадачи по идентификатору
@@ -178,6 +187,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteAllSubtasksOfEpic(int epicId) {
         Epic epic = epicTable.get(epicId); //Эпик по id
+        if (epic.getSubtasks() == null) {
+            return;
+        }
         for (Subtask sub : epic.getSubtasks()) { //Удаление подзадачи из мапы подзадач по ключу
             subtaskTable.remove(sub.getId());
             prioritizedTasks.remove(sub);
@@ -189,14 +201,13 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Удаление подзадачи по идентификатору
     @Override
-    public boolean deleteParticularSubtask(int subtaskId) {
+    public void deleteParticularSubtask(int subtaskId) {
         if (subtaskTable.containsKey(subtaskId)) {
+            prioritizedTasks.remove(subtaskTable.get(subtaskId));
             subtaskTable.remove(subtaskId);
             history.removeItem(subtaskId); //Удаление элемента из истории
-            prioritizedTasks.remove(subtaskTable.get(subtaskId));
-            return true;
+
         }
-        return false;
     }
 
     //Обновление подзадачи по идентификатору, смена статуса
@@ -208,6 +219,7 @@ public class InMemoryTaskManager implements TaskManager {
             for (Subtask sub : epic.getSubtasks()) { //Цикл по подзадачам эпика
                 if (sub.getId() == subtask.getId()) { //Если найден по id
                     epic.getSubtasks().set(i, subtask); //Замена элемента в списке
+                    subtaskTable.put(subtask.getId(), subtask);
                     newEpic = epic;
                     break; //Если if сработал не нужно продолжать цикл
                 }
@@ -237,17 +249,19 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Метод добавления простой задачи
     @Override
-    public void addTask(Task task) {
+    public boolean addTask(Task task) {
         if (isCrossingOther(task)) { //Если есть пересечение, не добавляется
-            return;
+            return false;
         }
 
         counter += 1;
         task.setId(counter);
+        task.setStatus("NEW");
         tasksTable.put(task.getId(), task);
         if (task.getStartTime() != null) {
             prioritizedTasks.add(task);
         }
+        return true;
     }
 
     //Метод удаление всех задач
@@ -299,11 +313,13 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Обновление задачи
     @Override
-    public void updateTask(Task task) { //Полное обновление задачи
+    public boolean updateTask(Task task) { //Полное обновление задачи
         if (tasksTable.containsKey(task.getId())) {
             tasksTable.put(task.getId(), task); //Заменяет собой прошлый объект в мапе
             prioritizedTasks.remove(task);
             prioritizedTasks.add(task);
+            return true;
         }
+        return false;
     }
 }

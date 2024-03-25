@@ -7,6 +7,17 @@ import tasks.Task;
 import java.util.ArrayList;
 import java.util.Optional;
 
+//Todo endpoints для каждого метода в этом интерфейсе
+//Todo 5 групп методов и их пути: /tasks, /subtasks, /Epics, /history, /prioritized
+//Todo для каждого пути - несколько методов: GET - чтение, POST - обновление, DELETE - удаление
+//Todo коды: 200 - успешно выполнено, возврат, 201 - успешно обновлено, возврата нет
+//Todo коды: 404 - задача не найдена, 406 - пересечение задач, 500 - ошибки при выполнении запроса
+//Todo обмен данными в JSON
+//Todo HttpTaskServer - порт 8080, метод main для старта
+//Todo обработчик для каждого пути, привязать к пути
+//Todo добавить библиотеку GSON
+//Todo тесты
+
 public interface TaskManager {
 
     //Методы для эпиков
@@ -20,14 +31,14 @@ public interface TaskManager {
     String deleteAllEpics();
 
     //Удаление эпика по идентификатору
-    void deleteEpic(int epicId);
+    boolean deleteEpic(int epicId);
 
     //Обновление статуса эпика
     void updateEpic(Epic epic);
 
     //Методы для подзадач эпиков
     //Добавление подзадачи в эпик
-    void addSubTaskInEpic(int epicId, Subtask subtask);
+    boolean addSubTaskInEpic(int epicId, Subtask subtask);
 
     //Вывод подзадачи по идентификатору
     Optional<Subtask> receiveSubtasksUseID(int subtaskId);
@@ -36,7 +47,7 @@ public interface TaskManager {
     void deleteAllSubtasksOfEpic(int epicId);
 
     //Удаление подзадачи по идентификатору
-    boolean deleteParticularSubtask(int subtaskId);
+    void deleteParticularSubtask(int subtaskId);
 
     //Обновление подзадачи по идентификатору, смена статуса
     boolean updateSubtask(Subtask subtask);
@@ -46,7 +57,7 @@ public interface TaskManager {
 
     // Методы для простых задач.
     //Метод добавления простой задачи
-    void addTask(Task task);
+    boolean addTask(Task task);
 
     //Метод удаление всех задач
     void deleteAllTask();
@@ -64,6 +75,6 @@ public interface TaskManager {
     Optional<Task> receiveOneTask(int id);
 
     //Обновление задачи
-    void updateTask(Task task);
+    boolean updateTask(Task task);
 
 }

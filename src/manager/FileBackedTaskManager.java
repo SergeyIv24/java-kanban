@@ -134,9 +134,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     //Удаление эпика по id
     @Override
-    public void deleteEpic(int epicId) {
-        super.deleteEpic(epicId);
-        save();
+    public boolean deleteEpic(int epicId) {
+        if (super.deleteEpic(epicId)) {
+            save();
+            return true;
+        }
+        return false;
     }
 
     //Обновление эпика
@@ -159,9 +162,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 //Методы для подзадач эпиков
     //Создание подзадачи
     @Override
-    public void addSubTaskInEpic(int epicId, Subtask subtask) {
-        super.addSubTaskInEpic(epicId, subtask);
+    public boolean addSubTaskInEpic(int epicId, Subtask subtask) {
+        boolean result = super.addSubTaskInEpic(epicId, subtask);
         save();
+        return result;
     }
 
     //Удаление всех подзадач эпика
@@ -173,10 +177,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     //Удаление подзадачи по идентификатору
     @Override
-    public boolean deleteParticularSubtask(int subtaskId) {
-        boolean result = super.deleteParticularSubtask(subtaskId);
+    public void deleteParticularSubtask(int subtaskId) {
+        super.deleteParticularSubtask(subtaskId);
         save();
-        return result;
     }
 
     //Обновление подзадачи
@@ -199,9 +202,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 //Методы для обычных задач
     //Создание задачи
     @Override
-    public void addTask(Task task) {
-        super.addTask(task);
-        save();
+    public boolean addTask(Task task) {
+        if (super.addTask(task)) {
+            save();
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -218,9 +225,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     @Override
-    public void updateTask(Task task) {
-        super.updateTask(task);
-        save();
+    public boolean updateTask(Task task) {
+        if (super.updateTask(task)) {
+            save();
+            return true;
+        }
+        return false;
+
     }
 
     //Метод вывода по идентификатору

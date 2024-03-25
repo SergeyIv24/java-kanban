@@ -10,8 +10,6 @@ public class Epic extends Task {
     private LocalDateTime epicStartTime;
     private Duration epicDuration;
     private LocalDateTime epicEndTime;
-
-
     private ArrayList<Subtask> subtasks;
 
 
@@ -24,13 +22,21 @@ public class Epic extends Task {
         return subtasks;
     }
 
+    public void createSubtasks() {
+        this.subtasks = new ArrayList<>();
+    }
+
     //Расчет временных полей
-    public void solveStartTimeAndDuration() {
+    public boolean solveStartTimeAndDuration() {
+        if (subtasks == null) {
+            return false;
+        }
+
        if (subtasks.isEmpty()) {
             epicDuration = null;
             epicStartTime = null;
             epicEndTime = null;
-            return;
+            return false;
         }
         epicDuration = Duration.ofMinutes(0);
         subtasks.stream()
@@ -42,6 +48,7 @@ public class Epic extends Task {
         if (epicStartTime != null) {
             epicEndTime = epicStartTime.plus(epicDuration); //Время окончания = время начала первой задачи + общая продолжительность
         }
+        return true;
 
     }
 
